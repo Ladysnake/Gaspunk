@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.logging.log4j.Logger;
 
 @Mod(
         modid = GasPunk.MOD_ID,
@@ -27,6 +28,8 @@ public class GasPunk {
     @Mod.Instance(MOD_ID)
     public static GasPunk INSTANCE;
 
+    public static Logger LOGGER;
+
     public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(MOD_ID) {
         @SideOnly(Side.CLIENT)
         public ItemStack getTabIconItem() {
@@ -39,8 +42,8 @@ public class GasPunk {
      * The registry events below will have fired prior to entry to this method.
      */
     @Mod.EventHandler
-    public void preinit(FMLPreInitializationEvent event) {
-
+    public void preInit(FMLPreInitializationEvent event) {
+        LOGGER = event.getModLog();
     }
 
     /**
@@ -55,7 +58,7 @@ public class GasPunk {
      * This is the final initialization event. Register actions from other mods here
      */
     @Mod.EventHandler
-    public void postinit(FMLPostInitializationEvent event) {
+    public void postInit(FMLPostInitializationEvent event) {
 
     }
 }
