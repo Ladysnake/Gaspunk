@@ -43,7 +43,7 @@ public class ItemGrenade extends Item {
     }
 
     public void explode(WorldServer worldIn, Vec3d pos) {
-            worldIn.spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.x, pos.y, pos.z, 10, 0.5, 0.5, 0.5, 0.2);
+            worldIn.spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.x, pos.y, pos.z, 20, 0.5, 0.5, 0.5, 0.2);
     }
 
     @Override
