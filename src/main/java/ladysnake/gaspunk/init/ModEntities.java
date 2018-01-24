@@ -1,7 +1,10 @@
 package ladysnake.gaspunk.init;
 
 import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.client.render.RenderGasTube;
+import ladysnake.gaspunk.client.render.RenderNothing;
 import ladysnake.gaspunk.entity.EntityGasCloud;
+import ladysnake.gaspunk.entity.EntityGasTube;
 import ladysnake.gaspunk.entity.EntityGrenade;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderSnowball;
@@ -26,9 +29,18 @@ public final class ModEntities {
                         .entity(EntityGrenade.class)
                         .factory(EntityGrenade::new)
                         .name("gas_grenade")
-                        .id("gas_grenade", id)
+                        .id("gas_grenade", id++)
                         .tracker(64, 1, true)
                         .build(),
+
+                EntityEntryBuilder.create()
+                        .entity(EntityGasTube.class)
+                        .factory(EntityGasTube::new)
+                        .name("gas_tube")
+                        .id("gas_tube", id++)
+                        .tracker(64, 1, true)
+                        .build(),
+
                 EntityEntryBuilder.create()
                         .entity(EntityGasCloud.class)
                         .factory(EntityGasCloud::new)
@@ -42,6 +54,8 @@ public final class ModEntities {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void onModelRegistry(ModelRegistryEvent event) {
-        RenderingRegistry.registerEntityRenderingHandler(EntityGrenade.class, manager -> new RenderSnowball<>(manager, ModItems.GRENADE, Minecraft.getMinecraft().getRenderItem()));
+        RenderingRegistry.registerEntityRenderingHandler(EntityGasCloud.class, RenderNothing::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityGasTube.class, manager -> new RenderGasTube(manager, ModItems.GAS_TUBE, Minecraft.getMinecraft().getRenderItem()));
+        RenderingRegistry.registerEntityRenderingHandler(EntityGrenade.class, manager -> new RenderGasTube(manager, ModItems.GRENADE, Minecraft.getMinecraft().getRenderItem()));
     }
 }

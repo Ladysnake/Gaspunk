@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 
 public class ItemGasMask extends ItemArmor {
 
-    private static final ResourceLocation GAS_MASK_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/gas_mask_overlay");
+    private static final ResourceLocation GAS_MASK_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/gas_mask_overlay.png");
 
     public ItemGasMask(ItemArmor.ArmorMaterial materialIn, int renderIndexIn) {
         super(materialIn, renderIndexIn, EntityEquipmentSlot.HEAD);

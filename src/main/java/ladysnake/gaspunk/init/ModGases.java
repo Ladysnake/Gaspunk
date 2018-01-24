@@ -14,14 +14,23 @@ import net.minecraftforge.registries.RegistryBuilder;
 @GameRegistry.ObjectHolder(GasPunk.MOD_ID)
 public class ModGases {
 
-    public static final IForgeRegistry<Gas> REGISTRY = new RegistryBuilder<Gas>()
-            .setType(Gas.class)
-            .setName(new ResourceLocation(GasPunk.MOD_ID, "gases"))
-            .setMaxID(255)
-            .create();
+    public static final Gas AIR = new Gas();
+
+    public static IForgeRegistry<Gas> REGISTRY;
 
     @SubscribeEvent
-    public void addGases(RegistryEvent.Register event) {
+    public static void addRegistries(RegistryEvent.NewRegistry event) {
+        REGISTRY = new RegistryBuilder<Gas>()
+                .setType(Gas.class)
+                .setName(new ResourceLocation(GasPunk.MOD_ID, "gases"))
+                .setMaxID(255)
+                .create();
+    }
 
+    @SubscribeEvent
+    public static void addGases(RegistryEvent.Register<Gas> event) {
+        event.getRegistry().registerAll(
+                AIR.setRegistryName("air")
+        );
     }
 }

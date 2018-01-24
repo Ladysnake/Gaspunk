@@ -2,6 +2,7 @@ package ladysnake.gaspunk.init;
 
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.item.ItemGasMask;
+import ladysnake.gaspunk.item.ItemGasTube;
 import ladysnake.gaspunk.item.ItemGrenade;
 import ladysnake.gaspunk.item.ItemGrenadeBelt;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -28,7 +29,7 @@ import java.util.Set;
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
 public final class ModItems {
 
-    public static ItemArmor.ArmorMaterial gasMaterial;
+    public static final Item GAS_TUBE = Items.AIR;
     public static final Item GRENADE = Items.AIR;
 
     static Set<Item> allItems = new HashSet<>();
@@ -45,6 +46,7 @@ public final class ModItems {
                 name(new Item(), "ash"),
                 name(new Item(), "enriched_coal"),
                 name(new ItemGasMask(ItemArmor.ArmorMaterial.LEATHER, 0), "gas_mask"),
+                name(new ItemGasTube(), "gas_tube"),
                 name(new ItemGrenade(), "grenade")
         );
         if (Loader.isModLoaded("baubles"))

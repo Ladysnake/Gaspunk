@@ -13,7 +13,7 @@ public class BreathPacket implements IMessageHandler<BreathMessage, IMessage> {
     @Override
     @SideOnly(Side.CLIENT)
     public IMessage onMessage(BreathMessage message, MessageContext ctx) {
-        CapabilityBreathing.getHandler(Minecraft.getMinecraft().player).ifPresent(handler -> handler.setAirSupply(message.breath));
+        Minecraft.getMinecraft().addScheduledTask(() -> CapabilityBreathing.getHandler(Minecraft.getMinecraft().player).ifPresent(handler -> handler.setAirSupply(message.breath)));
         return null;
     }
 }

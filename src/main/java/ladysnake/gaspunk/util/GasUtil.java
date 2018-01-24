@@ -6,6 +6,7 @@ import com.google.common.cache.LoadingCache;
 import ladysnake.gaspunk.entity.EntityGasCloud;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.init.ModGases;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -27,7 +28,7 @@ public class GasUtil {
         if (stack.hasTagCompound()) {
             return ModGases.REGISTRY.getValue(new ResourceLocation(Objects.requireNonNull(stack.getTagCompound()).getString("gaspunk:contained_gas")));
         }
-        return null;
+        return ModGases.AIR;
     }
 
     /**
@@ -70,8 +71,11 @@ public class GasUtil {
 
             for (EnumFacing facing : EnumFacing.VALUES) {
                 BlockPos neighbour = current.offset(facing);
-                if (!dataIn.world.isAirBlock(neighbour) || dataIn.start.distanceSq(neighbour) > EntityGasCloud.MAX_PROPAGATION_DISTANCE_SQ)
+                if (/*!dataIn.world.isAirBlock(neighbour) || */dataIn.start.distanceSq(neighbour) > EntityGasCloud.MAX_PROPAGATION_DISTANCE_SQ)
                     continue; // gases can only propagate through air and up to a maximum distance from emission
+                Material mat = dataIn.world.getBlockState(neighbour).getMaterial();
+                if (mat.isSolid() || mat.isLiquid() || mat.blocksMovement())
+                    continue;
                 if (closedSet.contains(neighbour))
                     continue; // ignore the neighbour which has already been evaluated
 

@@ -2,6 +2,7 @@ package ladysnake.gaspunk.item;
 
 import ladysnake.gaspunk.entity.EntityGasCloud;
 import ladysnake.gaspunk.entity.EntityGrenade;
+import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.util.GasUtil;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +17,7 @@ import net.minecraft.world.WorldServer;
 
 import javax.annotation.Nonnull;
 
-public class ItemGrenade extends Item {
+public class ItemGrenade extends ItemGasTube {
 
     @Override
     public int getItemStackLimit(ItemStack stack) {
@@ -46,16 +47,19 @@ public class ItemGrenade extends Item {
     @Override
     public ItemStack onItemUseFinish(@Nonnull ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
         stack.shrink(1);
+        if (entityLiving instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) entityLiving;
+            player.addItemStackToInventory(new ItemStack(ModItems.GRENADE));
+        }
         if (!worldIn.isRemote)
             explode((WorldServer) worldIn, entityLiving.getPositionVector(), stack);
         return stack;
     }
 
-    public void explode(WorldServer worldIn, Vec3d pos, ItemStack stack) {
-            worldIn.spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.x, pos.y, pos.z, 20, 0.5, 0.5, 0.5, 0.2);
-            EntityGasCloud cloud = new EntityGasCloud(worldIn, GasUtil.getContainedGas(stack));
-            cloud.setPosition(pos.x, pos.y, pos.z);
-            worldIn.spawnEntity(cloud);
+    public EntityGasCloud explode(WorldServer worldIn, Vec3d pos, ItemStack stack) {
+        EntityGasCloud cloud = super.explode(worldIn, pos, stack);
+        cloud.setMaxLifespan(400);
+        return cloud;
     }
 
     @Override

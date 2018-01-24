@@ -5,7 +5,6 @@ import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.item.ItemGrenade;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -17,8 +16,7 @@ import net.minecraft.world.WorldServer;
 
 import javax.annotation.Nonnull;
 
-public class EntityGrenade extends EntityThrowable {
-    private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityGrenade.class, DataSerializers.ITEM_STACK);
+public class EntityGrenade extends EntityGasTube {
     private static final DataParameter<Integer> COUNTDOWN = EntityDataManager.createKey(EntityGrenade.class, DataSerializers.VARINT);
 
     public EntityGrenade(World worldIn) {
@@ -26,8 +24,7 @@ public class EntityGrenade extends EntityThrowable {
     }
 
     public EntityGrenade(World worldIn, EntityLivingBase throwerIn, ItemStack stack) {
-        super(worldIn, throwerIn);
-        setItem(stack);
+        super(worldIn, throwerIn, stack);
     }
 
     @Override
@@ -37,27 +34,8 @@ public class EntityGrenade extends EntityThrowable {
 
     @Override
     protected void entityInit() {
+        super.entityInit();
         getDataManager().register(COUNTDOWN, 60);
-        getDataManager().register(ITEM, new ItemStack(ModItems.GRENADE));
-    }
-
-    @Nonnull
-    public ItemStack getGrenade() {
-        ItemStack itemstack = this.getDataManager().get(ITEM);
-
-        if (itemstack.getItem() != ModItems.GRENADE) {
-            if (this.world != null) {
-                GasPunk.LOGGER.error("ThrownGrenade entity {} has no item?!", this.getEntityId());
-            }
-
-            return new ItemStack(ModItems.GRENADE);
-        } else {
-            return itemstack;
-        }
-    }
-
-    public void setItem(ItemStack item) {
-        getDataManager().set(ITEM, item);
     }
 
     public void setCountdown(int countdown) {
@@ -89,14 +67,19 @@ public class EntityGrenade extends EntityThrowable {
             motionZ *= hitVector.getZ() * -0.6 + 0.3;
             if (Math.abs(motionZ) < 0.05) motionZ = 0;
             isAirBorne = true;
+        } else if (result.typeOfHit == RayTraceResult.Type.ENTITY) {
+            this.motionX *= -0.1;
+            this.motionY *= -0.1;
+            this.motionZ *= -0.1;
+            this.rotationYaw += 180.0F;
+            this.prevRotationYaw += 180.0F;
         }
     }
 
+    @Override
     protected void explode() {
-        if (this.world instanceof WorldServer) {
-            ((ItemGrenade) this.getGrenade().getItem()).explode((WorldServer) world, this.getPositionVector(), getGrenade());
+        super.explode();
+        if (!world.isRemote)
             world.spawnEntity(new EntityItem(world, posX, posY, posZ, new ItemStack(ModItems.GRENADE)));
-            this.setDead();
-        }
     }
 }

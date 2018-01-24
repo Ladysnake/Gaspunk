@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class PacketHandler {
-    public static final SimpleNetworkWrapper NET = NetworkRegistry.INSTANCE.newSimpleChannel(GasPunk.MOD_ID.toUpperCase());
+    public static final SimpleNetworkWrapper NET = NetworkRegistry.INSTANCE.newSimpleChannel(GasPunk.MOD_ID);
     private static int nextId;
 
     public static void initPackets() {

@@ -64,7 +64,7 @@ public class CapabilityBreathing {
     }
 
     @SubscribeEvent
-    public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
+    public static void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
         getHandler(event.getEntity()).ifPresent(IBreathingHandler::tick);
     }
 
@@ -86,6 +86,7 @@ public class CapabilityBreathing {
 
         /**
          * Sets a gas concentration surrounding an entity for this tick
+         *
          * @param gas           the gas suffocating this entity
          * @param concentration a value between 0 and 1 representing the gas' concentration in the entity space
          */
@@ -96,30 +97,36 @@ public class CapabilityBreathing {
         }
 
         @Override
+        public Map<Gas, Float> getGasConcentrations() {
+            return concentrations;
+        }
+
+        @Override
         public void tick() {
-            // worst case, no air at all
-            float gasConcentration = Math.max(1, concentrations.values().stream().reduce(Float::sum).orElse(0f));
-            float entityModifier = 1;
-            if (entityLivingBase$decreaseAirSupply != null) {
-                try {
-                    // entities like iron golems get a chance to nullify the effect
-                    entityModifier = airSupply - (int) entityLivingBase$decreaseAirSupply.invoke((int) airSupply);
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
-                }
-            }
-            boolean appliedAirReduction = false;
-            for (Map.Entry<Gas, Float> gasEffect : concentrations.entrySet()) {
-                Gas gas = gasEffect.getKey();
-                float concentration = gasEffect.getValue() * entityModifier;
-                if (gas.isToxic() && airSupply > 0) {
-                    if (!appliedAirReduction) {
-                        // air supply decreases 4x as fast as underwater under worse conditions
-                        this.setAirSupply(airSupply - 4 * gasConcentration);
-                        appliedAirReduction = true;
+            if (!owner.world.isRemote) {
+                // worst case, no air at all
+                float gasConcentration = Math.max(1, concentrations.values().stream().reduce(Float::sum).orElse(0f));
+                float entityModifier = 1;
+                if (entityLivingBase$decreaseAirSupply != null) {
+                    try {
+                        // entities like iron golems get a chance to nullify the effect
+                        entityModifier = airSupply - (int) entityLivingBase$decreaseAirSupply.invoke(owner, (int) airSupply);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
                     }
-                } else {
-                    gas.applyEffect(owner, concentration);
+                }
+                boolean appliedAirReduction = false;
+                for (Map.Entry<Gas, Float> gasEffect : concentrations.entrySet()) {
+                    Gas gas = gasEffect.getKey();
+                    float concentration = gasEffect.getValue() * entityModifier;
+                    if (gas.isToxic() && airSupply > 0) {
+                        if (!appliedAirReduction) {
+                            // air supply decreases 4x as fast as underwater under worse conditions
+                            this.setAirSupply(airSupply - 4 * gasConcentration);
+                            appliedAirReduction = true;
+                        }
+                    }
+                    gas.applyEffect(owner, this, concentration);
                 }
             }
             // invalidate concentration values for next tick
