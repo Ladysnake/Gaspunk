@@ -1,9 +1,12 @@
 package ladysnake.gaspunk;
 
+import ladysnake.gaspunk.gas.CapabilityBreathing;
 import ladysnake.gaspunk.init.ModItems;
+import ladysnake.gaspunk.network.PacketHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -28,6 +31,13 @@ public class GasPunk {
     @Mod.Instance(MOD_ID)
     public static GasPunk INSTANCE;
 
+    @SidedProxy(
+            modId = GasPunk.MOD_ID,
+            serverSide = "ladysnake.gaspunk.CommonProxy",
+            clientSide = "ladysnake.gaspunk.client.ClientProxy"
+    )
+    public static CommonProxy proxy;
+
     public static Logger LOGGER;
 
     public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(MOD_ID) {
@@ -44,6 +54,7 @@ public class GasPunk {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         LOGGER = event.getModLog();
+        CapabilityBreathing.register();
     }
 
     /**
@@ -51,7 +62,7 @@ public class GasPunk {
      */
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-
+        PacketHandler.initPackets();
     }
 
     /**

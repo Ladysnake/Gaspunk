@@ -1,6 +1,7 @@
 package ladysnake.gaspunk.init;
 
 import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.entity.EntityGasCloud;
 import ladysnake.gaspunk.entity.EntityGrenade;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderSnowball;
@@ -20,14 +21,21 @@ public final class ModEntities {
     @SubscribeEvent
     public static void addEntities(RegistryEvent.Register<EntityEntry> event) {
         int id = 0;
-        event.getRegistry().register(
+        event.getRegistry().registerAll(
                 EntityEntryBuilder.create()
                         .entity(EntityGrenade.class)
                         .factory(EntityGrenade::new)
                         .name("gas_grenade")
                         .id("gas_grenade", id)
                         .tracker(64, 1, true)
-                .build()
+                        .build(),
+                EntityEntryBuilder.create()
+                        .entity(EntityGasCloud.class)
+                        .factory(EntityGasCloud::new)
+                        .name("gas_cloud")
+                        .id("gas_cloud", id)
+                        .tracker(64, 1, true)
+                        .build()
         );
     }
 

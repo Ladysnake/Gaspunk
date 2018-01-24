@@ -1,4 +1,4 @@
-package ladysnake.gaspunk.gases;
+package ladysnake.gaspunk.gas;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

@@ -1,14 +1,17 @@
 package ladysnake.gaspunk.init;
 
 import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.item.ItemGasMask;
 import ladysnake.gaspunk.item.ItemGrenade;
+import ladysnake.gaspunk.item.ItemGrenadeBelt;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemArmor;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -25,6 +28,7 @@ import java.util.Set;
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
 public final class ModItems {
 
+    public static ItemArmor.ArmorMaterial gasMaterial;
     public static final Item GRENADE = Items.AIR;
 
     static Set<Item> allItems = new HashSet<>();
@@ -38,8 +42,13 @@ public final class ModItems {
     public static void addItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> reg = event.getRegistry();
         Collections.addAll(allItems,
-                name(new ItemBlock(ModBlocks.GAS_FACTORY), "air"),
-                name(new ItemGrenade(), "grenade"));
+                name(new Item(), "ash"),
+                name(new Item(), "enriched_coal"),
+                name(new ItemGasMask(ItemArmor.ArmorMaterial.LEATHER, 0), "gas_mask"),
+                name(new ItemGrenade(), "grenade")
+        );
+        if (Loader.isModLoaded("baubles"))
+            allItems.add(name(new ItemGrenadeBelt(), "grenade_belt"));
         for (Item item : allItems) {
             item.setCreativeTab(GasPunk.CREATIVE_TAB);
             reg.register(item);

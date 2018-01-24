@@ -14,8 +14,8 @@ buildscript {
 apply plugin: "net.minecraftforge.gradle.forge"
 
 version = modVersion
-group = modGroup
-archivesBaseName = modBaseName
+//group = modGroup
+//archivesBaseName = modBaseName
 
 minecraft {
     version = project.forgeVersion
@@ -32,9 +32,14 @@ minecraft {
 
 repositories {
     mavenCentral()
+    maven {
+        name = "thiakil"
+        url = "http://maven.thiakil.com"
+    }
 }
 
 dependencies {
+    deobfCompile "com.azanor.baubles:Baubles:1.12-1.5.2"
 }
 
 processResources {
