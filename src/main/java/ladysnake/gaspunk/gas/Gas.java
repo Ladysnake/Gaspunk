@@ -24,12 +24,20 @@ public class Gas extends IForgeRegistryEntry.Impl<Gas> {
 
     }
 
+    public int getColor() {
+        return 0xFFFFFF00;
+    }
+
     @SideOnly(Side.CLIENT)
     public void renderOverlay(float concentration, float partialTicks, ScaledResolution resolution) {
         GlStateManager.disableDepth();
         GlStateManager.depthMask(false);
-//        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, concentration);
+        int color = getColor();
+        int a = (color & 0xFF) / 0xFF;
+        int b = (color >> 8 & 0xFF) / 0xFF;
+        int g = (color >> 16 & 0xFF) / 0xFF;
+        int r = (color >> 24 & 0xFF) / 0xFF;
+        GlStateManager.color(r, g, b, concentration * a);
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);

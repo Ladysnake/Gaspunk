@@ -2,12 +2,11 @@ package ladysnake.gaspunk.init;
 
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.client.render.RenderGasTube;
-import ladysnake.gaspunk.client.render.RenderNothing;
+import ladysnake.gaspunk.client.render.RenderGasCloud;
 import ladysnake.gaspunk.entity.EntityGasCloud;
 import ladysnake.gaspunk.entity.EntityGasTube;
 import ladysnake.gaspunk.entity.EntityGrenade;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -54,7 +53,7 @@ public final class ModEntities {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void onModelRegistry(ModelRegistryEvent event) {
-        RenderingRegistry.registerEntityRenderingHandler(EntityGasCloud.class, RenderNothing::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityGasCloud.class, RenderGasCloud::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityGasTube.class, manager -> new RenderGasTube(manager, ModItems.GAS_TUBE, Minecraft.getMinecraft().getRenderItem()));
         RenderingRegistry.registerEntityRenderingHandler(EntityGrenade.class, manager -> new RenderGasTube(manager, ModItems.GRENADE, Minecraft.getMinecraft().getRenderItem()));
     }
