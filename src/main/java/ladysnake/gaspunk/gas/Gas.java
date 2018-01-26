@@ -33,10 +33,10 @@ public class Gas extends IForgeRegistryEntry.Impl<Gas> {
         GlStateManager.disableDepth();
         GlStateManager.depthMask(false);
         int color = getColor();
-        int a = (color & 0xFF) / 0xFF;
-        int b = (color >> 8 & 0xFF) / 0xFF;
-        int g = (color >> 16 & 0xFF) / 0xFF;
-        int r = (color >> 24 & 0xFF) / 0xFF;
+        float a = (color & 0xFF) / 255F;
+        float b = (color >> 8 & 0xFF) / 255F;
+        float g = (color >> 16 & 0xFF) / 255F;
+        float r = (color >> 24 & 0xFF) / 255F;
         GlStateManager.color(r, g, b, concentration * a);
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();

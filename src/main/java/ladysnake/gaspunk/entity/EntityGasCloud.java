@@ -48,7 +48,7 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
     public void onUpdate() {
         super.onUpdate();
         if (!world.isRemote) {
-            ((WorldServer) world).spawnParticle(EnumParticleTypes.SMOKE_LARGE, posX, posY, posZ, 5, 0, 0, 0, 0.3);
+//            ((WorldServer) world).spawnParticle(EnumParticleTypes.SMOKE_LARGE, posX, posY, posZ, 5, 0, 0, 0, 0.3);
             int age = getCloudAge();
             this.setCloudAge(age + 1);
             if (age > getMaxLifeSpan()) {
