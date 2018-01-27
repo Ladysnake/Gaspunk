@@ -50,7 +50,7 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
         if (!world.isRemote) {
 //            ((WorldServer) world).spawnParticle(EnumParticleTypes.SMOKE_LARGE, posX, posY, posZ, 5, 0, 0, 0, 0.3);
             int age = getCloudAge();
-            this.setCloudAge(age + 1);
+//            this.setCloudAge(age + 1);
             if (age > getMaxLifeSpan()) {
                 setDead();
                 return;
@@ -69,6 +69,7 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
             if (distance >= 0) {
                 float concentration = (1 - getCloudAge() / (float) getMaxLifeSpan()) * (1 - distance / (float) MAX_PROPAGATION_DISTANCE);
                 CapabilityBreathing.getHandler(entity).ifPresent(h -> h.setConcentration(gas, concentration));
+                System.out.printf("%s: %s\n", entity.getName(), distance);
             }
         }
     }

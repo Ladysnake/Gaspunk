@@ -54,7 +54,7 @@ public class GasPunk {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         LOGGER = event.getModLog();
-        CapabilityBreathing.register();
+        proxy.preInit();
     }
 
     /**
@@ -62,7 +62,7 @@ public class GasPunk {
      */
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        PacketHandler.initPackets();
+        proxy.init();
     }
 
     /**
@@ -70,6 +70,6 @@ public class GasPunk {
      */
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-
+        proxy.postInit();
     }
 }

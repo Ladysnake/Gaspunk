@@ -2,6 +2,8 @@ package ladysnake.gaspunk.init;
 
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.gas.Gas;
+import ladysnake.gaspunk.gas.GasHealingVapor;
+import ladysnake.gaspunk.gas.GasTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -14,7 +16,7 @@ import net.minecraftforge.registries.RegistryBuilder;
 @GameRegistry.ObjectHolder(GasPunk.MOD_ID)
 public class ModGases {
 
-    public static final Gas AIR = new Gas();
+    public static final Gas AIR = new Gas(GasTypes.VAPOR, 0x00FFFFFF);
 
     public static IForgeRegistry<Gas> REGISTRY;
 
@@ -30,7 +32,8 @@ public class ModGases {
     @SubscribeEvent
     public static void addGases(RegistryEvent.Register<Gas> event) {
         event.getRegistry().registerAll(
-                AIR.setRegistryName("air")
+                AIR.setRegistryName("air"),
+                new GasHealingVapor().setRegistryName("healing_vapor")
         );
     }
 }

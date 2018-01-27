@@ -1,10 +1,12 @@
 package ladysnake.gaspunk.gas;
 
 import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.item.ItemGasMask;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -104,8 +106,6 @@ public class CapabilityBreathing {
         @Override
         public void tick() {
             if (!owner.world.isRemote) {
-                // worst case, no air at all
-                float gasConcentration = Math.max(1, concentrations.values().stream().reduce(Float::sum).orElse(0f));
                 float entityModifier = 1;
                 if (entityLivingBase$decreaseAirSupply != null) {
                     try {
@@ -115,14 +115,17 @@ public class CapabilityBreathing {
                         throwable.printStackTrace();
                     }
                 }
-                boolean appliedAirReduction = false;
+                // never apply air reduction if the entity is wearing a gas mask
+                boolean appliedAirReduction = owner.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof ItemGasMask;
                 for (Map.Entry<Gas, Float> gasEffect : concentrations.entrySet()) {
                     Gas gas = gasEffect.getKey();
                     float concentration = gasEffect.getValue() * entityModifier;
                     if (gas.isToxic() && airSupply > 0) {
                         if (!appliedAirReduction) {
+                            // take all gases into account for the breathing penalty
+                            float totalGasConcentration = Math.max(1, concentrations.values().stream().reduce(Float::sum).orElse(0f));
                             // air supply decreases 4x as fast as underwater under worse conditions
-                            this.setAirSupply(airSupply - 4 * gasConcentration);
+                            this.setAirSupply(airSupply - 4 * totalGasConcentration);
                             appliedAirReduction = true;
                         }
                     }

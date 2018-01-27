@@ -1,15 +1,20 @@
 package ladysnake.gaspunk.item;
 
+import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.entity.EntityGasCloud;
 import ladysnake.gaspunk.entity.EntityGrenade;
+import ladysnake.gaspunk.gas.Gas;
+import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.util.GasUtil;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -17,10 +22,22 @@ import net.minecraft.world.WorldServer;
 
 import javax.annotation.Nonnull;
 
+
 public class ItemGrenade extends ItemGasTube {
+
+    public ItemGrenade() {
+        super();
+        addPropertyOverride(new ResourceLocation(GasPunk.MOD_ID, "pinned"),
+                ((stack, worldIn, entityIn) -> entityIn != null && entityIn.getActiveItemStack() == stack ? 1 : 0));
+        this.setMaxStackSize(1);
+    }
 
     @Override
     public int getItemStackLimit(ItemStack stack) {
+        NBTTagCompound nbt = stack.getTagCompound();
+        if (nbt != null) {
+            return nbt.getBoolean(ItemGrenadeBelt.NBT_TAG_BELT_STACK) ? 4 : 1;
+        }
         return super.getItemStackLimit(stack);
     }
 

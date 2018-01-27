@@ -3,6 +3,7 @@ package ladysnake.gaspunk.util;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.entity.EntityGasCloud;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.init.ModGases;
@@ -23,13 +24,6 @@ public class GasUtil {
     private static LoadingCache<CacheKey, Integer> distanceCache = CacheBuilder.newBuilder()
             .expireAfterWrite(1, TimeUnit.SECONDS)
             .build(CacheLoader.from(GasUtil::computeDistance));
-
-    public static Gas getContainedGas(ItemStack stack) {
-        if (stack.hasTagCompound()) {
-            return ModGases.REGISTRY.getValue(new ResourceLocation(Objects.requireNonNull(stack.getTagCompound()).getString("gaspunk:contained_gas")));
-        }
-        return ModGases.AIR;
-    }
 
     /**
      * Gets the minimum number of air blocks between start and goal
