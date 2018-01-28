@@ -75,6 +75,7 @@ public class CapabilityBreathing {
          * a value between 0 and 300, emulating the entity air stat with greater precision
          */
         private float airSupply = 300;
+        private int ticksSinceToxicInhalation = 0;
         private EntityLivingBase owner;
         private Map<Gas, Float> concentrations = new HashMap<>();
 
@@ -106,34 +107,47 @@ public class CapabilityBreathing {
         @Override
         public void tick() {
             if (!owner.world.isRemote) {
-                float entityModifier = 1;
-                if (entityLivingBase$decreaseAirSupply != null) {
-                    try {
-                        // entities like iron golems get a chance to nullify the effect
-                        entityModifier = airSupply - (int) entityLivingBase$decreaseAirSupply.invoke(owner, (int) airSupply);
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                }
-                // never apply air reduction if the entity is wearing a gas mask
-                boolean appliedAirReduction = owner.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof ItemGasMask;
-                for (Map.Entry<Gas, Float> gasEffect : concentrations.entrySet()) {
-                    Gas gas = gasEffect.getKey();
-                    float concentration = gasEffect.getValue() * entityModifier;
-                    if (gas.isToxic() && airSupply > 0) {
-                        if (!appliedAirReduction) {
-                            // take all gases into account for the breathing penalty
-                            float totalGasConcentration = Math.max(1, concentrations.values().stream().reduce(Float::sum).orElse(0f));
-                            // air supply decreases 4x as fast as underwater under worse conditions
-                            this.setAirSupply(airSupply - 4 * totalGasConcentration);
-                            appliedAirReduction = true;
+                boolean appliedAirReduction = false;
+                if (!isImmune()) {
+                    float entityModifier = 1;
+                    if (entityLivingBase$decreaseAirSupply != null) {
+                        try {
+                            // entities like iron golems get a chance to nullify the effect
+                            entityModifier = airSupply - (int) entityLivingBase$decreaseAirSupply.invoke(owner, (int) airSupply);
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
                         }
                     }
-                    gas.applyEffect(owner, this, concentration);
+                    for (Map.Entry<Gas, Float> gasEffect : concentrations.entrySet()) {
+                        Gas gas = gasEffect.getKey();
+                        float concentration = gasEffect.getValue() * entityModifier;
+                        if (gas.isToxic() && airSupply > 0) {
+                            if (!appliedAirReduction) {
+                                float finalEntityModifier = entityModifier;
+                                // take all gases into account for the breathing penalty
+                                float totalGasConcentration = (float) Math.max(1, concentrations.entrySet().stream()
+                                        .filter(e -> e.getKey().isToxic())
+                                        .mapToDouble(Map.Entry::getValue)
+                                        .map(c -> c * finalEntityModifier).sum());
+                                // air supply decreases 4x as fast as underwater under worse conditions
+                                this.setAirSupply(airSupply - 4 * totalGasConcentration);
+                                appliedAirReduction = true;
+                            }
+                        }
+                        gas.applyEffect(owner, this, concentration);
+                    }
+                }
+                // regenerate air supply if no toxic gas was inhaled
+                if (!appliedAirReduction && airSupply < 300) {
+                    this.setAirSupply(airSupply + ticksSinceToxicInhalation++);
                 }
             }
             // invalidate concentration values for next tick
             concentrations.clear();
+        }
+
+        public boolean isImmune() {
+            return owner.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof ItemGasMask;
         }
 
         @Override

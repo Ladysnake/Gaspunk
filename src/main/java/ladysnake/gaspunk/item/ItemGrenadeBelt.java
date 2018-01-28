@@ -20,6 +20,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Optional.Interface(iface = "baubles.api.IBauble", modid = "baubles", striprefs = true)
 @Optional.Interface(iface = "baubles.api.render.IRenderBauble", modid = "baubles", striprefs = true)
@@ -39,7 +41,10 @@ public class ItemGrenadeBelt extends Item implements IBauble, IRenderBauble {
 
     @Override
     public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
-        for (ItemStack stack : player.getHeldEquipment()) {
+        if (!(player instanceof EntityPlayer)) return;
+        List<ItemStack> inventory = new ArrayList<>(((EntityPlayer) player).inventory.mainInventory);
+        inventory.addAll(((EntityPlayer) player).inventory.offHandInventory);
+        for (ItemStack stack : inventory) {
             if (stack.getItem() instanceof ItemGrenade) {
                 NBTTagCompound nbt = stack.getTagCompound();
                 if (nbt == null) {
@@ -53,11 +58,19 @@ public class ItemGrenadeBelt extends Item implements IBauble, IRenderBauble {
 
     @Override
     public void onUnequipped(ItemStack itemstack, EntityLivingBase player) {
-        for (ItemStack stack : player.getHeldEquipment()) {
+        if (player instanceof EntityPlayer)
+            preventTomfoolery((EntityPlayer) player);
+    }
+
+    private void preventTomfoolery(EntityPlayer player) {
+        List<ItemStack> inventory = new ArrayList<>(player.inventory.mainInventory);
+        inventory.addAll(player.inventory.offHandInventory);
+        for (ItemStack stack : inventory) {
             if (stack.getItem() instanceof ItemGrenade) {
                 NBTTagCompound nbt = stack.getTagCompound();
                 if (nbt != null) {
                     nbt.removeTag(NBT_TAG_BELT_STACK);
+                    while (stack.getCount() > 1) player.addItemStackToInventory(stack.splitStack(1));
                 }
             }
         }
@@ -79,13 +92,7 @@ public class ItemGrenadeBelt extends Item implements IBauble, IRenderBauble {
         @Override
         public void sendSlotContents(@Nonnull Container containerToSend, int slotInd, @Nonnull ItemStack stack) {
             if (stack.getItem() == ModItems.GRENADE && BaublesApi.isBaubleEquipped(owner, ModItems.GRENADE_BELT) == -1) {
-                NBTTagCompound nbt = stack.getTagCompound();
-                if (nbt != null) {
-                    nbt.removeTag(NBT_TAG_BELT_STACK);
-                    while (stack.getCount() > 1) {
-                        owner.addItemStackToInventory(stack.splitStack(1));
-                    }
-                }
+                preventTomfoolery(owner);
             }
         }
 

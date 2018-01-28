@@ -6,6 +6,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 public class BreathMessage implements IMessage {
     float breath;
 
+    public BreathMessage() {
+        super();
+    }
+
     public BreathMessage(float breath) {
         this.breath = breath;
     }
