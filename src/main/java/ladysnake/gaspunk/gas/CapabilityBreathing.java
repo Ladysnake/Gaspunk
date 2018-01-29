@@ -1,6 +1,7 @@
 package ladysnake.gaspunk.gas;
 
 import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.event.GasImmunityEvent;
 import ladysnake.gaspunk.item.ItemGasMask;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -11,6 +12,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -38,7 +40,7 @@ public class CapabilityBreathing {
     static {
         MethodHandle temp = null;
         try {
-            Method method = ReflectionHelper.findMethod(EntityLivingBase.class, "decreaseAirSupply", "func_70682_h(I)I", int.class);
+            Method method = ReflectionHelper.findMethod(EntityLivingBase.class, "decreaseAirSupply", "func_70682_h", int.class);
             temp = MethodHandles.lookup().unreflect(method);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -147,7 +149,10 @@ public class CapabilityBreathing {
         }
 
         public boolean isImmune() {
-            return owner.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof ItemGasMask;
+            boolean immune = owner.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof ItemGasMask;
+            GasImmunityEvent event = new GasImmunityEvent(owner, this, immune);
+            MinecraftForge.EVENT_BUS.post(event);
+            return event.isImmune();
         }
 
         @Override

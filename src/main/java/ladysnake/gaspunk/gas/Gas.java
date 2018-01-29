@@ -16,7 +16,7 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 import java.awt.image.ColorModel;
 
 public class Gas extends IForgeRegistryEntry.Impl<Gas> {
-    public static final ResourceLocation GAS_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/gas_overlay.png");
+    public static final ResourceLocation GAS_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/_overlay.png");
     protected IGasType type;
     protected int color;
 
@@ -37,6 +37,10 @@ public class Gas extends IForgeRegistryEntry.Impl<Gas> {
 
     }
 
+    public void onExitCloud(EntityLivingBase entity, IBreathingHandler handler) {
+
+    }
+
     /**
      * Returns the RGB value representing the color in the default sRGB
      * {@link ColorModel}.
@@ -48,6 +52,10 @@ public class Gas extends IForgeRegistryEntry.Impl<Gas> {
      */
     public int getColor() {
         return color;
+    }
+
+    protected ResourceLocation getOverlayTexture() {
+        return GAS_TEX_PATH;
     }
 
     @SideOnly(Side.CLIENT)
@@ -63,7 +71,7 @@ public class Gas extends IForgeRegistryEntry.Impl<Gas> {
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(GAS_TEX_PATH);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(getOverlayTexture());
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);

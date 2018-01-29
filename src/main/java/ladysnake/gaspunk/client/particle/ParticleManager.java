@@ -9,6 +9,11 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -23,11 +28,28 @@ import java.util.Set;
  *
  */
 @SideOnly(Side.CLIENT)
+@Mod.EventBusSubscriber(Side.CLIENT)
 public class ParticleManager {
 
     public static final ParticleManager INSTANCE = new ParticleManager();
 
     private final Set<Particle> particles = new HashSet<>();
+
+    @SubscribeEvent
+    public static void onTextureStitch(TextureStitchEvent.Pre event) {
+        event.getMap().registerSprite(ParticleGasSmoke.TEXTURE);
+        event.getMap().registerSprite(ParticleGasSmoke.CHLORINE_TEXTURE);
+    }
+
+    @SubscribeEvent
+    public static void onGameTick(TickEvent.ClientTickEvent event) {
+        INSTANCE.updateParticles();
+    }
+
+    @SubscribeEvent
+    public static void onRenderWorldLast(RenderWorldLastEvent event) {
+        INSTANCE.renderParticles(event.getPartialTicks());
+    }
 
     public void updateParticles() {
         particles.forEach(Particle::onUpdate);
@@ -63,12 +85,14 @@ public class ParticleManager {
             // render normal particles
             {
                 GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+                GlStateManager.enableLighting();
                 buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
                 particles
-//                        .stream()
-//                        .filter(p -> p instanceof IDissolutionParticle && !((IDissolutionParticle)p).isAdditive())
+                        .stream()
+                        .filter(p -> p instanceof IGasPunkParticle && !((IGasPunkParticle)p).isAdditive())
                         .forEach(p -> p.renderParticle(buffer, player, partialTicks, f, f4, f1, f2, f3));
                 tess.draw();
+                GlStateManager.disableLighting();
             }
 
             // render additive particles
@@ -76,8 +100,8 @@ public class ParticleManager {
                 GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
                 buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
                 particles
-//                        .stream()
-//                        .filter(p -> p instanceof IDissolutionParticle && ((IDissolutionParticle)p).isAdditive())
+                        .stream()
+                        .filter(p -> p instanceof IGasPunkParticle && ((IGasPunkParticle)p).isAdditive())
                         .forEach(p -> p.renderParticle(buffer, player, partialTicks, f, f4, f1, f2, f3));
                 tess.draw();
             }

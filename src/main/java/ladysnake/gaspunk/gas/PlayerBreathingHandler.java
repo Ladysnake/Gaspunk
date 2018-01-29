@@ -18,7 +18,7 @@ public class PlayerBreathingHandler extends CapabilityBreathing.DefaultBreathing
         try {
             if (!owner.world.isRemote)
                 PacketHandler.NET.sendTo(new BreathMessage(airSupply), owner);
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }

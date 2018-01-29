@@ -2,6 +2,7 @@ package ladysnake.gaspunk.entity;
 
 import io.netty.buffer.ByteBuf;
 import ladysnake.gaspunk.Configuration;
+import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.gas.CapabilityBreathing;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.init.ModGases;
@@ -14,12 +15,10 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 import javax.annotation.Nonnull;
@@ -28,12 +27,12 @@ import java.util.Objects;
 
 public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData {
 
-    public static final int MAX_PROPAGATION_DISTANCE = 12;
+    public static final int MAX_PROPAGATION_DISTANCE = 8;
     public static final int MAX_PROPAGATION_DISTANCE_SQ = MAX_PROPAGATION_DISTANCE * MAX_PROPAGATION_DISTANCE;
     private static final DataParameter<Integer> CLOUD_AGE = EntityDataManager.createKey(EntityGasCloud.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> MAX_LIFESPAN = EntityDataManager.createKey(EntityGasCloud.class, DataSerializers.VARINT);
 
-    private Gas gas = ModGases.AIR;
+    private Gas gas = ModGases.VAPOR;
 
     public EntityGasCloud(World worldIn) {
         super(worldIn);
@@ -47,8 +46,12 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
     @Override
     public void onUpdate() {
         super.onUpdate();
+        float ageRatio = 1 - getCloudAge() / (float) getMaxLifeSpan();
+        int color = gas.getColor();
+        int alpha = color & 0xFF000000 * (((int)(ageRatio * 255)) << 24);
+        color &= 0x00FFFFFF | alpha;
+        GasPunk.proxy.makeSmoke(world, posX, posY, posZ, color, 50, MAX_PROPAGATION_DISTANCE, 2, MAX_PROPAGATION_DISTANCE);
         if (!world.isRemote) {
-//            ((WorldServer) world).spawnParticle(EnumParticleTypes.SMOKE_LARGE, posX, posY, posZ, 5, 0, 0, 0, 0.3);
             int age = getCloudAge();
             this.setCloudAge(age + 1);
             if (age > getMaxLifeSpan()) {
@@ -67,7 +70,7 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
                     ? this.getDistance(entity)
                     : GasUtil.getPropagationDistance(world, new BlockPos(this), new BlockPos(entity));
             if (distance >= 0) {
-                float concentration = (1 - getCloudAge() / (float) getMaxLifeSpan()) * (1 - distance / (float) MAX_PROPAGATION_DISTANCE);
+                float concentration = ageRatio * (1 - distance / (float) MAX_PROPAGATION_DISTANCE);
                 CapabilityBreathing.getHandler(entity).ifPresent(h -> h.setConcentration(gas, concentration));
             }
         }

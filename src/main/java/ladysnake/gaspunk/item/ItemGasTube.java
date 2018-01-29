@@ -8,7 +8,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
 
@@ -31,7 +33,7 @@ public class ItemGasTube extends Item {
         if (stack.hasTagCompound()) {
             ret = ModGases.REGISTRY.getValue(new ResourceLocation(Objects.requireNonNull(stack.getTagCompound()).getString(NBT_CONTAINED_GAS)));
         }
-        return ret == null ? ModGases.AIR : ret;
+        return ret == null ? ModGases.VAPOR : ret;
     }
 
     public ItemStack getItemStackFor(Gas gas) {
@@ -68,7 +70,7 @@ public class ItemGasTube extends Item {
     @Override
     public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items) {
         if (tab == GasPunk.CREATIVE_TAB) {
-            for (Gas gas : ModGases.REGISTRY.getValuesCollection()) {
+            for (Gas gas : ModGases.REGISTRY.getValues()) {
                 items.add(getItemStackFor(gas));
             }
         }

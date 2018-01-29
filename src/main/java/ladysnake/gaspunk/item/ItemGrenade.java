@@ -3,16 +3,11 @@ package ladysnake.gaspunk.item;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.entity.EntityGasCloud;
 import ladysnake.gaspunk.entity.EntityGrenade;
-import ladysnake.gaspunk.gas.Gas;
-import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.init.ModItems;
-import ladysnake.gaspunk.util.GasUtil;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
@@ -66,7 +61,11 @@ public class ItemGrenade extends ItemGasTube {
         stack.shrink(1);
         if (entityLiving instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entityLiving;
-            player.addItemStackToInventory(new ItemStack(ModItems.GRENADE));
+            ItemStack emptyGrenade = new ItemStack(ModItems.GRENADE);
+            if (!player.addItemStackToInventory(emptyGrenade)) {
+                player.dropItem(emptyGrenade, false);
+            }
+
         }
         if (!worldIn.isRemote)
             explode((WorldServer) worldIn, entityLiving.getPositionVector(), stack);

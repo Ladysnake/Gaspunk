@@ -1,10 +1,7 @@
 package ladysnake.gaspunk.init;
 
 import ladysnake.gaspunk.GasPunk;
-import ladysnake.gaspunk.item.ItemGasMask;
-import ladysnake.gaspunk.item.ItemGasTube;
-import ladysnake.gaspunk.item.ItemGrenade;
-import ladysnake.gaspunk.item.ItemGrenadeBelt;
+import ladysnake.gaspunk.item.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Items;
@@ -32,9 +29,12 @@ import java.util.Set;
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
 public final class ModItems {
 
+    public static final Item ASH = Items.AIR;
+    public static final Item GAS_MASK = Items.AIR;
     public static final Item GAS_TUBE = Items.AIR;
     public static final Item GRENADE = Items.AIR;
     public static final Item GRENADE_BELT = new ItemGrenadeBelt();
+    public static final Item SMOKE_POWDER = Items.AIR;
 
     static Set<Item> allItems = new HashSet<>();
 
@@ -51,6 +51,7 @@ public final class ModItems {
                 name(new Item(), "diffuser"),
                 name(new ItemGasMask(ItemArmor.ArmorMaterial.LEATHER, 0), "gas_mask"),
                 name(new ItemGasTube(), "gas_tube"),
+                name(new ItemGlassTube(), "glass_tube"),
                 name(new ItemGrenade(), "grenade"),
                 name(new Item(), "smoke_powder")
         );

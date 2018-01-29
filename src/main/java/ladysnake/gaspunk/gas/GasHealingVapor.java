@@ -7,7 +7,7 @@ import net.minecraft.potion.PotionEffect;
 public class GasHealingVapor extends Gas {
 
     public GasHealingVapor() {
-        super(GasTypes.VAPOR, 0xCD5CAB);
+        super(GasTypes.VAPOR, 0xFFCD5CAB);
     }
 
     @Override
