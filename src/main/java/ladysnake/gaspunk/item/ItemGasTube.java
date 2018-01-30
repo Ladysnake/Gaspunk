@@ -23,7 +23,7 @@ public class ItemGasTube extends Item {
 
     public ItemGasTube() {
         super();
-        this.setMaxStackSize(16);
+        this.setMaxStackSize(1);
         this.addPropertyOverride(new ResourceLocation(GasPunk.MOD_ID, "gas_type"),
                 ((stack, worldIn, entityIn) -> getContainedGas(stack).getType().getId()));
     }
@@ -42,6 +42,26 @@ public class ItemGasTube extends Item {
         nbt.setString(NBT_CONTAINED_GAS, Objects.requireNonNull(gas.getRegistryName(), "Can't use an unregistered gas in grenade").toString());
         stack.setTagCompound(nbt);
         return stack;
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand handIn) {
+      return new ActionResult<>(EnumActionResult.SUCCESS, this.turnBottleIntoItem(itemstack, playerIn, new ItemStack(ModItems.GLASS_TUBE)));
+    }
+
+    protected ItemStack turnBottleIntoItem(ItemStack emptyTubes, EntityPlayer player, ItemStack stack) {
+        emptyTubes.shrink(1);
+        player.addStat(Objects.requireNonNull(StatList.getObjectUseStats(this)));
+
+        if (emptyTubes.isEmpty()) {
+            return stack;
+        } else {
+            if (!player.inventory.addItemStackToInventory(stack)) {
+                player.dropItem(stack, false);
+            }
+
+            return emptyTubes;
+        }
     }
 
     /*@Nonnull
