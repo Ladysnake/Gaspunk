@@ -46,9 +46,13 @@ public class ModGases {
     }
 
     public static void initRecipes() {
-        BrewingRecipeRegistry.addRecipe(
-                ((ItemGasTube)ModItems.GAS_TUBE).getItemStackFor(VAPOR),
-                new ItemStack(ModItems.SMOKE_POWDER),
-                ((ItemGasTube)ModItems.GAS_TUBE).getItemStackFor(SMOKE));
+      addRecipe(VAPOR, ModItems.SMOKE_POWDER, SMOKE);
+    }
+
+    public static void addRecipe(Gas prerequisite, ItemStack ingredient, Gas result) {
+      BrewingRecipeRegistry.addRecipe(
+              ((ItemGasTube)ModItems.GAS_TUBE).getItemStackFor(prerequisite),
+              ingredient,
+              ((ItemGasTube)ModItems.GAS_TUBE).getItemStackFor(result));
     }
 }

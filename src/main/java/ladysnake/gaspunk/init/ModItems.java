@@ -32,6 +32,7 @@ public final class ModItems {
     public static final Item ASH = Items.AIR;
     public static final Item GAS_MASK = Items.AIR;
     public static final Item GAS_TUBE = Items.AIR;
+    public static final Item GLASS_TUBE = Items.AIR;
     public static final Item GRENADE = Items.AIR;
     public static final Item GRENADE_BELT = new ItemGrenadeBelt();
     public static final Item SMOKE_POWDER = Items.AIR;

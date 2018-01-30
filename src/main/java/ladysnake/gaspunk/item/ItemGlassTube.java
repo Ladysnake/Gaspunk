@@ -21,6 +21,10 @@ import java.util.Objects;
 
 public class ItemGlassTube extends Item {
 
+    public ItemGlassTube() {
+      this.setMaxStackSize(16);
+    }
+
     @Nonnull
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand handIn) {
