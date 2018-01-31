@@ -5,6 +5,7 @@ import ladysnake.gaspunk.entity.EntityGasCloud;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.init.ModItems;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -15,8 +16,12 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Objects;
 
 public class ItemGasTube extends Item {
@@ -47,8 +52,15 @@ public class ItemGasTube extends Item {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(Objects.requireNonNull(getContainedGas(stack).getRegistryName()).toString());
+    }
+
+    @Nonnull
+    @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand handIn) {
-      return new ActionResult<>(EnumActionResult.SUCCESS, this.turnBottleIntoItem(itemstack, playerIn, new ItemStack(ModItems.GLASS_TUBE)));
+      return new ActionResult<>(EnumActionResult.SUCCESS, this.turnBottleIntoItem(playerIn.getHeldItem(handIn), playerIn, new ItemStack(ModItems.GLASS_TUBE)));
     }
 
     protected ItemStack turnBottleIntoItem(ItemStack emptyTubes, EntityPlayer player, ItemStack stack) {
@@ -92,6 +104,7 @@ public class ItemGasTube extends Item {
     @Override
     public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items) {
         if (tab == GasPunk.CREATIVE_TAB) {
+            //TODO use IForgeRegistry#getValuesCollection when ModOff is over
             for (Gas gas : ModGases.REGISTRY.getValues()) {
                 items.add(getItemStackFor(gas));
             }

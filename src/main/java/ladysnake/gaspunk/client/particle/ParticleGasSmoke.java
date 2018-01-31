@@ -18,7 +18,7 @@ public class ParticleGasSmoke extends Particle implements IGasPunkParticle {
 //        this.particleRed = red;
 //        this.particleGreen = green;
 //        this.particleBlue = blue;
-//        this.particleAlpha = alpha;
+//        this.particleAlpha = 0.5f;
         this.giveRandomMotion(0,0,0);
 //        this.motionX *= 1.4;
 //        this.motionZ *= 1.4;

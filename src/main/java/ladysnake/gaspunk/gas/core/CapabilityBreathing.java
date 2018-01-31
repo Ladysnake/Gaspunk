@@ -1,7 +1,8 @@
-package ladysnake.gaspunk.gas;
+package ladysnake.gaspunk.gas.core;
 
 import ladysnake.gaspunk.GasPunk;
-import ladysnake.gaspunk.event.GasImmunityEvent;
+import ladysnake.gaspunk.event.GasEvent;
+import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.item.ItemGasMask;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -79,6 +80,7 @@ public class CapabilityBreathing {
         private float airSupply = 300;
         private int ticksSinceToxicInhalation = 0;
         private EntityLivingBase owner;
+        private Map<Gas, Float> prevConcentrations = new HashMap<>();
         private Map<Gas, Float> concentrations = new HashMap<>();
 
         DefaultBreathingHandler() {
@@ -109,6 +111,14 @@ public class CapabilityBreathing {
         @Override
         public void tick() {
             if (!owner.world.isRemote) {
+                prevConcentrations.forEach((gas, concentration) -> {
+                    if (!concentrations.containsKey(gas))
+                        if (MinecraftForge.EVENT_BUS.post(new GasEvent.ExitGasCloudEvent(owner, this, gas, concentration))) {
+                            concentrations.put(gas, concentration);
+                        } else {
+                            gas.onExitCloud(owner, this);
+                        }
+                });
                 boolean appliedAirReduction = false;
                 if (!isImmune()) {
                     float entityModifier = 1;
@@ -123,8 +133,11 @@ public class CapabilityBreathing {
                     for (Map.Entry<Gas, Float> gasEffect : concentrations.entrySet()) {
                         Gas gas = gasEffect.getKey();
                         float concentration = gasEffect.getValue() * entityModifier;
-                        if (gas.isToxic() && airSupply > 0) {
-                            if (!appliedAirReduction) {
+                        boolean firstTick = !prevConcentrations.containsKey(gasEffect.getKey());
+                        if (MinecraftForge.EVENT_BUS.post(new GasEvent.GasTickEvent(owner, this, gas, concentration, firstTick)))
+                            continue;
+                        if (gas.isToxic()) {
+                            if (airSupply > 0 && !appliedAirReduction) {
                                 float finalEntityModifier = entityModifier;
                                 // take all gases into account for the breathing penalty
                                 float totalGasConcentration = (float) Math.max(1, concentrations.entrySet().stream()
@@ -133,24 +146,27 @@ public class CapabilityBreathing {
                                         .map(c -> c * finalEntityModifier).sum());
                                 // air supply decreases 4x as fast as underwater under worse conditions
                                 this.setAirSupply(airSupply - 4 * totalGasConcentration);
-                                appliedAirReduction = true;
                             }
+                            appliedAirReduction = true;
                         }
-                        gas.applyEffect(owner, this, concentration);
+                        gas.applyEffect(owner, this, concentration, firstTick);
                     }
                 }
+                prevConcentrations.clear();
+                prevConcentrations.putAll(concentrations);
                 // regenerate air supply if no toxic gas was inhaled
                 if (!appliedAirReduction && airSupply < 300) {
-                    this.setAirSupply(airSupply + ticksSinceToxicInhalation++);
+                    this.setAirSupply(airSupply + 2);
                 }
             }
             // invalidate concentration values for next tick
             concentrations.clear();
         }
 
+        @Override
         public boolean isImmune() {
             boolean immune = owner.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof ItemGasMask;
-            GasImmunityEvent event = new GasImmunityEvent(owner, this, immune);
+            GasEvent.GasImmunityEvent event = new GasEvent.GasImmunityEvent(owner, this, immune);
             MinecraftForge.EVENT_BUS.post(event);
             return event.isImmune();
         }
@@ -162,7 +178,7 @@ public class CapabilityBreathing {
 
         @Override
         public void setAirSupply(float airSupply) {
-            this.airSupply = airSupply;
+            this.airSupply = Math.min(airSupply, 300);
         }
     }
 

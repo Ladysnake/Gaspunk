@@ -1,13 +1,12 @@
 package ladysnake.gaspunk;
 
 import ladysnake.gaspunk.event.BaublesCompatHandler;
-import ladysnake.gaspunk.gas.CapabilityBreathing;
+import ladysnake.gaspunk.gas.core.CapabilityBreathing;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.network.PacketHandler;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;

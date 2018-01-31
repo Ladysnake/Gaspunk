@@ -10,6 +10,7 @@ public class PacketHandler {
     private static int nextId;
 
     public static void initPackets() {
-        NET.registerMessage(new BreathPacket(), BreathMessage.class, nextId++, Side.CLIENT);
+        NET.registerMessage(new BreathMessageHandler(), BreathMessage.class, nextId++, Side.CLIENT);
+        NET.registerMessage(new ShaderMessageHandler(), ShaderMessage.class, nextId++, Side.CLIENT);
     }
 }

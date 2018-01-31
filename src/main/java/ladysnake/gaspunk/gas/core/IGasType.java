@@ -1,4 +1,4 @@
-package ladysnake.gaspunk.gas;
+package ladysnake.gaspunk.gas.core;
 
 public interface IGasType {
 

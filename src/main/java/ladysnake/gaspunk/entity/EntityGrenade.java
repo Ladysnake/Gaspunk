@@ -72,11 +72,4 @@ public class EntityGrenade extends EntityGasTube {
             this.prevRotationYaw += 180.0F;
         }
     }
-
-    @Override
-    protected void explode() {
-        super.explode();
-        if (!world.isRemote)
-            world.spawnEntity(new EntityItem(world, posX, posY, posZ, new ItemStack(ModItems.GRENADE)));
-    }
 }

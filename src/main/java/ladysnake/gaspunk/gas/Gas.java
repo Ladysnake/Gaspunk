@@ -1,6 +1,8 @@
 package ladysnake.gaspunk.gas;
 
 import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.gas.core.IBreathingHandler;
+import ladysnake.gaspunk.gas.core.IGasType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -16,7 +18,7 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 import java.awt.image.ColorModel;
 
 public class Gas extends IForgeRegistryEntry.Impl<Gas> {
-    public static final ResourceLocation GAS_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/_overlay.png");
+    public static final ResourceLocation GAS_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/vapor_overlay.png");
     protected IGasType type;
     protected int color;
 
@@ -33,7 +35,7 @@ public class Gas extends IForgeRegistryEntry.Impl<Gas> {
         return type.isToxic();
     }
 
-    public void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration) {
+    public void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick) {
 
     }
 

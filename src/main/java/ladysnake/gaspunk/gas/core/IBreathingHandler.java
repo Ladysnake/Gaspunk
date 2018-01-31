@@ -1,4 +1,6 @@
-package ladysnake.gaspunk.gas;
+package ladysnake.gaspunk.gas.core;
+
+import ladysnake.gaspunk.gas.Gas;
 
 import java.util.Map;
 
@@ -9,6 +11,8 @@ public interface IBreathingHandler {
     Map<Gas, Float> getGasConcentrations();
 
     void tick();
+
+    boolean isImmune();
 
     float getAirSupply();
 
