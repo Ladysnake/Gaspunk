@@ -31,7 +31,7 @@ public class ItemGrenadeBelt extends Item implements IBauble, IRenderBauble {
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        event.player.inventoryContainer.addListener(new BeltInventoryListener((EntityPlayerMP)event.player));
+        event.player.inventoryContainer.addListener(new BeltInventoryListener((EntityPlayerMP) event.player));
     }
 
     @Override
@@ -92,7 +92,7 @@ public class ItemGrenadeBelt extends Item implements IBauble, IRenderBauble {
 
     public class BeltInventoryListener implements IContainerListener {
 
-        private EntityPlayerMP owner;
+        private final EntityPlayerMP owner;
 
         BeltInventoryListener(EntityPlayerMP owner) {
             this.owner = owner;

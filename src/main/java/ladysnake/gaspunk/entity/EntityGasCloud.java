@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import ladysnake.gaspunk.Configuration;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.gas.core.CapabilityBreathing;
-import ladysnake.gaspunk.gas.Gas;
+import ladysnake.gaspunk.gas.core.IGas;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.util.GasUtil;
 import net.minecraft.entity.Entity;
@@ -32,13 +32,13 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
     private static final DataParameter<Integer> CLOUD_AGE = EntityDataManager.createKey(EntityGasCloud.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> MAX_LIFESPAN = EntityDataManager.createKey(EntityGasCloud.class, DataSerializers.VARINT);
 
-    private Gas gas = ModGases.VAPOR;
+    private IGas gas = ModGases.VAPOR;
 
     public EntityGasCloud(World worldIn) {
         super(worldIn);
     }
 
-    public EntityGasCloud(World worldIn, Gas gas) {
+    public EntityGasCloud(World worldIn, IGas gas) {
         this(worldIn);
         this.gas = gas;
     }

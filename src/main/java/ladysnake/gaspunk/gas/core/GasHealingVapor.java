@@ -13,7 +13,8 @@ public class GasHealingVapor extends Gas {
 
     @Override
     public void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick) {
+        super.applyEffect(entity, handler, concentration, firstTick);
         if (!entity.world.isRemote)
-            entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 5));
+            entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 1));
     }
 }

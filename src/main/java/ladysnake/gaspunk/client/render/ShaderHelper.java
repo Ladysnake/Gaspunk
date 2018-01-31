@@ -1,31 +1,34 @@
 package ladysnake.gaspunk.client.render;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import ladysnake.gaspunk.Configuration;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.GL20;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * Helper class for shader creation and usage
- * @author Pyrofab
  *
+ * @author Pyrofab
  */
 @SideOnly(Side.CLIENT)
 public final class ShaderHelper {
 
-    /**the shader used during the corpse dissolution animation*/
+    /**
+     * the shader used during the corpse dissolution animation
+     */
     public static int dissolution = 0;
-    /**the shader used with the blue overlay*/
+    /**
+     * the shader used with the blue overlay
+     */
     public static int bloom = 0;
 
     private static int prevProgram = 0, currentProgram = 0;
@@ -43,7 +46,7 @@ public final class ShaderHelper {
      * Initializes all known shaders
      */
     public static void initShaders() {
-        if(noShaders())
+        if (noShaders())
             return;
         dissolution = initShader("vertex_base.vsh", "fragment_test.fsh");
         bloom = initShader("vertex_base.vsh", "fragment_test.fsh");
@@ -51,6 +54,7 @@ public final class ShaderHelper {
 
     /**
      * Initializes a program with two shaders having the same name
+     *
      * @param shaderName the common name or relative location of both shaders, minus the file extension
      * @return the reference to the initialized program
      */
@@ -60,7 +64,8 @@ public final class ShaderHelper {
 
     /**
      * Initializes a program with one or two shaders
-     * @param vertexLocation the name or relative location of the vertex shader
+     *
+     * @param vertexLocation   the name or relative location of the vertex shader
      * @param fragmentLocation the name or relative location of the fragment shader
      * @return the reference to the initialized program
      */
@@ -70,7 +75,7 @@ public final class ShaderHelper {
         int program = OpenGlHelper.glCreateProgram();
 
         // vertex shader creation
-        if(vertexLocation != null && !vertexLocation.trim().isEmpty()) {
+        if (vertexLocation != null && !vertexLocation.trim().isEmpty()) {
             int vertexShader = OpenGlHelper.glCreateShader(OpenGlHelper.GL_VERTEX_SHADER);
             ARBShaderObjects.glShaderSourceARB(vertexShader, fromFile(LOCATION_PREFIX + vertexLocation));
             OpenGlHelper.glCompileShader(vertexShader);
@@ -78,7 +83,7 @@ public final class ShaderHelper {
         }
 
         // fragment shader creation
-        if(fragmentLocation != null && !fragmentLocation.trim().isEmpty()) {
+        if (fragmentLocation != null && !fragmentLocation.trim().isEmpty()) {
             int fragmentShader = OpenGlHelper.glCreateShader(OpenGlHelper.GL_FRAGMENT_SHADER);
             ARBShaderObjects.glShaderSourceARB(fragmentShader, fromFile(LOCATION_PREFIX + fragmentLocation));
             OpenGlHelper.glCompileShader(fragmentShader);
@@ -92,10 +97,11 @@ public final class ShaderHelper {
 
     /**
      * Sets the currently used program
+     *
      * @param program the reference to the desired shader (0 to remove any current shader)
      */
     public static void useShader(int program) {
-        if(noShaders())
+        if (noShaders())
             return;
 
         prevProgram = GlStateManager.glGetInteger(GL20.GL_CURRENT_PROGRAM);
@@ -108,29 +114,31 @@ public final class ShaderHelper {
 
     /**
      * Sets the value of a uniform from the current program
+     *
      * @param uniformName the uniform's name
-     * @param value an int value for this uniform
+     * @param value       an int value for this uniform
      */
     public static void setUniform(String uniformName, int value) {
-        if(noShaders() || currentProgram == 0)
+        if (noShaders() || currentProgram == 0)
             return;
 
         int uniform = GL20.glGetUniformLocation(currentProgram, uniformName);
-        if(uniform != -1)
+        if (uniform != -1)
             GL20.glUniform1i(uniform, value);
     }
 
     /**
      * Sets the value of a uniform from the current program
+     *
      * @param uniformName the name of the uniform value to set
-     * @param value a float value for this uniform
+     * @param value       a float value for this uniform
      */
     public static void setUniform(String uniformName, float value) {
-        if(noShaders())
+        if (noShaders())
             return;
 
         int uniform = GL20.glGetUniformLocation(currentProgram, uniformName);
-        if(uniform != -1)
+        if (uniform != -1)
             GL20.glUniform1f(uniform, value);
     }
 
@@ -143,6 +151,7 @@ public final class ShaderHelper {
 
     /**
      * Reads a text file into a single String
+     *
      * @param filename the path to the file to read
      * @return a string with the content of the file
      */
@@ -150,12 +159,12 @@ public final class ShaderHelper {
         StringBuilder source = new StringBuilder();
 
         try (InputStream in = ShaderHelper.class.getResourceAsStream(filename);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(in,"UTF-8"))){
+             BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"))) {
 
             String line;
-            while((line = reader.readLine()) != null)
+            while ((line = reader.readLine()) != null)
                 source.append(line).append('\n');
-        } catch(IOException exc) {
+        } catch (IOException exc) {
             exc.printStackTrace();
         } catch (NullPointerException e) {
             System.err.println(e + " : " + filename + " does not exist");
@@ -165,6 +174,7 @@ public final class ShaderHelper {
         return source.toString();
     }
 
-    private ShaderHelper(){}
+    private ShaderHelper() {
+    }
 
 }

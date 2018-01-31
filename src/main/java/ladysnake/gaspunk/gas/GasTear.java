@@ -2,7 +2,6 @@ package ladysnake.gaspunk.gas;
 
 import ladysnake.gaspunk.gas.core.GasTypes;
 import ladysnake.gaspunk.gas.core.IBreathingHandler;
-import ladysnake.gaspunk.gas.core.IGasType;
 import ladysnake.gaspunk.network.PacketHandler;
 import ladysnake.gaspunk.network.ShaderMessage;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,9 +16,12 @@ public class GasTear extends Gas {
 
     @Override
     public void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick) {
-        if (firstTick && entity instanceof EntityPlayerMP)
-            PacketHandler.NET.sendTo(new ShaderMessage("shaders/post/blur.json"), (EntityPlayerMP) entity);
-        entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 5));
+        super.applyEffect(entity, handler, concentration, firstTick);
+        if (!handler.isImmune()) {
+            if (firstTick && entity instanceof EntityPlayerMP)
+                PacketHandler.NET.sendTo(new ShaderMessage("shaders/post/blur.json"), (EntityPlayerMP) entity);
+            entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 5));
+        }
     }
 
     @Override

@@ -3,6 +3,7 @@ package ladysnake.gaspunk.item;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.client.model.ModelGasMask;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.model.ModelBiped;
@@ -35,16 +36,14 @@ public class ItemGasMask extends ItemArmor implements IBauble {
     @Nullable
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-        // TODO custom texture
-        return super.getArmorTexture(stack, entity, slot, type);
+        return GasPunk.MOD_ID + ":textures/entity/gasmask.png";
     }
 
     @Nullable
     @Override
     @SideOnly(Side.CLIENT)
     public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot, ModelBiped _default) {
-        // TODO render a custom model
-        return super.getArmorModel(entityLiving, itemStack, armorSlot, _default);
+        return ModelGasMask.MODEL;
     }
 
     @Override
@@ -59,9 +58,9 @@ public class ItemGasMask extends ItemArmor implements IBauble {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos(0.0D, (double)resolution.getScaledHeight(), -90.0D).tex(0.0D, 1.0D).endVertex();
-        bufferbuilder.pos((double)resolution.getScaledWidth(), (double)resolution.getScaledHeight(), -90.0D).tex(1.0D, 1.0D).endVertex();
-        bufferbuilder.pos((double)resolution.getScaledWidth(), 0.0D, -90.0D).tex(1.0D, 0.0D).endVertex();
+        bufferbuilder.pos(0.0D, (double) resolution.getScaledHeight(), -90.0D).tex(0.0D, 1.0D).endVertex();
+        bufferbuilder.pos((double) resolution.getScaledWidth(), (double) resolution.getScaledHeight(), -90.0D).tex(1.0D, 1.0D).endVertex();
+        bufferbuilder.pos((double) resolution.getScaledWidth(), 0.0D, -90.0D).tex(1.0D, 0.0D).endVertex();
         bufferbuilder.pos(0.0D, 0.0D, -90.0D).tex(0.0D, 0.0D).endVertex();
         tessellator.draw();
         GlStateManager.depthMask(true);

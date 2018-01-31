@@ -1,8 +1,8 @@
 package ladysnake.gaspunk.event;
 
-import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.gas.core.CapabilityBreathing;
 import ladysnake.gaspunk.gas.core.IBreathingHandler;
+import ladysnake.gaspunk.gas.core.IGas;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -34,11 +34,11 @@ public class GasEvent extends LivingEvent {
      */
     @Cancelable
     public static class GasTickEvent extends GasEvent {
-        private final Gas gas;
+        private final IGas gas;
         private final float concentration;
         private final boolean firstBreathingTick;
 
-        public GasTickEvent(EntityLivingBase entity, IBreathingHandler breathHandler, Gas gas, float concentration, boolean firstBreathingTick) {
+        public GasTickEvent(EntityLivingBase entity, IBreathingHandler breathHandler, IGas gas, float concentration, boolean firstBreathingTick) {
             super(entity, breathHandler);
             this.gas = gas;
             this.concentration = concentration;
@@ -56,7 +56,7 @@ public class GasEvent extends LivingEvent {
             return concentration;
         }
 
-        public Gas getGas() {
+        public IGas getGas() {
             return gas;
         }
     }
@@ -67,10 +67,10 @@ public class GasEvent extends LivingEvent {
      */
     @Cancelable
     public static class ExitGasCloudEvent extends GasEvent {
-        private final Gas gas;
+        private final IGas gas;
         private final float concentration;
 
-        public ExitGasCloudEvent(EntityLivingBase entity, IBreathingHandler breathHandler, Gas gas, float concentration) {
+        public ExitGasCloudEvent(EntityLivingBase entity, IBreathingHandler breathHandler, IGas gas, float concentration) {
             super(entity, breathHandler);
             this.gas = gas;
             this.concentration = concentration;
@@ -80,7 +80,7 @@ public class GasEvent extends LivingEvent {
             return concentration;
         }
 
-        public Gas getGas() {
+        public IGas getGas() {
             return gas;
         }
     }
@@ -88,7 +88,7 @@ public class GasEvent extends LivingEvent {
     /**
      * GasImmunityEvent is fired whenever an entity checks whether they're affected by surrounding gases
      * in {@link CapabilityBreathing.DefaultBreathingHandler#isImmune()}.<br>
-     *
+     * <p>
      * <br>
      */
     public static class GasImmunityEvent extends GasEvent {

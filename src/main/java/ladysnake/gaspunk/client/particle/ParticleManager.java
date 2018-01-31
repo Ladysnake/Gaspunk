@@ -24,8 +24,8 @@ import java.util.Set;
 /**
  * This class has been adapted from embers' source code under GNU Lesser General Public License 2.1
  * https://github.com/RootsTeam/Embers/blob/master/src/main/java/teamroots/embers/particle/ParticleRenderer.java
- * @author Elucent
  *
+ * @author Elucent
  */
 @SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(Side.CLIENT)
@@ -87,23 +87,9 @@ public class ParticleManager {
                 GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
                 GlStateManager.enableLighting();
                 buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
-                particles
-                        .stream()
-                        .filter(p -> p instanceof IGasPunkParticle && !((IGasPunkParticle)p).isAdditive())
-                        .forEach(p -> p.renderParticle(buffer, player, partialTicks, f, f4, f1, f2, f3));
+                particles.forEach(p -> p.renderParticle(buffer, player, partialTicks, f, f4, f1, f2, f3));
                 tess.draw();
                 GlStateManager.disableLighting();
-            }
-
-            // render additive particles
-            {
-                GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-                buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
-                particles
-                        .stream()
-                        .filter(p -> p instanceof IGasPunkParticle && ((IGasPunkParticle)p).isAdditive())
-                        .forEach(p -> p.renderParticle(buffer, player, partialTicks, f, f4, f1, f2, f3));
-                tess.draw();
             }
 
             GlStateManager.enableCull();

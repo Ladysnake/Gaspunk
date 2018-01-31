@@ -2,7 +2,6 @@ package ladysnake.gaspunk.init;
 
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.item.*;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -19,7 +18,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import java.awt.*;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
@@ -39,7 +37,7 @@ public final class ModItems {
     public static final Item GRENADE_BELT = new ItemGrenadeBelt();
     public static final Item SMOKE_POWDER = Items.AIR;
 
-    static Set<Item> allItems = new HashSet<>();
+    static final Set<Item> allItems = new HashSet<>();
 
     @SuppressWarnings("unchecked")
     private static <T extends Item> T name(T item, String name) {
