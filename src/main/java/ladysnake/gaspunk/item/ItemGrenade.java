@@ -50,30 +50,23 @@ public class ItemGrenade extends ItemGasTube {
         worldIn.playSound(null, entityLivingBase.posX, entityLivingBase.posY, entityLivingBase.posZ, SoundEvents.ENTITY_SPLASH_POTION_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
         if (!worldIn.isRemote) {
-            EntityGrenade grenade = new EntityGrenade(worldIn, entityLivingBase, stack.splitStack(1));
+            int i = 0;
+            if (entityLivingBase instanceof EntityPlayer)
+                if (!((EntityPlayer) entityLivingBase).isCreative())
+                    i = 1;
+            EntityGrenade grenade = new EntityGrenade(worldIn, entityLivingBase, stack.splitStack(i));
             grenade.setCountdown(timeLeft);
             grenade.shoot(entityLivingBase, entityLivingBase.rotationPitch, entityLivingBase.rotationYaw, 0.0F, 1.5F, 1.0F);
             worldIn.spawnEntity(grenade);
-            if (entityLivingBase instanceof EntityPlayer) {
-                ItemStack diffuser = new ItemStack(ModItems.DIFFUSER);
-                if(!((EntityPlayer) entityLivingBase).addItemStackToInventory(diffuser))
-                    ((EntityPlayer) entityLivingBase).dropItem(diffuser, false);
-            }
         }
     }
 
     @Nonnull
     @Override
     public ItemStack onItemUseFinish(@Nonnull ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
-        stack.shrink(1);
-        if (entityLiving instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) entityLiving;
-            ItemStack diffuser = new ItemStack(ModItems.DIFFUSER);
-            if (!player.addItemStackToInventory(diffuser)) {
-                player.dropItem(diffuser, false);
-            }
-
-        }
+        if (entityLiving instanceof EntityPlayer)
+            if (!((EntityPlayer) entityLiving).isCreative())
+                stack.shrink(1);
         if (!worldIn.isRemote)
             explode((WorldServer) worldIn, entityLiving.getPositionVector(), stack);
         return stack;
