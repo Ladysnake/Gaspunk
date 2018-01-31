@@ -1,0 +1,15 @@
+{
+  "result": {
+    "item": "gaspunk:smoke_powder"
+  },
+  "type": "forge:ore_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "gunpowder"
+    }
+  ]
+}

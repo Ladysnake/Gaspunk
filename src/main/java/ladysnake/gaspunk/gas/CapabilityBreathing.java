@@ -1,14 +1,18 @@
 package ladysnake.gaspunk.gas;
 
 import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.event.GasImmunityEvent;
+import ladysnake.gaspunk.item.ItemGasMask;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -36,7 +40,7 @@ public class CapabilityBreathing {
     static {
         MethodHandle temp = null;
         try {
-            Method method = ReflectionHelper.findMethod(EntityLivingBase.class, "decreaseAirSupply", "func_70682_h(I)I", int.class);
+            Method method = ReflectionHelper.findMethod(EntityLivingBase.class, "decreaseAirSupply", "func_70682_h", int.class);
             temp = MethodHandles.lookup().unreflect(method);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -73,6 +77,7 @@ public class CapabilityBreathing {
          * a value between 0 and 300, emulating the entity air stat with greater precision
          */
         private float airSupply = 300;
+        private int ticksSinceToxicInhalation = 0;
         private EntityLivingBase owner;
         private Map<Gas, Float> concentrations = new HashMap<>();
 
@@ -104,33 +109,50 @@ public class CapabilityBreathing {
         @Override
         public void tick() {
             if (!owner.world.isRemote) {
-                // worst case, no air at all
-                float gasConcentration = Math.max(1, concentrations.values().stream().reduce(Float::sum).orElse(0f));
-                float entityModifier = 1;
-                if (entityLivingBase$decreaseAirSupply != null) {
-                    try {
-                        // entities like iron golems get a chance to nullify the effect
-                        entityModifier = airSupply - (int) entityLivingBase$decreaseAirSupply.invoke(owner, (int) airSupply);
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                }
                 boolean appliedAirReduction = false;
-                for (Map.Entry<Gas, Float> gasEffect : concentrations.entrySet()) {
-                    Gas gas = gasEffect.getKey();
-                    float concentration = gasEffect.getValue() * entityModifier;
-                    if (gas.isToxic() && airSupply > 0) {
-                        if (!appliedAirReduction) {
-                            // air supply decreases 4x as fast as underwater under worse conditions
-                            this.setAirSupply(airSupply - 4 * gasConcentration);
-                            appliedAirReduction = true;
+                if (!isImmune()) {
+                    float entityModifier = 1;
+                    if (entityLivingBase$decreaseAirSupply != null) {
+                        try {
+                            // entities like iron golems get a chance to nullify the effect
+                            entityModifier = airSupply - (int) entityLivingBase$decreaseAirSupply.invoke(owner, (int) airSupply);
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
                         }
                     }
-                    gas.applyEffect(owner, this, concentration);
+                    for (Map.Entry<Gas, Float> gasEffect : concentrations.entrySet()) {
+                        Gas gas = gasEffect.getKey();
+                        float concentration = gasEffect.getValue() * entityModifier;
+                        if (gas.isToxic() && airSupply > 0) {
+                            if (!appliedAirReduction) {
+                                float finalEntityModifier = entityModifier;
+                                // take all gases into account for the breathing penalty
+                                float totalGasConcentration = (float) Math.max(1, concentrations.entrySet().stream()
+                                        .filter(e -> e.getKey().isToxic())
+                                        .mapToDouble(Map.Entry::getValue)
+                                        .map(c -> c * finalEntityModifier).sum());
+                                // air supply decreases 4x as fast as underwater under worse conditions
+                                this.setAirSupply(airSupply - 4 * totalGasConcentration);
+                                appliedAirReduction = true;
+                            }
+                        }
+                        gas.applyEffect(owner, this, concentration);
+                    }
+                }
+                // regenerate air supply if no toxic gas was inhaled
+                if (!appliedAirReduction && airSupply < 300) {
+                    this.setAirSupply(airSupply + ticksSinceToxicInhalation++);
                 }
             }
             // invalidate concentration values for next tick
             concentrations.clear();
+        }
+
+        public boolean isImmune() {
+            boolean immune = owner.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof ItemGasMask;
+            GasImmunityEvent event = new GasImmunityEvent(owner, this, immune);
+            MinecraftForge.EVENT_BUS.post(event);
+            return event.isImmune();
         }
 
         @Override

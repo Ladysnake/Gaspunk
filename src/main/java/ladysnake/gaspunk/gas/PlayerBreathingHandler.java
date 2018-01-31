@@ -15,7 +15,11 @@ public class PlayerBreathingHandler extends CapabilityBreathing.DefaultBreathing
     @Override
     public void setAirSupply(float airSupply) {
         super.setAirSupply(airSupply);
-        if (!owner.world.isRemote)  // Apparently this is important ?
-            PacketHandler.NET.sendTo(new BreathMessage(airSupply), owner);
+        try {
+            if (!owner.world.isRemote)
+                PacketHandler.NET.sendTo(new BreathMessage(airSupply), owner);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 }

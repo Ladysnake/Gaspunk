@@ -45,8 +45,8 @@ public final class ShaderHelper {
     public static void initShaders() {
         if(noShaders())
             return;
-        dissolution = initShader("VertexBase.vsh", "corpsedissolution.fsh");
-        bloom = initShader("VertexBase.vsh", "bloom.fsh");
+        dissolution = initShader("vertex_base.vsh", "fragment_test.fsh");
+        bloom = initShader("vertex_base.vsh", "fragment_test.fsh");
     }
 
     /**

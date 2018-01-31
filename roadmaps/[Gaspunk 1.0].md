@@ -20,8 +20,8 @@
 #### Gases:
 
 -         
-  Invisible gas: Obtained by brewing a poisonous potato into a water tube, this gas is living up to its name. It's totally invisible and undetectable, unless you're inside it. Suffocates entities going through it.
-
+  Invisible gas (sarin): Obtained by brewing a poisonous potato into a water tube, this gas is living up to its name. It's totally invisible and undetectable, unless you're inside it. Suffocates entities going through it.
+- Teargas: Slows the player and blurs its vision
 
 #### Vapours:
 

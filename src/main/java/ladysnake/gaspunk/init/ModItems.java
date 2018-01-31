@@ -1,16 +1,15 @@
 package ladysnake.gaspunk.init;
 
 import ladysnake.gaspunk.GasPunk;
-import ladysnake.gaspunk.item.ItemGasMask;
-import ladysnake.gaspunk.item.ItemGasTube;
-import ladysnake.gaspunk.item.ItemGrenade;
-import ladysnake.gaspunk.item.ItemGrenadeBelt;
+import ladysnake.gaspunk.item.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -20,6 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import java.awt.*;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
@@ -29,8 +29,13 @@ import java.util.Set;
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
 public final class ModItems {
 
+    public static final Item ASH = Items.AIR;
+    public static final Item GAS_MASK = Items.AIR;
     public static final Item GAS_TUBE = Items.AIR;
+    public static final Item GLASS_TUBE = Items.AIR;
     public static final Item GRENADE = Items.AIR;
+    public static final Item GRENADE_BELT = new ItemGrenadeBelt();
+    public static final Item SMOKE_POWDER = Items.AIR;
 
     static Set<Item> allItems = new HashSet<>();
 
@@ -44,13 +49,17 @@ public final class ModItems {
         IForgeRegistry<Item> reg = event.getRegistry();
         Collections.addAll(allItems,
                 name(new Item(), "ash"),
-                name(new Item(), "enriched_coal"),
+                name(new Item(), "diffuser"),
                 name(new ItemGasMask(ItemArmor.ArmorMaterial.LEATHER, 0), "gas_mask"),
                 name(new ItemGasTube(), "gas_tube"),
-                name(new ItemGrenade(), "grenade")
+                name(new ItemGlassTube(), "glass_tube"),
+                name(new ItemGrenade(), "grenade"),
+                name(new Item(), "smoke_powder")
         );
-        if (Loader.isModLoaded("baubles"))
-            allItems.add(name(new ItemGrenadeBelt(), "grenade_belt"));
+        if (Loader.isModLoaded("baubles")) {
+            allItems.add(name(GRENADE_BELT, "grenade_belt"));
+            MinecraftForge.EVENT_BUS.register(GRENADE_BELT);
+        }
         for (Item item : allItems) {
             item.setCreativeTab(GasPunk.CREATIVE_TAB);
             reg.register(item);

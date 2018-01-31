@@ -13,19 +13,49 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
+import java.awt.image.ColorModel;
+
 public class Gas extends IForgeRegistryEntry.Impl<Gas> {
-    public static final ResourceLocation GAS_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/gas_overlay.png");
+    public static final ResourceLocation GAS_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/_overlay.png");
+    protected IGasType type;
+    protected int color;
+
+    public Gas(IGasType type, int color) {
+        this.type = type;
+        this.color = color;
+    }
+
+    public IGasType getType() {
+        return type;
+    }
 
     public boolean isToxic() {
-        return false;
+        return type.isToxic();
     }
 
     public void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration) {
 
     }
 
+    public void onExitCloud(EntityLivingBase entity, IBreathingHandler handler) {
+
+    }
+
+    /**
+     * Returns the RGB value representing the color in the default sRGB
+     * {@link ColorModel}.
+     * (Bits 24-31 are alpha, 16-23 are red, 8-15 are green, 0-7 are
+     * blue).
+     * @return the RGB value of the color in the default sRGB
+     *         <code>ColorModel</code>.
+     * @see java.awt.Color#getRGB
+     */
     public int getColor() {
-        return 0xFFFFFF00;
+        return color;
+    }
+
+    protected ResourceLocation getOverlayTexture() {
+        return GAS_TEX_PATH;
     }
 
     @SideOnly(Side.CLIENT)
@@ -33,15 +63,15 @@ public class Gas extends IForgeRegistryEntry.Impl<Gas> {
         GlStateManager.disableDepth();
         GlStateManager.depthMask(false);
         int color = getColor();
-        int a = (color & 0xFF) / 0xFF;
-        int b = (color >> 8 & 0xFF) / 0xFF;
-        int g = (color >> 16 & 0xFF) / 0xFF;
-        int r = (color >> 24 & 0xFF) / 0xFF;
+        float b = (color & 0xFF) / 255F;
+        float g = (color >> 8 & 0xFF) / 255F;
+        float r = (color >> 16 & 0xFF) / 255F;
+        float a = (color >> 24 & 0xFF) / 255F;
         GlStateManager.color(r, g, b, concentration * a);
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(GAS_TEX_PATH);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(getOverlayTexture());
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
