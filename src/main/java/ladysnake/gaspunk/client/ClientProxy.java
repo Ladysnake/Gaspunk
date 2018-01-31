@@ -41,7 +41,7 @@ public class ClientProxy extends CommonProxy {
                 double posX = x + world.rand.nextGaussian() * radX % radX;
                 double posY = y + world.rand.nextGaussian() * radY % radY;
                 double posZ = z + world.rand.nextGaussian() * radZ % radZ;
-                ParticleManager.INSTANCE.addParticle(new ParticleGasSmoke(world, posX, posY, posZ, r, g, b, a, (float) (25 + world.rand.nextGaussian())));
+                ParticleManager.INSTANCE.addParticle(new ParticleGasSmoke(world, posX, posY, posZ, r, g, b, a, (float) (100 + world.rand.nextGaussian())));
             }
         }
     }
