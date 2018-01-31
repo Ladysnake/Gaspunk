@@ -1,5 +1,7 @@
 package ladysnake.gaspunk.item;
 
+import baubles.api.BaubleType;
+import baubles.api.IBauble;
 import ladysnake.gaspunk.GasPunk;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -15,12 +17,14 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-public class ItemGasMask extends ItemArmor {
+@Optional.Interface(iface = "baubles.api.IBauble", modid = "baubles", striprefs = true)
+public class ItemGasMask extends ItemArmor implements IBauble {
 
     private static final ResourceLocation GAS_MASK_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/gas_mask_overlay.png");
 
@@ -66,4 +70,8 @@ public class ItemGasMask extends ItemArmor {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
+    @Override
+    public BaubleType getBaubleType(ItemStack itemstack) {
+        return BaubleType.HEAD;
+    }
 }
