@@ -1,6 +1,21 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "gaspunk:items/tube"
-  }
+    "layer0": "gaspunk:items/liquid_gas_underlay",
+    "layer1": "gaspunk:items/tube"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "gaspunk:gas_type": 1
+      },
+      "model": "gaspunk:item/smoke_tube"
+    },
+    {
+      "predicate": {
+        "gaspunk:gas_type": 2
+      },
+      "model": "gaspunk:item/vapor_tube"
+    }
+  ]
 }
