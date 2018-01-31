@@ -1,4 +1,5 @@
 #version 120
+//#extension GL_EXT_gpu_shader4 : require TODO make some varying flat
 
 #define totalSteps 4
 #define totalLayers 4
@@ -14,6 +15,7 @@ uniform sampler2D texture;    // represents what's currently displayed on the sc
 uniform int iTime;      // current system time in milliseconds
 uniform int radius;   // the radius of the sphere
 uniform vec4 gasColor; // the color of the gas
+
 
 vec3 hash33(in vec3 pos) {
     pos  = fract(pos * vec3(0.1031, 0.1030, 0.0973));
@@ -55,13 +57,12 @@ float simplex3D(vec3 p) {
   }
 
 float cloudFunction(in vec3 world) {
-  // world += playerPosition.yxz / 10;
-  world /= 8;
+  world *= 4;
   float layeredNoise = 0.0;
 
   float weight = 1.0;
 
-  const vec3 movementDirection = vec3(1.0) * 0.0;
+  const vec3 movementDirection = vec3(1.0) * 0.05;
   vec3 movement = movementDirection * iTime * 0.01;
 
   const float rotationAmount = 0.7;
@@ -92,29 +93,6 @@ float bayer2(vec2 a){
   #define bayer64(a)  (bayer32(.5*(a))*.25+bayer2(a))
   #define bayer128(a) (bayer64(.5*(a))*.25+bayer2(a))
 
-bool intersectSphere(in vec3 rayOrigin, in vec3 rayDirection, in vec3 sphereOrigin, in float sphereRadius, inout vec3 intersection0, inout vec3 intersection1) {
-  sphereOrigin = sphereOrigin.yxz;
-  vec3 L = sphereOrigin - rayOrigin;
-
-  //if(sdfSphere(sphereOrigin, rayOrigin) < 0.0) return false;
-
-  float tca = dot(L, rayDirection);
-
-  if(tca < 0.0) return false;
-
-  float d2 = dot(L, L) - tca * tca;
-  float r2 = sphereRadius * sphereRadius;
-
-  if(d2 > r2) return false;
-
-  float tch = sqrt(r2 - d2);
-
-  intersection0 = rayDirection * (tca - tch) + rayOrigin;
-  intersection1 = rayDirection * (tca + tch) + rayOrigin;
-
-  return true;
-}
-
 void main() {
     float depth = gl_FragCoord.z;
     vec3 dither = vec3(1);
@@ -122,15 +100,17 @@ void main() {
     vec3 end = vec3(texcoord, 1.0);
 
     vec3 intersection0, intersection1 = vec3(0.0);
-    start = vec3(0.0);//viewToWorld(clipToView(start.xy, start.z));
 
-    bool isIntersecting = intersectSphere(start, normalize(vec3(0,0,1)), vec3(0.5, 0.5, 0.5), 0.5, intersection0, intersection1);
+    // bool isIntersecting = intersectSphere(start, normalize(vec3(0,0,1)), vec3(0.5, 0.5, 0.5), 0.5, intersection0, intersection1);
 
 
-    if(intersection0.z < intersection1.z)
-      start = intersection0, end = intersection1;
-    else
-      start = intersection1, end = intersection0;
+    // if(intersection0.z < intersection1.z)
+    //   start = intersection0, end = intersection1;
+    // else
+    //   start = intersection1, end = intersection0;
+
+    // start = viewToWorld(clipToView(start.xy, start.z));
+    // end = viewToWorld(clipToView(end.xy, end.z));
 
     vec3 increment = (end - start) / totalSteps;
     vec3 position = increment * bayer16(gl_FragCoord.xy) + start;
