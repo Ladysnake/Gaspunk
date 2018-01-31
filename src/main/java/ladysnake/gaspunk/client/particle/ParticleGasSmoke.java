@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class ParticleGasSmoke extends Particle implements IGasPunkParticle {
+public class ParticleGasSmoke extends Particle {
     public static final ResourceLocation TEXTURE = new ResourceLocation(GasPunk.MOD_ID, "entity/particle_smoke");
     public static final ResourceLocation CHLORINE_TEXTURE = new ResourceLocation(GasPunk.MOD_ID, "entity/particle_chlorine");
 
@@ -19,7 +19,7 @@ public class ParticleGasSmoke extends Particle implements IGasPunkParticle {
 //        this.particleGreen = green;
 //        this.particleBlue = blue;
 //        this.particleAlpha = 0.5f;
-        this.giveRandomMotion(0,0,0);
+        this.giveRandomMotion(0, 0, 0);
 //        this.motionX *= 1.4;
 //        this.motionZ *= 1.4;
         this.motionY *= 0.5;
@@ -54,16 +54,14 @@ public class ParticleGasSmoke extends Particle implements IGasPunkParticle {
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
 
-        if (this.particleAge++ >= this.particleMaxAge)
-        {
+        if (this.particleAge++ >= this.particleMaxAge) {
             this.setExpired();
         }
 
         this.motionY += 0.0005D;
         this.move(this.motionX, this.motionY, this.motionZ);
 
-        if (this.posY == this.prevPosY)
-        {
+        if (this.posY == this.prevPosY) {
             this.motionX *= 1.1D;
             this.motionZ *= 1.1D;
         }
@@ -72,15 +70,10 @@ public class ParticleGasSmoke extends Particle implements IGasPunkParticle {
         this.motionY *= 0.9599999785423279D;
         this.motionZ *= 0.9;
 
-        if (this.onGround)
-        {
+        if (this.onGround) {
             this.motionX *= 0.699999988079071D;
             this.motionZ *= 0.699999988079071D;
         }
     }
 
-    @Override
-    public boolean isAdditive() {
-        return false;
-    }
 }

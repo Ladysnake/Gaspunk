@@ -1,6 +1,6 @@
 package ladysnake.gaspunk;
 
-import ladysnake.gaspunk.event.BaublesCompatHandler;
+import ladysnake.gaspunk.compat.BaublesCompatHandler;
 import ladysnake.gaspunk.gas.core.CapabilityBreathing;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.init.ModItems;

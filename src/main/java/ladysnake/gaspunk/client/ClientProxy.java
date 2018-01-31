@@ -32,6 +32,9 @@ public class ClientProxy extends CommonProxy {
         float g = (color >> 8 & 0xFF) / 255F;
         float r = (color >> 16 & 0xFF) / 255F;
         float a = (color >> 24 & 0xFF) / 255F;
+        // no need to spawn invisible particles
+        if (a == 0) return;
+
         for (int i = 0; i < amount; i++) {
             particleCount += world.rand.nextInt(3);
             if (particleCount % (Minecraft.getMinecraft().gameSettings.particleSetting == 0 ? 1 : 2 * Minecraft.getMinecraft().gameSettings.particleSetting) == 0) {

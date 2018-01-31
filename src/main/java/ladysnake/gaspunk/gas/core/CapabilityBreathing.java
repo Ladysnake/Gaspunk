@@ -2,7 +2,6 @@ package ladysnake.gaspunk.gas.core;
 
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.event.GasEvent;
-import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.item.ItemGasMask;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -78,10 +77,9 @@ public class CapabilityBreathing {
          * a value between 0 and 300, emulating the entity air stat with greater precision
          */
         private float airSupply = 300;
-        private int ticksSinceToxicInhalation = 0;
-        private EntityLivingBase owner;
-        private Map<Gas, Float> prevConcentrations = new HashMap<>();
-        private Map<Gas, Float> concentrations = new HashMap<>();
+        private final EntityLivingBase owner;
+        private final Map<IGas, Float> prevConcentrations = new HashMap<>();
+        private final Map<IGas, Float> concentrations = new HashMap<>();
 
         DefaultBreathingHandler() {
             this(null);
@@ -98,13 +96,13 @@ public class CapabilityBreathing {
          * @param concentration a value between 0 and 1 representing the gas' concentration in the entity space
          */
         @Override
-        public void setConcentration(Gas gas, float concentration) {
+        public void setConcentration(IGas gas, float concentration) {
             if (concentrations.getOrDefault(gas, 0f) < concentration)
                 concentrations.put(gas, concentration);
         }
 
         @Override
-        public Map<Gas, Float> getGasConcentrations() {
+        public Map<IGas, Float> getGasConcentrations() {
             return concentrations;
         }
 
@@ -130,8 +128,8 @@ public class CapabilityBreathing {
                             throwable.printStackTrace();
                         }
                     }
-                    for (Map.Entry<Gas, Float> gasEffect : concentrations.entrySet()) {
-                        Gas gas = gasEffect.getKey();
+                    for (Map.Entry<IGas, Float> gasEffect : concentrations.entrySet()) {
+                        IGas gas = gasEffect.getKey();
                         float concentration = gasEffect.getValue() * entityModifier;
                         boolean firstTick = !prevConcentrations.containsKey(gasEffect.getKey());
                         if (MinecraftForge.EVENT_BUS.post(new GasEvent.GasTickEvent(owner, this, gas, concentration, firstTick)))
@@ -183,7 +181,7 @@ public class CapabilityBreathing {
     }
 
     public static class Provider implements ICapabilitySerializable<NBTTagCompound> {
-        IBreathingHandler instance;
+        final IBreathingHandler instance;
 
         Provider(Entity object) {
             this.instance = object instanceof EntityPlayerMP

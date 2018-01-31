@@ -22,7 +22,7 @@ import java.util.Objects;
 public class ItemGlassTube extends Item {
 
     public ItemGlassTube() {
-      this.setMaxStackSize(16);
+        this.setMaxStackSize(16);
     }
 
     @Nonnull
@@ -43,7 +43,7 @@ public class ItemGlassTube extends Item {
 
                 if (worldIn.getBlockState(blockpos).getMaterial() == Material.WATER) {
                     worldIn.playSound(playerIn, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL, 1.0F, 1.0F);
-                    return new ActionResult<>(EnumActionResult.SUCCESS, this.turnBottleIntoItem(itemstack, playerIn, ((ItemGasTube)ModItems.GAS_TUBE).getItemStackFor(ModGases.VAPOR)));
+                    return new ActionResult<>(EnumActionResult.SUCCESS, this.turnBottleIntoItem(itemstack, playerIn, ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(ModGases.VAPOR)));
                 }
             }
 

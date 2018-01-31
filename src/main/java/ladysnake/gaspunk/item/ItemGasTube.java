@@ -2,7 +2,7 @@ package ladysnake.gaspunk.item;
 
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.entity.EntityGasCloud;
-import ladysnake.gaspunk.gas.Gas;
+import ladysnake.gaspunk.gas.core.IGas;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.init.ModItems;
 import net.minecraft.client.util.ITooltipFlag;
@@ -26,7 +26,7 @@ import java.util.Objects;
 
 public class ItemGasTube extends Item {
 
-    public static String NBT_CONTAINED_GAS = GasPunk.MOD_ID + ":contained_gas";
+    public static final String NBT_CONTAINED_GAS = GasPunk.MOD_ID + ":contained_gas";
 
     public ItemGasTube() {
         super();
@@ -35,15 +35,15 @@ public class ItemGasTube extends Item {
                 ((stack, worldIn, entityIn) -> getContainedGas(stack).getType().getId()));
     }
 
-    public static Gas getContainedGas(ItemStack stack) {
-        Gas ret = null;
+    public static IGas getContainedGas(ItemStack stack) {
+        IGas ret = null;
         if (stack.hasTagCompound()) {
             ret = ModGases.REGISTRY.getValue(new ResourceLocation(Objects.requireNonNull(stack.getTagCompound()).getString(NBT_CONTAINED_GAS)));
         }
         return ret == null ? ModGases.VAPOR : ret;
     }
 
-    public ItemStack getItemStackFor(Gas gas) {
+    public ItemStack getItemStackFor(IGas gas) {
         ItemStack stack = new ItemStack(this);
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setString(NBT_CONTAINED_GAS, Objects.requireNonNull(gas.getRegistryName(), "Can't use an unregistered gas in grenade").toString());
@@ -60,7 +60,7 @@ public class ItemGasTube extends Item {
     @Nonnull
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand handIn) {
-      return new ActionResult<>(EnumActionResult.SUCCESS, this.turnBottleIntoItem(playerIn.getHeldItem(handIn), playerIn, new ItemStack(ModItems.GLASS_TUBE)));
+        return new ActionResult<>(EnumActionResult.SUCCESS, this.turnBottleIntoItem(playerIn.getHeldItem(handIn), playerIn, new ItemStack(ModItems.GLASS_TUBE)));
     }
 
     protected ItemStack turnBottleIntoItem(ItemStack emptyTubes, EntityPlayer player, ItemStack stack) {
@@ -105,7 +105,7 @@ public class ItemGasTube extends Item {
     public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items) {
         if (tab == GasPunk.CREATIVE_TAB) {
             //TODO use IForgeRegistry#getValuesCollection when ModOff is over
-            for (Gas gas : ModGases.REGISTRY.getValues()) {
+            for (IGas gas : ModGases.REGISTRY.getValues()) {
                 items.add(getItemStackFor(gas));
             }
         }

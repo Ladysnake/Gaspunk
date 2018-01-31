@@ -1,14 +1,19 @@
 package ladysnake.gaspunk.client.model;
 
-import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+
+import javax.annotation.Nullable;
 
 /**
  * Gas_Mask - Alien
  * Created using Tabula 7.0.0
  */
-public class Gasmask extends ModelBase {
+public class ModelGasMask extends ModelBiped {
+
+    public static final ModelGasMask MODEL = new ModelGasMask();
+
     public ModelRenderer shape15;
     public ModelRenderer shape16;
     public ModelRenderer shape17;
@@ -84,7 +89,7 @@ public class Gasmask extends ModelBase {
     public ModelRenderer shape34_4;
     public ModelRenderer shape34_5;
 
-    public Gasmask() {
+    public ModelGasMask() {
         this.textureWidth = 64;
         this.textureHeight = 64;
         this.shape59_3 = new ModelRenderer(this, 37, 30);
@@ -356,6 +361,7 @@ public class Gasmask extends ModelBase {
         this.shape36_5 = new ModelRenderer(this, 14, 31);
         this.shape36_5.setRotationPoint(0.0F, 0.0F, 1.2F);
         this.shape36_5.addBox(-0.5F, -1.0F, -1.0F, 1, 2, 1, 0.0F);
+        this.bipedHead.addChild(this.shape15);
         this.shape59_2.addChild(this.shape59_3);
         this.shape32_1.addChild(this.shape38_3);
         this.shape32_2.addChild(this.shape81);
@@ -432,8 +438,9 @@ public class Gasmask extends ModelBase {
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) { 
-        this.shape15.render(f5);
+    public void render(@Nullable Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+        this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entityIn);
+        this.bipedHead.render(scale);
     }
 
     /**

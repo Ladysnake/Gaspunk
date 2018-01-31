@@ -1,0 +1,24 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "II#",
+    "##G",
+    "GGG"
+  ],
+  "key": {
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "#": {
+      "type": "forge:ore_dict",
+      "ore": "leather"
+    },
+    "G": {
+      "item": "gaspunk:empty_grenade"
+    }
+  },
+  "result": {
+    "item": "gaspunk:grenade_belt"
+  }
+}

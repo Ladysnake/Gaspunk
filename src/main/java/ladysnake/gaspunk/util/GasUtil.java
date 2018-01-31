@@ -3,14 +3,9 @@ package ladysnake.gaspunk.util;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.entity.EntityGasCloud;
-import ladysnake.gaspunk.gas.Gas;
-import ladysnake.gaspunk.init.ModGases;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -21,16 +16,17 @@ import java.util.concurrent.TimeUnit;
 
 public class GasUtil {
 
-    private static LoadingCache<CacheKey, Integer> distanceCache = CacheBuilder.newBuilder()
+    private static final LoadingCache<CacheKey, Integer> distanceCache = CacheBuilder.newBuilder()
             .expireAfterWrite(1, TimeUnit.SECONDS)
             .build(CacheLoader.from(GasUtil::computeDistance));
 
     /**
      * Gets the minimum number of air blocks between start and goal
      * Information may be outdated by up to a second but gases don't update instantly irl either
+     *
      * @param world the world in which the gas is
      * @param start the emission point of the gas
-     * @param goal the location to check
+     * @param goal  the location to check
      * @return the minimum number of air blocks between start and goal, or -1 if no path is found
      */
     public static int getPropagationDistance(World world, BlockPos start, BlockPos goal) {
@@ -44,6 +40,7 @@ public class GasUtil {
 
     /**
      * A* implementation to know how dense the gas is at a certain location
+     *
      * @param dataIn the relevant information to compute this distance
      * @return the minimum number of air blocks between start and goal, or -1 if no path is found
      */
@@ -51,7 +48,7 @@ public class GasUtil {
         Map<BlockPos, Integer> cost = new HashMap<>();
         cost.put(dataIn.start, 0);
         Map<BlockPos, Integer> heuristic = new HashMap<>();
-        heuristic.put(dataIn.start, (int)dataIn.start.distanceSq(dataIn.goal));
+        heuristic.put(dataIn.start, (int) dataIn.start.distanceSq(dataIn.goal));
         Set<BlockPos> closedSet = new HashSet<>();
         Queue<BlockPos> openSet = new PriorityQueue<>(Comparator.comparing(heuristic::get));
         openSet.add(dataIn.start);
@@ -86,9 +83,9 @@ public class GasUtil {
     }
 
     public static class CacheKey {
-        World world;
-        BlockPos start;
-        BlockPos goal;
+        final World world;
+        final BlockPos start;
+        final BlockPos goal;
 
         public CacheKey(World world, BlockPos start, BlockPos goal) {
             this.world = world;

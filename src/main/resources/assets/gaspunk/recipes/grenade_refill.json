@@ -1,0 +1,14 @@
+{
+  "result": {
+    "item": "gaspunk:grenade"
+  },
+  "type": "gaspunk:gas_container",
+  "ingredients": [
+    {
+      "item": "gaspunk:empty_grenade"
+    },
+    {
+      "item": "gaspunk:gas_tube"
+    }
+  ]
+}

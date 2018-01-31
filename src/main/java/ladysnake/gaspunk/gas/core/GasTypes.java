@@ -3,7 +3,7 @@ package ladysnake.gaspunk.gas.core;
 public enum GasTypes implements IGasType {
     GAS(true), SMOKE(false), VAPOR(false);
 
-    private boolean isToxic;
+    private final boolean isToxic;
 
     GasTypes(boolean isToxic) {
         this.isToxic = isToxic;

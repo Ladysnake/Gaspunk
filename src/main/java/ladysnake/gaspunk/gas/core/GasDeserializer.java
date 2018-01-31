@@ -35,7 +35,7 @@ public class GasDeserializer {
 
                         String name = FilenameUtils.removeExtension(relative).replaceAll("\\\\", "/");
                         ResourceLocation key = new ResourceLocation(GasPunk.MOD_ID, name);
-                        try(BufferedReader reader = Files.newBufferedReader(file)) {
+                        try (BufferedReader reader = Files.newBufferedReader(file)) {
                             JsonObject json = JsonUtils.fromJson(GSON, reader, JsonObject.class);
                         } catch (IOException e) {
                             e.printStackTrace();

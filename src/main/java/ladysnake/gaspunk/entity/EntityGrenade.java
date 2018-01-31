@@ -1,8 +1,6 @@
 package ladysnake.gaspunk.entity;
 
-import ladysnake.gaspunk.init.ModItems;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
