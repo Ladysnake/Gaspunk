@@ -1,6 +1,44 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "gaspunk:items/nade_pinned"
-  }
+    "layer0": "gaspunk:items/liquid_gas_underlay",
+    "layer1": "gaspunk:items/nade_pinned"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "gaspunk:unpinned": 1,
+        "gaspunk:gas_type": 0
+      },
+      "model": "gaspunk:item/grenade_unpinned"
+    },
+    {
+      "predicate": {
+        "gaspunk:unpinned": 0,
+        "gaspunk:gas_type": 1
+      },
+      "model": "gaspunk:item/smoke_grenade_pinned"
+    },
+    {
+      "predicate": {
+        "gaspunk:unpinned": 1,
+        "gaspunk:gas_type": 2
+      },
+      "model": "gaspunk:item/smoke_grenade_unpinned"
+    },
+    {
+      "predicate": {
+        "gaspunk:unpinned": 0,
+        "gaspunk:gas_type": 3
+      },
+      "model": "gaspunk:item/vapor_grenade_pinned"
+    },
+    {
+      "predicate": {
+        "gaspunk:unpinned": 1,
+        "gaspunk:gas_type": 3
+      },
+      "model": "gaspunk:item/vapor_grenade_unpinned"
+    }
+  ]
 }
