@@ -30,6 +30,8 @@ import java.util.Set;
 public final class ModItems {
 
     public static final Item ASH = Items.AIR;
+    public static final Item DIFFUSER = Items.AIR;
+    public static final Item EMPTY_GRENADE = Items.AIR;
     public static final Item GAS_MASK = Items.AIR;
     public static final Item GAS_TUBE = Items.AIR;
     public static final Item GLASS_TUBE = Items.AIR;
@@ -50,6 +52,7 @@ public final class ModItems {
         Collections.addAll(allItems,
                 name(new Item(), "ash"),
                 name(new Item(), "diffuser"),
+                name(new Item(), "empty_grenade"),
                 name(new ItemGasMask(ItemArmor.ArmorMaterial.LEATHER, 0), "gas_mask"),
                 name(new ItemGasTube(), "gas_tube"),
                 name(new ItemGlassTube(), "glass_tube"),

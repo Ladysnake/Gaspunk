@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 public class BreathMessage implements IMessage {
     float breath;
 
+    @SuppressWarnings("unused")
     public BreathMessage() {
         super();
     }

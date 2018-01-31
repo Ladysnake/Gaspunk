@@ -1,8 +1,6 @@
 package ladysnake.gaspunk;
 
-import ladysnake.gaspunk.gas.CapabilityBreathing;
 import ladysnake.gaspunk.init.ModItems;
-import ladysnake.gaspunk.network.PacketHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;

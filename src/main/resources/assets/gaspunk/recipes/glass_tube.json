@@ -1,0 +1,11 @@
+{
+  "result": {
+    "item": "gaspunk:glass_tube"
+  },
+  "type": "forge:ore_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:glass_bottle"
+    }
+  ]
+}

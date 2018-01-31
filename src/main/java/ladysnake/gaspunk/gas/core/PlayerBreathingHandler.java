@@ -1,4 +1,4 @@
-package ladysnake.gaspunk.gas;
+package ladysnake.gaspunk.gas.core;
 
 import ladysnake.gaspunk.network.BreathMessage;
 import ladysnake.gaspunk.network.PacketHandler;

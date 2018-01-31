@@ -3,7 +3,7 @@ package ladysnake.gaspunk.entity;
 import io.netty.buffer.ByteBuf;
 import ladysnake.gaspunk.Configuration;
 import ladysnake.gaspunk.GasPunk;
-import ladysnake.gaspunk.gas.CapabilityBreathing;
+import ladysnake.gaspunk.gas.core.CapabilityBreathing;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.util.GasUtil;
@@ -48,8 +48,8 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
         super.onUpdate();
         float ageRatio = 1 - getCloudAge() / (float) getMaxLifeSpan();
         int color = gas.getColor();
-        int alpha = color & 0xFF000000 * (((int)(ageRatio * 255)) << 24);
-        color &= 0x00FFFFFF | alpha;
+//        int alpha = color & 0xFF000000 * (((int)(ageRatio * 255)) << 24);
+//        color &= 0x00FFFFFF | alpha;
         GasPunk.proxy.makeSmoke(world, posX, posY, posZ, color, 50, MAX_PROPAGATION_DISTANCE, 2, MAX_PROPAGATION_DISTANCE);
         if (!world.isRemote) {
             int age = getCloudAge();

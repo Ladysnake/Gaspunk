@@ -1,5 +1,4 @@
 #version 120
-//#extension GL_EXT_gpu_shader4 : require TODO make some varying flat
 
 #define totalSteps 4
 #define totalLayers 4
@@ -9,54 +8,75 @@ const float noiseTextureResolutionInverse = 1 / noiseTextureResolution;
 
 varying vec2 texcoord;        // the texture coordinate of the current pixel
 varying vec4 vPosition;       // the screen position of the current pixel
-varying mat4 gbufferModelViewInverse;
-varying mat4 gbufferProjectionInverse;
 
 // uniform variables are given in the java code
 uniform sampler2D texture;    // represents what's currently displayed on the screen
-uniform int iTime;
+uniform int iTime;      // current system time in milliseconds
 uniform int radius;   // the radius of the sphere
-uniform vec3 playerPosition; // the position of the camera
-uniform vec3 center; // the center position of this entity
+uniform vec4 gasColor; // the color of the gas
 
-float rand(vec2 co) {
-   return fract(sin(dot(co.xy, vec2(12.9898,78.233))) * 43758.5453);
+vec3 hash33(in vec3 pos) {
+    pos  = fract(pos * vec3(0.1031, 0.1030, 0.0973));
+    pos += dot(pos, pos.yzx + 19.19);
+    return fract((pos.xxy + pos.yxx) * pos.zyx);
 }
 
-vec3 clipToView(in vec2 uvCoord, in float depth) {
-    vec4 viewPos = gbufferProjectionInverse * vec4(vec3(uvCoord, depth) * 2.0 - 1.0, 1.0);
-    viewPos /= viewPos.w;
+float simplex3D(vec3 p) {
+    vec3 s = floor(p + dot(p, vec3(0.3333333)));
+    vec3 x = p - s + dot(s, vec3(0.1666666));
 
-    return viewPos.xyz;
-}
+    vec3 e = step(x.yzx, x.xyz);
+    e -= e.zxy;
 
-vec3 viewToWorld(in vec3 view) {
-    vec4 worldPos = gbufferModelViewInverse * vec4(view, 1.0);
-    worldPos /= worldPos.w;
+    vec3 i1 = clamp(e   ,0.,1.);
+    vec3 i2 = clamp(e+1.,0.,1.);
 
-    return worldPos.xyz;
-}
+    vec3 x1 = x - i1 + .1666666;
+    vec3 x2 = x - i2 + .3333333;
+    vec3 x3 = x - .5;
 
-float noise3D(in vec3 uvCoord) {
-    float p = floor(uvCoord.z);
-    float f = uvCoord.z - p;
+    vec4 w = vec4(
+      dot(x , x ),
+      dot(x1, x1),
+      dot(x2, x2),
+      dot(x3, x3));
 
-    vec2 noise = texture2D(texture, fract(uvCoord.xy * noiseTextureResolutionInverse + (p * 17.0 / noiseTextureResolution))).xy;
+    w = clamp(.6 - w,0.,1.);
+    w *= w;
+    w *= w;
 
-    return mix(noise.x, noise.y, f);
-}
+    vec4 d=vec4(
+      dot(hash33(s     )-.5, x ),
+      dot(hash33(s + i1)-.5, x1),
+      dot(hash33(s + i2)-.5, x2),
+      dot(hash33(s + 1.)-.5, x3));
+
+    return dot(d, w*52.);
+  }
 
 float cloudFunction(in vec3 world) {
+  // world += playerPosition.yxz / 10;
+  world /= 8;
   float layeredNoise = 0.0;
 
-    float weight = 1.0;
+  float weight = 1.0;
 
-    for(int i = 0; i < totalLayers; i++) {
-        layeredNoise += noise3D(world) * weight;
+  const vec3 movementDirection = vec3(1.0) * 0.0;
+  vec3 movement = movementDirection * iTime * 0.01;
 
-        world *= 2.0;
-        weight *= 0.5;
-    }
+  const float rotationAmount = 0.7;
+  const mat2 rotation = mat2(cos(rotationAmount), -sin(rotationAmount), sin(rotationAmount), cos(rotationAmount));
+
+  for(int i = 0; i < totalLayers; i++) {
+      layeredNoise += (simplex3D(world + movement) * 0.5 + 0.5) * weight;
+
+      world *= 2.0;
+      weight *= 0.5;
+      movement *= 2.0;
+
+      world.xy *= rotation;
+      world.yz *= rotation;
+  }
 
     return layeredNoise;
 }
@@ -73,6 +93,7 @@ float bayer2(vec2 a){
   #define bayer128(a) (bayer64(.5*(a))*.25+bayer2(a))
 
 bool intersectSphere(in vec3 rayOrigin, in vec3 rayDirection, in vec3 sphereOrigin, in float sphereRadius, inout vec3 intersection0, inout vec3 intersection1) {
+  sphereOrigin = sphereOrigin.yxz;
   vec3 L = sphereOrigin - rayOrigin;
 
   //if(sdfSphere(sphereOrigin, rayOrigin) < 0.0) return false;
@@ -100,14 +121,27 @@ void main() {
     vec3 start = vec3(texcoord, 0.0);
     vec3 end = vec3(texcoord, 1.0);
 
+    vec3 intersection0, intersection1 = vec3(0.0);
+    start = vec3(0.0);//viewToWorld(clipToView(start.xy, start.z));
+
+    bool isIntersecting = intersectSphere(start, normalize(vec3(0,0,1)), vec3(0.5, 0.5, 0.5), 0.5, intersection0, intersection1);
+
+
+    if(intersection0.z < intersection1.z)
+      start = intersection0, end = intersection1;
+    else
+      start = intersection1, end = intersection0;
+
     vec3 increment = (end - start) / totalSteps;
     vec3 position = increment * bayer16(gl_FragCoord.xy) + start;
 
     float incrementSize = length(increment);
 
-    vec3 intersection0, intersection1 = vec3(0.0);
-
-    bool isIntersecting = intersectSphere(start, normalize(start), vec3(0.5), 0.1, intersection0, intersection1);
-
-    gl_FragColor = vec4(vec3(distance(intersection0, intersection1)), 1.0);
+    float density = 0.0;
+    for(int i = 0; i < totalSteps; i++, position += increment) {
+      density += cloudFunction(position) * incrementSize * 0.5;
+    }
+    gl_FragColor = vec4(gasColor.rgb, gasColor.a * density);
+    // gl_FragColor = texture2D(texture, texcoord);
+    // gl_FragColor = vec4(vec3(distance(intersection0, intersection1)), 1.0);
 }
