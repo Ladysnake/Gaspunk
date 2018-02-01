@@ -21,6 +21,10 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
 
     int getColor();
 
+    default int getBottleColor() {
+        return getColor();
+    }
+
     default ParticleTypes getParticleType() {
         return getType().getParticleType();
     }

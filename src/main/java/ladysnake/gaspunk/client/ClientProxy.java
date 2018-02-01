@@ -24,7 +24,7 @@ public class ClientProxy extends CommonProxy {
     public void postInit() {
         super.postInit();
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(((stack, tintIndex) -> tintIndex == 0
-                ? ItemGasTube.getContainedGas(stack).getColor()
+                ? ItemGasTube.getContainedGas(stack).getBottleColor()
                 : Color.WHITE.getRGB()), ModItems.GAS_TUBE, ModItems.GRENADE);
         if (Loader.isModLoaded("baubles"))
             Minecraft.getMinecraft().getRenderManager().getSkinMap().forEach((s, render) -> render.addLayer(new LayerBelt()));
@@ -46,7 +46,7 @@ public class ClientProxy extends CommonProxy {
                 double posX = x + world.rand.nextGaussian() * radX % radX;
                 double posY = y + world.rand.nextGaussian() * radY % radY;
                 double posZ = z + world.rand.nextGaussian() * radX % radX;
-                ParticleGasSmoke particle = new ParticleGasSmoke(world, posX, posY, posZ, r, g, b, a, (float) (100 + 20*world.rand.nextGaussian()));
+                ParticleGasSmoke particle = new ParticleGasSmoke(world, posX, posY, posZ, r, g, b, a, (float) (55 + 20*world.rand.nextGaussian()));
                 switch (texture) {
                     case CHLORINE: particle.setTexture(ParticleGasSmoke.CHLORINE_TEXTURE); break;
                     case TEARGAS: particle.setTexture(ParticleGasSmoke.TEARGAS_TEXTURE); break;

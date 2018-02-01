@@ -23,11 +23,16 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
     public static final ResourceLocation NOISE_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/noise.png");
 
     protected final IGasType type;
-    protected final int color;
+    protected int color, bottleColor;
 
     public Gas(IGasType type, int color) {
+        this(type, color, color);
+    }
+
+    public Gas(IGasType type, int color, int bottleColor) {
         this.type = type;
         this.color = color;
+        this.bottleColor = bottleColor;
     }
 
     @Override
@@ -48,6 +53,11 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
     @Override
     public int getColor() {
         return color;
+    }
+
+    @Override
+    public int getBottleColor() {
+        return bottleColor;
     }
 
     protected ResourceLocation getOverlayTexture() {

@@ -16,11 +16,8 @@ public class PlayerBreathingHandler extends CapabilityBreathing.DefaultBreathing
     @Override
     public void setAirSupply(float airSupply) {
         super.setAirSupply(airSupply);
-        try {
-            if (!owner.world.isRemote)
-                PacketHandler.NET.sendTo(new BreathMessage(airSupply), owner);
-        } catch (NullPointerException e) {
-            GasPunk.LOGGER.trace("Hey there's this exception I should take care of one day and you have the right to insult me", e);
-        }
+        // check that the player is actually connected before sending an update packet
+        if (owner.connection != null)
+            PacketHandler.NET.sendTo(new BreathMessage(airSupply), owner);
     }
 }

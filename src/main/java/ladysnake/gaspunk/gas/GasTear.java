@@ -21,7 +21,7 @@ public class GasTear extends Gas {
         if (!handler.isImmune()) {
             if (firstTick && entity instanceof EntityPlayerMP)
                 PacketHandler.NET.sendTo(new ShaderMessage("shaders/post/blur.json"), (EntityPlayerMP) entity);
-            entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 5));
+            entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 119, 1));
         }
     }
 
