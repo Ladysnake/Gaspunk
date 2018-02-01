@@ -53,7 +53,7 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
             int particleAmount = 0;
             switch (gas.getParticleType()) {
                 case SMOKE:
-                    particleAmount = 4;
+                    particleAmount = 5;
                     break;
                 case TEARGAS:
                     particleAmount = 2;
