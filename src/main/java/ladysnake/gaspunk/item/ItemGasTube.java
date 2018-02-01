@@ -54,7 +54,8 @@ public class ItemGasTube extends Item {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(Objects.requireNonNull(getContainedGas(stack).getRegistryName()).toString());
+        // FIXME this is awful but I don't have time
+        tooltip.add(Objects.requireNonNull(getContainedGas(stack).getRegistryName()).getResourcePath().replace('_', ' '));
     }
 
     @Nonnull

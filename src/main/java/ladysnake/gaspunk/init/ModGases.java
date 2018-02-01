@@ -9,7 +9,9 @@ import ladysnake.gaspunk.gas.core.GasTypes;
 import ladysnake.gaspunk.gas.core.IGas;
 import ladysnake.gaspunk.gas.core.ILingeringGas;
 import ladysnake.gaspunk.item.ItemGasTube;
+import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
@@ -19,6 +21,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 
@@ -53,8 +56,12 @@ public class ModGases {
                 new GasHealingVapor().setRegistryName("healing_vapor"),
                 new GasToxic(GasTypes.SMOKE, 0xFF000000).setRegistryName("toxic_smoke"),
                 new GasToxic(GasTypes.GAS, 0x00FFFFFF).setRegistryName("sarin_gas"),
-                new GasTear(0xAA0033FF).setRegistryName("tear_gas")
+                new GasTear(0xAAAACCCC).setRegistryName("tear_gas")
         );
+        for (EnumDyeColor color : EnumDyeColor.values()) {
+            // this is probably illegal in 53 states but I didn't want to parse the value back from the table
+            event.getRegistry().register(new Gas(GasTypes.SMOKE,  0xFF000000 | (int) ReflectionHelper.getPrivateValue(EnumDyeColor.class, color, "colorValue", "field_193351_w")).setRegistryName("colored_smoke_" + color.getName()));
+        }
     }
 
     @SubscribeEvent

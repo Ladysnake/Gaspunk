@@ -2,6 +2,7 @@ package ladysnake.gaspunk;
 
 import ladysnake.gaspunk.compat.BaublesCompatHandler;
 import ladysnake.gaspunk.gas.core.CapabilityBreathing;
+import ladysnake.gaspunk.gas.core.IGas;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.network.PacketHandler;
@@ -33,7 +34,7 @@ public class CommonProxy {
 
     }
 
-    public void makeSmoke(World world, double x, double y, double z, int color, int amount, int radX, int radY, int radZ) {
+    public void makeSmoke(World world, double x, double y, double z, int color, int amount, int radX, int radY, IGas.ParticleTypes texture) {
 
     }
 

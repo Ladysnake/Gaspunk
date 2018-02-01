@@ -15,5 +15,8 @@ public class Configuration {
 
     public static class Client {
         public boolean useShaders = true;
+
+        @Config.Comment({"Display a custom overlay when inside a gas cloud", "combine with useShaders for an animated overlay"})
+        public boolean renderGasOverlays = false;
     }
 }

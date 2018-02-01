@@ -9,19 +9,19 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class ParticleGasSmoke extends Particle {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(GasPunk.MOD_ID, "entity/particle_smoke");
     public static final ResourceLocation CHLORINE_TEXTURE = new ResourceLocation(GasPunk.MOD_ID, "entity/particle_chlorine");
+    public static final ResourceLocation TEARGAS_TEXTURE = new ResourceLocation(GasPunk.MOD_ID, "entity/particle_lachrymator");
+    public static final ResourceLocation SMOKE_TEXTURE = new ResourceLocation(GasPunk.MOD_ID, "entity/particle_smoke");
+    public static final ResourceLocation VAPOR_TEXTURE = new ResourceLocation(GasPunk.MOD_ID, "entity/particle_vapor");
 
     public ParticleGasSmoke(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, float red, float green, float blue, float alpha, float scale) {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn);
         this.setTexture(CHLORINE_TEXTURE);
-//        this.particleRed = red;
-//        this.particleGreen = green;
-//        this.particleBlue = blue;
-//        this.particleAlpha = 0.5f;
+        this.particleRed = red;
+        this.particleGreen = green;
+        this.particleBlue = blue;
+        this.particleAlpha = alpha;
         this.giveRandomMotion(0, 0, 0);
-//        this.motionX *= 1.4;
-//        this.motionZ *= 1.4;
         this.motionY *= 0.5;
         this.particleScale = scale;
         this.setMaxAge(100);

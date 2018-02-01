@@ -21,6 +21,12 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
 
     int getColor();
 
+    ParticleTypes getParticleType();
+
     @SideOnly(Side.CLIENT)
     void renderOverlay(float concentration, float partialTicks, ScaledResolution resolution);
+
+    enum ParticleTypes {
+        CHLORINE, TEARGAS, SMOKE, VAPOR
+    }
 }
