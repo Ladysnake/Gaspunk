@@ -26,8 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Optional.Interface(iface = "baubles.api.IBauble", modid = "baubles", striprefs = true)
-@Optional.Interface(iface = "baubles.api.render.IRenderBauble", modid = "baubles", striprefs = true)
-public class ItemGrenadeBelt extends Item implements IBauble, IRenderBauble {
+public class ItemGrenadeBelt extends Item implements IBauble {
 
     public static final String NBT_TAG_BELT_STACK = "gaspunk:belt_equipped";
 
@@ -85,12 +84,6 @@ public class ItemGrenadeBelt extends Item implements IBauble, IRenderBauble {
                 }
             }
         }
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void onPlayerBaubleRender(ItemStack stack, EntityPlayer player, RenderType type, float partialTicks) {
-//        BandoulierTest.MODEL.render(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, player.rotationYaw, player.rotationPitch, 1.0f);
     }
 
     public class BeltInventoryListener implements IContainerListener {
