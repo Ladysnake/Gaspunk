@@ -36,7 +36,7 @@ public interface ILingeringGas extends IGas {
     }
 
     default int getLingeringTime() {
-        return 500;
+        return 1000;
     }
 
     default void addEffectToEntity(EntityLivingBase entity, float concentration) {

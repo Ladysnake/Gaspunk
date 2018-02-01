@@ -34,9 +34,12 @@ public class ModGases {
     public static IForgeRegistry<IGas> REGISTRY;
 
 
-    public static final IGas VAPOR = new Gas(GasTypes.VAPOR, 0x00FFFFFF);
+    public static final IGas VAPOR = new Gas(GasTypes.VAPOR, 0x00FFFFFF, 0xAA0033FF);
     public static final IGas HEALING_VAPOR = VAPOR;
+    public static final IGas SARIN_GAS = VAPOR;
     public static final IGas SMOKE = VAPOR;
+    public static final IGas TEAR_GAS = VAPOR;
+    public static final IGas TOXIC_SMOKE = VAPOR;
 
     @SubscribeEvent
     public static void addRegistries(RegistryEvent.NewRegistry event) {
@@ -56,7 +59,7 @@ public class ModGases {
                 new GasHealingVapor().setRegistryName("healing_vapor"),
                 new GasToxic(GasTypes.SMOKE, 0xFF000000).setRegistryName("toxic_smoke"),
                 new GasToxic(GasTypes.GAS, 0x00FFFFFF).setRegistryName("sarin_gas"),
-                new GasTear(0xAAAACCCC).setRegistryName("tear_gas")
+                new GasTear(0xAACCCCCC).setRegistryName("tear_gas")
         );
         for (EnumDyeColor color : EnumDyeColor.values()) {
             // this is probably illegal in 53 states but I didn't want to parse the value back from the table
@@ -72,6 +75,12 @@ public class ModGases {
     public static void initRecipes() {
         addRecipe(VAPOR, new ItemStack(ModItems.SMOKE_POWDER), SMOKE);
         addRecipe(VAPOR, new ItemStack(Items.GHAST_TEAR), HEALING_VAPOR);
+        addRecipe(VAPOR, new ItemStack(ModItems.ASH), TOXIC_SMOKE);
+        addRecipe(VAPOR, new ItemStack(Items.POISONOUS_POTATO), SARIN_GAS);
+        addRecipe(SMOKE, new ItemStack(Items.FERMENTED_SPIDER_EYE), TEAR_GAS);
+        for (EnumDyeColor color : EnumDyeColor.values()) {
+            addRecipe(SMOKE, new ItemStack(Items.DYE, 1, color.getDyeDamage()), REGISTRY.getValue(new ResourceLocation(GasPunk.MOD_ID, "colored_smoke_" + color.getName())));
+        }
     }
 
     public static void addRecipe(IGas prerequisite, ItemStack ingredient, IGas result) {
