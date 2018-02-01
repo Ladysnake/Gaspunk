@@ -50,11 +50,6 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
         return color;
     }
 
-    @Override
-    public ParticleTypes getParticleType() {
-        return ParticleTypes.VAPOR;
-    }
-
     protected ResourceLocation getOverlayTexture() {
         return Configuration.client.useShaders ? NOISE_TEX_PATH : GAS_TEX_PATH;
     }
@@ -75,7 +70,7 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         Minecraft.getMinecraft().getTextureManager().bindTexture(getOverlayTexture());
         ShaderUtil.useShader(ShaderUtil.test);
-        ShaderUtil.setUniform("gasColor", new float[]{1, 1, 1, 1});
+        ShaderUtil.setUniform("gasColor", new float[]{r, g, b, a});
         ShaderUtil.setUniform("iTime", (int) System.currentTimeMillis());
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();

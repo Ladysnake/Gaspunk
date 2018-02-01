@@ -21,7 +21,9 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
 
     int getColor();
 
-    ParticleTypes getParticleType();
+    default ParticleTypes getParticleType() {
+        return getType().getParticleType();
+    }
 
     @SideOnly(Side.CLIENT)
     void renderOverlay(float concentration, float partialTicks, ScaledResolution resolution);

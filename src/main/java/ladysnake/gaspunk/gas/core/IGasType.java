@@ -12,4 +12,6 @@ public interface IGasType {
      */
     int getId();
 
+    IGas.ParticleTypes getParticleType();
+
 }
