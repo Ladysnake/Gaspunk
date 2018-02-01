@@ -1,6 +1,7 @@
 package ladysnake.gaspunk.client.render.entity;
 
 import baubles.api.BaublesApi;
+import baubles.api.render.IRenderBauble;
 import ladysnake.gaspunk.client.model.ModelBandoulier;
 import ladysnake.gaspunk.init.ModItems;
 import net.minecraft.client.Minecraft;
@@ -24,6 +25,7 @@ public class LayerBelt implements LayerRenderer<EntityPlayer> {
     @Override
     public void doRenderLayer(@Nullable EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         if (player != null && BaublesApi.isBaubleEquipped(player, ModItems.GRENADE_BELT) >= 0) {
+            IRenderBauble.Helper.rotateIfSneaking(player);
             Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("gaspunk:textures/entity/grenade_belt.png"));
             bandoulier.render(player, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
         }
