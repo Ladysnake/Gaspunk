@@ -37,8 +37,10 @@ public class ParticleManager {
 
     @SubscribeEvent
     public static void onTextureStitch(TextureStitchEvent.Pre event) {
-        event.getMap().registerSprite(ParticleGasSmoke.TEXTURE);
+        event.getMap().registerSprite(ParticleGasSmoke.SMOKE_TEXTURE);
         event.getMap().registerSprite(ParticleGasSmoke.CHLORINE_TEXTURE);
+        event.getMap().registerSprite(ParticleGasSmoke.VAPOR_TEXTURE);
+        event.getMap().registerSprite(ParticleGasSmoke.TEARGAS_TEXTURE);
     }
 
     @SubscribeEvent
@@ -85,11 +87,11 @@ public class ParticleManager {
             // render normal particles
             {
                 GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-                GlStateManager.enableLighting();
+//                GlStateManager.enableLighting();
                 buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
                 particles.forEach(p -> p.renderParticle(buffer, player, partialTicks, f, f4, f1, f2, f3));
                 tess.draw();
-                GlStateManager.disableLighting();
+//                GlStateManager.disableLighting();
             }
 
             GlStateManager.enableCull();

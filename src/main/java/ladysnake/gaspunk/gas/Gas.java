@@ -1,6 +1,8 @@
 package ladysnake.gaspunk.gas;
 
+import ladysnake.gaspunk.Configuration;
 import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.client.render.ShaderUtil;
 import ladysnake.gaspunk.gas.core.IGas;
 import ladysnake.gaspunk.gas.core.IGasType;
 import net.minecraft.client.Minecraft;
@@ -18,6 +20,8 @@ import java.awt.image.ColorModel;
 
 public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
     public static final ResourceLocation GAS_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/vapor_overlay.png");
+    public static final ResourceLocation NOISE_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/noise.png");
+
     protected final IGasType type;
     protected final int color;
 
@@ -46,8 +50,13 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
         return color;
     }
 
+    @Override
+    public ParticleTypes getParticleType() {
+        return ParticleTypes.VAPOR;
+    }
+
     protected ResourceLocation getOverlayTexture() {
-        return GAS_TEX_PATH;
+        return Configuration.client.useShaders ? NOISE_TEX_PATH : GAS_TEX_PATH;
     }
 
     @SideOnly(Side.CLIENT)
@@ -65,6 +74,9 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         Minecraft.getMinecraft().getTextureManager().bindTexture(getOverlayTexture());
+        ShaderUtil.useShader(ShaderUtil.test);
+        ShaderUtil.setUniform("gasColor", new float[]{1, 1, 1, 1});
+        ShaderUtil.setUniform("iTime", (int) System.currentTimeMillis());
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
@@ -73,6 +85,7 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
         bufferbuilder.pos((double) resolution.getScaledWidth(), 0.0D, -90.0D).tex(1.0D, 0.0D).endVertex();
         bufferbuilder.pos(0.0D, 0.0D, -90.0D).tex(0.0D, 0.0D).endVertex();
         tessellator.draw();
+        ShaderUtil.revert();
         GlStateManager.depthMask(true);
         GlStateManager.enableDepth();
         GlStateManager.enableAlpha();
