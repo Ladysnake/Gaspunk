@@ -75,7 +75,7 @@ public class ItemGrenade extends ItemGasTube {
 
     public EntityGasCloud explode(WorldServer worldIn, Vec3d pos, ItemStack stack) {
         EntityGasCloud cloud = super.explode(worldIn, pos, stack);
-        cloud.setMaxLifespan(400);
+        cloud.setMaxLifespan(600);
         if (!worldIn.isRemote)
             worldIn.spawnEntity(new EntityItem(worldIn, pos.x, pos.y, pos.z, new ItemStack(ModItems.EMPTY_GRENADE)));
         return cloud;
