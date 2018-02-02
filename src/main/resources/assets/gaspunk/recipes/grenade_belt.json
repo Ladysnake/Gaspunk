@@ -1,5 +1,11 @@
 {
   "type": "forge:ore_shaped",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "baubles"
+    }
+  ],
   "pattern": [
     "II#",
     "##G",
