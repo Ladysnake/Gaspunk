@@ -58,7 +58,7 @@ public class ParticleGasSmoke extends Particle {
         this.prevPosZ = this.posZ;
 
         if (this.particleAge++ >= this.particleMaxAge) {
-            this.particleAlpha *= .95;
+            this.particleAlpha *= .99;
             if (this.particleAlpha <= 0.01)
                 this.setExpired();
         } else

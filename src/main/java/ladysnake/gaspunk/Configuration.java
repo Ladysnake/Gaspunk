@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
 public class Configuration {
 
-    @Config.Comment("Disables gas clouds checking for a clear path to entities and make them only check straight distance instead")
+    @Config.Comment("Disables gas / smoke / vapor clouds checking for a clear path to entities and make them only check straight distance instead")
     public static boolean fastGas = false;
 
     @Config.Comment("Makes ash require smelting nether wart instead of rotten flesh")
