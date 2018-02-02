@@ -13,7 +13,6 @@ varying vec4 vPosition;       // the screen position of the current pixel
 // uniform variables are given in the java code
 uniform sampler2D texture;    // represents what's currently displayed on the screen
 uniform int iTime;      // current system time in milliseconds
-uniform int radius;   // the radius of the sphere
 uniform vec4 gasColor; // the color of the gas
 
 

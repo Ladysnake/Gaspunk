@@ -27,7 +27,7 @@ import java.util.Objects;
 
 public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData {
 
-    public static final int MAX_PROPAGATION_DISTANCE = 8;
+    public static final int MAX_PROPAGATION_DISTANCE = 10;
     public static final int MAX_PROPAGATION_DISTANCE_SQ = MAX_PROPAGATION_DISTANCE * MAX_PROPAGATION_DISTANCE;
     private static final DataParameter<Integer> CLOUD_AGE = EntityDataManager.createKey(EntityGasCloud.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> MAX_LIFESPAN = EntityDataManager.createKey(EntityGasCloud.class, DataSerializers.VARINT);
@@ -48,26 +48,26 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
         super.onUpdate();
 
         float ageRatio = 1 - getCloudAge() / (float) getMaxLifeSpan();
-        if (world.rand.nextInt(4) == 0) {
-
-            int particleAmount = 0;
-            switch (gas.getParticleType()) {
-                case SMOKE:
-                    particleAmount = 5;
-                    break;
-                case TEARGAS:
-                    particleAmount = 2;
-                    break;
-                case VAPOR:
-                    particleAmount = 1;
-                    break;
-                case CHLORINE:
-                    particleAmount = 1;
-            }
-
-            int color = gas.getColor();
-            GasPunk.proxy.makeSmoke(world, posX, posY, posZ, color, particleAmount, MAX_PROPAGATION_DISTANCE / 2, 2, gas.getParticleType());
+        int particleAmount = 1;
+        /*
+        switch (gas.getParticleType()) {
+            case SMOKE:
+                particleAmount = 1;
+                break;
+            case TEARGAS:
+                particleAmount = 1;
+                break;
+            case VAPOR:
+                particleAmount = 1;
+                break;
+            case CHLORINE:
+                particleAmount = 1;
         }
+        */
+        int color = gas.getColor();
+        //if (world.rand.nextInt(4) == 0)
+            GasPunk.proxy.makeSmoke(world, posX, posY, posZ, color, particleAmount, MAX_PROPAGATION_DISTANCE-2, 2, gas.getParticleType());
+
         if (!world.isRemote) {
             int age = getCloudAge();
             this.setCloudAge(age + 1);
