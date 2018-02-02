@@ -22,21 +22,21 @@
     {
       "predicate": {
         "gaspunk:unpinned": 1,
-        "gaspunk:gas_type": 2
+        "gaspunk:gas_type": 1
       },
       "model": "gaspunk:item/smoke_grenade_unpinned"
     },
     {
       "predicate": {
         "gaspunk:unpinned": 0,
-        "gaspunk:gas_type": 3
+        "gaspunk:gas_type": 2
       },
       "model": "gaspunk:item/vapor_grenade_pinned"
     },
     {
       "predicate": {
         "gaspunk:unpinned": 1,
-        "gaspunk:gas_type": 3
+        "gaspunk:gas_type": 2
       },
       "model": "gaspunk:item/vapor_grenade_unpinned"
     }
