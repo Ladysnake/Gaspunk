@@ -65,8 +65,7 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
         }
         */
         int color = gas.getColor();
-        //if (world.rand.nextInt(4) == 0)
-            GasPunk.proxy.makeSmoke(world, posX, posY, posZ, color, particleAmount, MAX_PROPAGATION_DISTANCE-2, 2, gas.getParticleType());
+        GasPunk.proxy.makeSmoke(world, posX, posY, posZ, color, particleAmount, MAX_PROPAGATION_DISTANCE-2, 2, gas.getParticleType());
 
         if (!world.isRemote) {
             int age = getCloudAge();
