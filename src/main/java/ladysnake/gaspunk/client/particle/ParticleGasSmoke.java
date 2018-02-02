@@ -14,13 +14,16 @@ public class ParticleGasSmoke extends Particle {
     public static final ResourceLocation SMOKE_TEXTURE = new ResourceLocation(GasPunk.MOD_ID, "entity/particle_smoke");
     public static final ResourceLocation VAPOR_TEXTURE = new ResourceLocation(GasPunk.MOD_ID, "entity/particle_vapor");
 
-    public ParticleGasSmoke(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, float red, float green, float blue, float alpha, float scale) {
+    public float particleMaxAlpha;
+
+    public ParticleGasSmoke(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, float red, float green, float blue, float maxAlpha, float scale) {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn);
         this.setTexture(CHLORINE_TEXTURE);
         this.particleRed = red;
         this.particleGreen = green;
         this.particleBlue = blue;
-        this.particleAlpha = alpha;
+        this.particleAlpha = 0;
+        this.particleMaxAlpha = maxAlpha;
         this.giveRandomMotion(0, 0, 0);
         this.motionY *= 0.5;
         this.particleScale = scale;
@@ -54,11 +57,12 @@ public class ParticleGasSmoke extends Particle {
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
 
-        this.particleAlpha *= 0.99;
-
         if (this.particleAge++ >= this.particleMaxAge) {
-            this.setExpired();
-        }
+            this.particleAlpha *= .95;
+            if (this.particleAlpha <= 0.01)
+                this.setExpired();
+        } else
+            particleAlpha = Math.min((float) particleAge / (particleMaxAge / 2) * particleMaxAlpha, 1);
 
         this.motionY += 0.0005D;
         this.move(this.motionX, this.motionY, this.motionZ);
