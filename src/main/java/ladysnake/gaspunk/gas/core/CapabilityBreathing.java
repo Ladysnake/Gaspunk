@@ -5,6 +5,7 @@ import ladysnake.gaspunk.event.GasEvent;
 import ladysnake.gaspunk.item.ItemGasMask;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.INpc;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -56,7 +57,7 @@ public class CapabilityBreathing {
     }
 
     public static Optional<IBreathingHandler> getHandler(Entity entity) {
-        if (entity instanceof EntityPlayer)
+        if (entity instanceof EntityLivingBase)
             return Optional.ofNullable(entity.getCapability(CAPABILITY_BREATHING, null));
         return Optional.empty();
     }
@@ -64,7 +65,7 @@ public class CapabilityBreathing {
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof EntityLivingBase)
-            event.addCapability(new ResourceLocation(GasPunk.MOD_ID, "breathing_cap"), new Provider(event.getObject()));
+            event.addCapability(new ResourceLocation(GasPunk.MOD_ID, "breathing_cap"), new Provider((EntityLivingBase) event.getObject()));
     }
 
     @SubscribeEvent
@@ -76,17 +77,20 @@ public class CapabilityBreathing {
         /**
          * a value between 0 and 300, emulating the entity air stat with greater precision
          */
-        private float airSupply = 300;
+        protected float airSupply;
+        protected int maxAirSupply;
         private final EntityLivingBase owner;
         private final Map<IGas, Float> prevConcentrations = new HashMap<>();
         private final Map<IGas, Float> concentrations = new HashMap<>();
 
         DefaultBreathingHandler() {
-            this(null);
+            this(null, 300);
         }
 
-        public DefaultBreathingHandler(EntityLivingBase owner) {
+        public DefaultBreathingHandler(EntityLivingBase owner, int maxAirSupply) {
             this.owner = owner;
+            this.maxAirSupply = maxAirSupply;
+            this.airSupply = maxAirSupply;
         }
 
         /**
@@ -153,7 +157,7 @@ public class CapabilityBreathing {
                 prevConcentrations.clear();
                 prevConcentrations.putAll(concentrations);
                 // regenerate air supply if no toxic gas was inhaled
-                if (!appliedAirReduction && airSupply < 300) {
+                if (!appliedAirReduction && airSupply < maxAirSupply) {
                     this.setAirSupply(airSupply + 2);
                 }
             }
@@ -176,17 +180,26 @@ public class CapabilityBreathing {
 
         @Override
         public void setAirSupply(float airSupply) {
-            this.airSupply = Math.min(airSupply, 300);
+            this.airSupply = Math.min(airSupply, maxAirSupply);
         }
     }
 
     public static class Provider implements ICapabilitySerializable<NBTTagCompound> {
         final IBreathingHandler instance;
 
-        Provider(Entity object) {
-            this.instance = object instanceof EntityPlayerMP
-                    ? new PlayerBreathingHandler((EntityPlayerMP) object)
-                    : new DefaultBreathingHandler((EntityLivingBase) object);
+        Provider(EntityLivingBase object) {
+            if (object instanceof EntityPlayerMP)
+                this.instance = new PlayerBreathingHandler((EntityPlayerMP) object);
+            else {
+                int maxAir;
+                if (object instanceof EntityPlayer)
+                    maxAir = 300;
+                else if (object instanceof INpc)
+                    maxAir = 200;
+                else
+                    maxAir = 40;
+                this.instance = new DefaultBreathingHandler(object, maxAir);
+            }
         }
 
         @Override
