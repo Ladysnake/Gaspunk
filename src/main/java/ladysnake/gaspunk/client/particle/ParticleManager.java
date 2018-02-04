@@ -1,5 +1,6 @@
 package ladysnake.gaspunk.client.particle;
 
+import ladysnake.gaspunk.Configuration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -54,7 +55,8 @@ public class ParticleManager {
     }
 
     public void updateParticles() {
-        particles.forEach(Particle::onUpdate);
+        // particles cost a lot less to update than to render
+        particles.stream().limit(3*Configuration.client.maxParticles).forEach(Particle::onUpdate);
         particles.removeIf(p -> !p.isAlive());
     }
 
@@ -89,7 +91,9 @@ public class ParticleManager {
                 GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 //                GlStateManager.enableLighting();
                 buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
-                particles.forEach(p -> p.renderParticle(buffer, player, partialTicks, f, f4, f1, f2, f3));
+                particles.stream()
+                        .limit(Configuration.client.maxParticles)
+                        .forEach(p -> p.renderParticle(buffer, player, partialTicks, f, f4, f1, f2, f3));
                 tess.draw();
 //                GlStateManager.disableLighting();
             }
@@ -105,7 +109,8 @@ public class ParticleManager {
     }
 
     public void addParticle(Particle p) {
-        particles.add(p);
+//        if (particles.size() < Configuration.client.maxParticles)
+            particles.add(p);
     }
 
 }

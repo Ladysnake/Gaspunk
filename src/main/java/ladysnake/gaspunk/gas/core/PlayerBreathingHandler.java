@@ -9,7 +9,7 @@ public class PlayerBreathingHandler extends CapabilityBreathing.DefaultBreathing
     private final EntityPlayerMP owner;
 
     public PlayerBreathingHandler(EntityPlayerMP owner) {
-        super(owner);
+        super(owner, 300);
         this.owner = owner;
     }
 
