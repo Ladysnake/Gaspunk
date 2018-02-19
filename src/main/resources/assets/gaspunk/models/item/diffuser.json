@@ -2,5 +2,13 @@
   "parent": "item/generated",
   "textures": {
     "layer0": "gaspunk:items/diffuser"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "gaspunk:custom_skin": 1
+      },
+      "model": "gaspunk:item/grenade/skins/modoff/diffuser"
+    }
+  ]
 }

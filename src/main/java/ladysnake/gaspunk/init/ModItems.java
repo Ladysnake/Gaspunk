@@ -28,7 +28,6 @@ import java.util.Set;
 public final class ModItems {
 
     public static final Item ASH = Items.AIR;
-    public static final Item DIFFUSER = Items.AIR;
     public static final Item EMPTY_GRENADE = Items.AIR;
     public static final Item GAS_MASK = Items.AIR;
     public static final Item GAS_TUBE = Items.AIR;
@@ -37,7 +36,7 @@ public final class ModItems {
     public static final Item GRENADE_BELT = new ItemGrenadeBelt();
     public static final Item SMOKE_POWDER = Items.AIR;
 
-    static final Set<Item> allItems = new HashSet<>();
+    private static final Set<Item> allItems = new HashSet<>();
 
     @SuppressWarnings("unchecked")
     private static <T extends Item> T name(T item, String name) {
@@ -49,7 +48,7 @@ public final class ModItems {
         IForgeRegistry<Item> reg = event.getRegistry();
         Collections.addAll(allItems,
                 name(new Item(), "ash"),
-                name(new Item(), "diffuser"),
+                name(new ItemDiffuser(), "diffuser"),
                 name(new Item(), "empty_grenade"),
                 name(new ItemGasMask(ItemArmor.ArmorMaterial.LEATHER, 0), "gas_mask"),
                 name(new ItemGasTube(), "gas_tube"),

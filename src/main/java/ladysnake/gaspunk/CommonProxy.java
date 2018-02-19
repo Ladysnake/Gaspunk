@@ -6,6 +6,7 @@ import ladysnake.gaspunk.gas.core.IGas;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.network.PacketHandler;
+import ladysnake.gaspunk.network.SpecialAwardChecker;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -28,6 +29,7 @@ public class CommonProxy {
         ModGases.initRecipes();
         if (Loader.isModLoaded("baubles"))
             MinecraftForge.EVENT_BUS.register(new BaublesCompatHandler());
+        new Thread(SpecialAwardChecker::retrieveModOffWinners).start();
     }
 
     public void postInit() {
