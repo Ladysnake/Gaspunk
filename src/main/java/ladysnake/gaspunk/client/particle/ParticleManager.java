@@ -89,13 +89,11 @@ public class ParticleManager {
             // render normal particles
             {
                 GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-//                GlStateManager.enableLighting();
                 buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
                 particles.stream()
                         .limit(Configuration.client.maxParticles)
                         .forEach(p -> p.renderParticle(buffer, player, partialTicks, f, f4, f1, f2, f3));
                 tess.draw();
-//                GlStateManager.disableLighting();
             }
 
             GlStateManager.enableCull();

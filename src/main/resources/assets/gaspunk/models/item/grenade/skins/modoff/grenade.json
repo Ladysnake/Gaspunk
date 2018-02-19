@@ -2,7 +2,7 @@
   "parent": "item/generated",
   "textures": {
     "layer0": "gaspunk:items/liquid_gas_underlay",
-    "layer1": "gaspunk:items/nade_pinned"
+    "layer1": "gaspunk:items/nade_pinned_modoff"
   },
   "overrides": [
     {
@@ -10,41 +10,35 @@
         "gaspunk:unpinned": 1,
         "gaspunk:gas_type": 0
       },
-      "model": "gaspunk:item/grenade/grenade_unpinned"
+      "model": "gaspunk:item/grenade/skins/modoff/grenade_unpinned"
     },
     {
       "predicate": {
         "gaspunk:unpinned": 0,
         "gaspunk:gas_type": 1
       },
-      "model": "gaspunk:item/grenade/smoke_grenade_pinned"
+      "model": "gaspunk:item/grenade/skins/modoff/smoke_grenade_pinned"
     },
     {
       "predicate": {
         "gaspunk:unpinned": 1,
         "gaspunk:gas_type": 1
       },
-      "model": "gaspunk:item/grenade/smoke_grenade_unpinned"
+      "model": "gaspunk:item/grenade/skins/modoff/smoke_grenade_unpinned"
     },
     {
       "predicate": {
         "gaspunk:unpinned": 0,
         "gaspunk:gas_type": 2
       },
-      "model": "gaspunk:item/grenade/vapor_grenade_pinned"
+      "model": "gaspunk:item/grenade/skins/modoff/vapor_grenade_pinned"
     },
     {
       "predicate": {
         "gaspunk:unpinned": 1,
         "gaspunk:gas_type": 2
       },
-      "model": "gaspunk:item/grenade/vapor_grenade_unpinned"
-    },
-    {
-      "predicate": {
-        "gaspunk:custom_skin": 1
-      },
-      "model": "gaspunk:item/grenade/skins/modoff/grenade"
+      "model": "gaspunk:item/grenade/skins/modoff/vapor_grenade_unpinned"
     }
   ]
 }

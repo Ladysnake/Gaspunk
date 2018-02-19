@@ -25,6 +25,7 @@ public class ItemGrenade extends ItemGasTube {
         super();
         addPropertyOverride(new ResourceLocation(GasPunk.MOD_ID, "unpinned"),
                 ((stack, worldIn, entityIn) -> entityIn != null && entityIn.getActiveItemStack() == stack ? 1 : 0));
+        addPropertyOverride(ItemDiffuser.CUSTOM_SKIN_PROPERTY, ItemDiffuser.CUSTOM_SKIN_GETTER);
         this.setMaxStackSize(1);
     }
 
