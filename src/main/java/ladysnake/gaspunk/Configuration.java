@@ -16,9 +16,9 @@ public class Configuration {
     @Config.Comment("Makes ash require smelting nether wart instead of rotten flesh")
     public static boolean alternativeAshRecipe = false;
 
-    @Config.Comment({"If set to true, gaspunk will connect to an external server to detect if a player was awarded a custom grenade skin during the Modoff event",
-    "The only sent information is the player's Universally Unique Identifier"})
-    public static boolean allowModoffReward = false;
+    @Config.Comment({"If set to true, gaspunk will connect to the external Ladysnake server to detect if a player has special mod rewards (for instance, grenade skins)",
+    "The only sent information is the player's Universally Unique Identifier (UUID for short)"})
+    public static boolean ladysnakeServerConnection = false;
 
     public static Client client = new Client();
 
