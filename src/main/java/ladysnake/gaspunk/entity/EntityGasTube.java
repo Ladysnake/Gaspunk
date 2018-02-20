@@ -15,7 +15,7 @@ import net.minecraft.world.WorldServer;
 
 import javax.annotation.Nonnull;
 
-public class EntityGasTube extends EntityThrowable {
+public class EntityGasTube extends EntityNonRetardedThrowable {
     private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityGrenade.class, DataSerializers.ITEM_STACK);
 
     public EntityGasTube(World worldIn) {
