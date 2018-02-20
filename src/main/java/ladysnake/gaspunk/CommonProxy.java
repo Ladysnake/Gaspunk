@@ -1,11 +1,16 @@
 package ladysnake.gaspunk;
 
 import ladysnake.gaspunk.compat.BaublesCompatHandler;
+import ladysnake.gaspunk.entity.EntityGrenade;
 import ladysnake.gaspunk.gas.core.CapabilityBreathing;
 import ladysnake.gaspunk.gas.core.IGas;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.network.PacketHandler;
+import net.minecraft.block.BlockDispenser;
+import net.minecraft.dispenser.BehaviorProjectileDispense;
+import net.minecraft.dispenser.IPosition;
+import net.minecraft.entity.IProjectile;
 import ladysnake.gaspunk.network.SpecialAwardChecker;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -13,6 +18,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+
+import javax.annotation.Nonnull;
 
 public class CommonProxy {
 
@@ -30,6 +37,13 @@ public class CommonProxy {
         if (Loader.isModLoaded("baubles"))
             MinecraftForge.EVENT_BUS.register(new BaublesCompatHandler());
         new Thread(SpecialAwardChecker::retrieveModOffWinners).start();
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.GRENADE, new BehaviorProjectileDispense() {
+            @Nonnull
+            @Override
+            protected IProjectile getProjectileEntity(@Nonnull World worldIn, @Nonnull IPosition position, @Nonnull ItemStack stackIn) {
+                return new EntityGrenade(worldIn, null, stackIn);
+            }
+        });
     }
 
     public void postInit() {

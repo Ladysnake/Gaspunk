@@ -3,7 +3,8 @@ package ladysnake.gaspunk.item;
 import baubles.api.BaubleType;
 import baubles.api.BaublesApi;
 import baubles.api.IBauble;
-import baubles.api.render.IRenderBauble;
+import baubles.common.Baubles;
+import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.init.ModItems;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,17 +20,15 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Optional.Interface(iface = "baubles.api.IBauble", modid = "baubles", striprefs = true)
+@Optional.Interface(iface = "baubles.api.IBauble", modid = Baubles.MODID, striprefs = true)
 public class ItemGrenadeBelt extends Item implements IBauble {
 
-    public static final String NBT_TAG_BELT_STACK = "gaspunk:belt_equipped";
+    public static final String NBT_TAG_BELT_STACK = GasPunk.MOD_ID + ":belt_equipped";
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
