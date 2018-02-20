@@ -53,14 +53,15 @@ public class EntityGrenade extends EntityGasTube {
 
     @Override
     protected void onImpact(@Nonnull RayTraceResult result) {
-        if (result.typeOfHit == RayTraceResult.Type.BLOCK && world.getBlockState(result.getBlockPos()).isFullBlock()) {
+        if (result.typeOfHit == RayTraceResult.Type.BLOCK && world.getBlockState(result.getBlockPos()).isFullBlock() && this.ignoreTime-- <= 0) {
             Vec3i hitVector = result.sideHit.getDirectionVec();
             motionX *= hitVector.getX() * -0.4 + 0.2;
             if (Math.abs(motionX) < 0.2) motionX = 0;
             motionY *= hitVector.getY() * -0.4 + 0.2;
-            if (Math.abs(motionY) < 0.2) motionY = 0;
+            if (Math.abs(motionY) < 0.3) motionY = 0;
             motionZ *= hitVector.getZ() * -0.4 + 0.2;
             if (Math.abs(motionZ) < 0.2) motionZ = 0;
+            this.ignoreTime = 2;
             isAirBorne = true;
         } else if (result.typeOfHit == RayTraceResult.Type.ENTITY) {
             this.motionX *= -0.05;
