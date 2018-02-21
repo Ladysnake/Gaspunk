@@ -9,7 +9,7 @@ import ladysnake.gaspunk.gas.core.GasTypes;
 import ladysnake.gaspunk.gas.core.IGas;
 import ladysnake.gaspunk.gas.core.ILingeringGas;
 import ladysnake.gaspunk.item.ItemGasTube;
-import net.minecraft.entity.passive.EntitySheep;
+import ladysnake.sicklib.sickness.ISickness;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
@@ -34,19 +34,22 @@ public class ModGases {
     public static IForgeRegistry<IGas> REGISTRY;
 
 
-    public static final IGas VAPOR = new Gas(GasTypes.VAPOR, 0x00FFFFFF, 0xAA0033FF);
-    public static final IGas HEALING_VAPOR = VAPOR;
-    public static final IGas SARIN_GAS = VAPOR;
-    public static final IGas SMOKE = VAPOR;
-    public static final IGas TEAR_GAS = VAPOR;
-    public static final IGas TOXIC_SMOKE = VAPOR;
+    /**
+     * The default gas, does nothing. Is actually water vapor in game
+     */
+    public static final Gas AIR = new Gas(GasTypes.VAPOR, 0x99FFFFFF, 0xAA0033FF);
+    public static final Gas HEALING_VAPOR = new GasHealingVapor();
+    public static final Gas SARIN_GAS = new GasToxic(GasTypes.GAS, 0x00FFFFFF);
+    public static final Gas SMOKE = new Gas(GasTypes.SMOKE, 0xFFFFFFFF);
+    public static final Gas TEAR_GAS = new GasTear(0xAACCCCCC);
+    public static final Gas TOXIC_SMOKE = new GasToxic(GasTypes.SMOKE, 0xFF000000);
 
     @SubscribeEvent
     public static void addRegistries(RegistryEvent.NewRegistry event) {
         REGISTRY = new RegistryBuilder<IGas>()
                 .setType(IGas.class)
                 .setName(new ResourceLocation(GasPunk.MOD_ID, "gases"))
-                .setMaxID(255)
+                .setDefaultKey(new ResourceLocation("air"))
                 .add((ILingeringGas::onRegistryAddGas))
                 .create();
     }
@@ -54,12 +57,12 @@ public class ModGases {
     @SubscribeEvent
     public static void addGases(RegistryEvent.Register<IGas> event) {
         event.getRegistry().registerAll(
-                VAPOR.setRegistryName(new ResourceLocation(GasPunk.MOD_ID, "air")),
-                new Gas(GasTypes.SMOKE, 0xFFFFFFFF).setRegistryName("smoke"),
-                new GasHealingVapor().setRegistryName("healing_vapor"),
-                new GasToxic(GasTypes.SMOKE, 0xFF000000).setRegistryName("toxic_smoke"),
-                new GasToxic(GasTypes.GAS, 0x00FFFFFF).setRegistryName("sarin_gas"),
-                new GasTear(0xAACCCCCC).setRegistryName("tear_gas")
+                AIR.setRegistryName("air"),
+                SMOKE.setRegistryName("smoke"),
+                HEALING_VAPOR.setRegistryName("healing_vapor"),
+                TOXIC_SMOKE.setRegistryName("toxic_smoke"),
+                SARIN_GAS.setRegistryName("sarin_gas"),
+                TEAR_GAS.setRegistryName("tear_gas")
         );
         for (EnumDyeColor color : EnumDyeColor.values()) {
             // this is probably illegal in 53 states but I didn't want to parse the value back from the table
@@ -68,15 +71,15 @@ public class ModGases {
     }
 
     @SubscribeEvent
-    public static void addPotions(RegistryEvent.Register<Potion> event) {
+    public static void addPotions(RegistryEvent.Register<ISickness> event) {
         ILingeringGas.LINGERING_EFFECTS.values().forEach(event.getRegistry()::register);
     }
 
     public static void initRecipes() {
-        addRecipe(VAPOR, new ItemStack(ModItems.SMOKE_POWDER), SMOKE);
-        addRecipe(VAPOR, new ItemStack(Items.GHAST_TEAR), HEALING_VAPOR);
-        addRecipe(VAPOR, new ItemStack(ModItems.ASH), TOXIC_SMOKE);
-        addRecipe(VAPOR, new ItemStack(Items.POISONOUS_POTATO), SARIN_GAS);
+        addRecipe(AIR, new ItemStack(ModItems.SMOKE_POWDER), SMOKE);
+        addRecipe(AIR, new ItemStack(Items.GHAST_TEAR), HEALING_VAPOR);
+        addRecipe(AIR, new ItemStack(ModItems.ASH), TOXIC_SMOKE);
+        addRecipe(AIR, new ItemStack(Items.POISONOUS_POTATO), SARIN_GAS);
         addRecipe(SMOKE, new ItemStack(Items.FERMENTED_SPIDER_EYE), TEAR_GAS);
         for (EnumDyeColor color : EnumDyeColor.values()) {
             addRecipe(SMOKE, new ItemStack(Items.DYE, 1, color.getDyeDamage()), REGISTRY.getValue(new ResourceLocation(GasPunk.MOD_ID, "colored_smoke_" + color.getName())));

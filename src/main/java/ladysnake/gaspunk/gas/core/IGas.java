@@ -7,6 +7,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public interface IGas extends IForgeRegistryEntry<IGas> {
+
     IGasType getType();
 
     default boolean isToxic() {
@@ -14,9 +15,11 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
     }
 
     default void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick) {
+        // NO-OP
     }
 
     default void onExitCloud(EntityLivingBase entity, IBreathingHandler handler) {
+        // NO-OP
     }
 
     int getColor();
@@ -31,6 +34,11 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
 
     @SideOnly(Side.CLIENT)
     void renderOverlay(float concentration, float partialTicks, ScaledResolution resolution);
+
+    default String getUnlocalizedName() {
+        // pattern : gas.<modid>.<name>
+        return ("gas." + getRegistryName()).replace(':', '.');
+    }
 
     enum ParticleTypes {
         CHLORINE, TEARGAS, SMOKE, VAPOR

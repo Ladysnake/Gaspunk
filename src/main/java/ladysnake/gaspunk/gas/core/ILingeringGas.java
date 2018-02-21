@@ -1,10 +1,10 @@
 package ladysnake.gaspunk.gas.core;
 
-import ladysnake.gaspunk.potion.PotionGas;
+import ladysnake.gaspunk.sickness.SicknessGas;
+import ladysnake.sicklib.capability.CapabilitySickness;
+import ladysnake.sicklib.sickness.ISickness;
+import ladysnake.sicklib.sickness.SicknessEffect;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.registries.IForgeRegistryInternal;
 import net.minecraftforge.registries.RegistryManager;
 
@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public interface ILingeringGas extends IGas {
 
-    Map<ILingeringGas, Potion> LINGERING_EFFECTS = new HashMap<>();
+    Map<ILingeringGas, ISickness> LINGERING_EFFECTS = new HashMap<>();
 
     @SuppressWarnings("unused")
     static void onRegistryAddGas(IForgeRegistryInternal<IGas> owner, RegistryManager stage, int id, IGas obj, @Nullable IGas oldObj) {
@@ -24,23 +24,18 @@ public interface ILingeringGas extends IGas {
         }
     }
 
-    void applyLingeringEffect(EntityLivingBase entity, int amplifier);
+    boolean applyLingeringEffect(EntityLivingBase entity, SicknessEffect effect);
 
-    default boolean isReadyForLingeringEffect(int duration, int amplifier) {
-        int j = 25 >> amplifier;
-        return j <= 0 || duration % j == 0;
+    default ISickness createPotion() {
+        return new SicknessGas(this).setRegistryName(Objects.requireNonNull(this.getRegistryName()));
     }
 
-    default Potion createPotion() {
-        return new PotionGas(this.isToxic(), this.getColor(), this).setRegistryName(Objects.requireNonNull(this.getRegistryName()));
-    }
-
-    default int getLingeringTime() {
-        return 1000;
+    default float getToxicity() {
+        return 1F;
     }
 
     default void addEffectToEntity(EntityLivingBase entity, float concentration) {
-        entity.addPotionEffect(new PotionEffect(LINGERING_EFFECTS.get(this), MathHelper.floor(getLingeringTime() * concentration)));
+        CapabilitySickness.getHandler(entity).ifPresent(h -> h.addSickness(new SicknessEffect(LINGERING_EFFECTS.get(this), getToxicity() * concentration)));
     }
 
     @Override

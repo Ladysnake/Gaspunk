@@ -3,6 +3,7 @@ package ladysnake.gaspunk.gas;
 import ladysnake.gaspunk.gas.core.IBreathingHandler;
 import ladysnake.gaspunk.gas.core.IGasType;
 import ladysnake.gaspunk.gas.core.ILingeringGas;
+import ladysnake.sicklib.sickness.SicknessEffect;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 
@@ -17,8 +18,9 @@ public class GasToxic extends Gas implements ILingeringGas {
     }
 
     @Override
-    public void applyLingeringEffect(EntityLivingBase entity, int amplifier) {
+    public boolean applyLingeringEffect(EntityLivingBase entity, SicknessEffect effect) {
         entity.attackEntityFrom(DamageSource.DROWN, 1);
+        return true;
     }
 
     @Override
