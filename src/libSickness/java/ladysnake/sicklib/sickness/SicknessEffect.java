@@ -32,6 +32,10 @@ public class SicknessEffect {
         this.ticksSinceBeginning = nbt.getInteger("ticksSinceBeginning");
     }
 
+    public ISickness getSickness() {
+        return sickness;
+    }
+
     /**
      * Sets the severity of this effect.
      * If the severity is 0 at any given tick, this effect will get cleared.
@@ -46,6 +50,19 @@ public class SicknessEffect {
      */
     public float getSeverity() {
         return severity;
+    }
+
+    /**
+     * Merges this sickness effect with another of the same type, cumulating their severity
+     * @param other another sickness effect of the same type as this one
+     * @return this effect
+     */
+    public SicknessEffect mergeSeverities(SicknessEffect other) {
+        if (other.getSickness() == this.getSickness()) {
+            this.setSeverity(this.getSeverity() + other.getSeverity());
+            other.setSeverity(0);
+        }
+        return this;
     }
 
     /**
