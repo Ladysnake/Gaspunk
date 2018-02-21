@@ -1,5 +1,5 @@
 #version 120
-//#extension GL_EXT_gpu_shader4 : require TODO make some varying flat
+//#extension GL_EXT_gpu_shader4 : require
 
 #define totalSteps 4
 #define totalLayers 4
