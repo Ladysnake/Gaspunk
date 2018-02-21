@@ -15,19 +15,21 @@ import org.apache.logging.log4j.Logger;
 @Mod(
         modid = GasPunk.MOD_ID,
         name = GasPunk.MOD_NAME,
-        version = GasPunk.VERSION
+        version = GasPunk.VERSION,
+        dependencies = GasPunk.DEPENDENCIES
 )
 public class GasPunk {
 
     public static final String MOD_ID = "gaspunk";
     public static final String MOD_NAME = "GasPunk";
-    public static final String VERSION = "1.1";
+    // Automagically replaced by gradle during the build
+    public static final String VERSION = "@VERSION@";
 
-    /**
-     * This is the instance of your mod as created by Forge. It will never be null.
-     */
-    @Mod.Instance(MOD_ID)
-    public static GasPunk INSTANCE;
+    public static final String DEPENDENCIES =
+            // Version 2594 introduced IForgeRegistry#getValuesCollection
+            "required:forge@[14.23.1.2594,);" +
+            "after:jei;" +
+            "after:baubles;";
 
     @SidedProxy(
             modId = GasPunk.MOD_ID,

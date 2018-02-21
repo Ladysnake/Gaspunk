@@ -140,14 +140,7 @@ public class CapabilityBreathing {
                             continue;
                         if (gas.isToxic()) {
                             if (airSupply > 0 && !appliedAirReduction) {
-                                float finalEntityModifier = entityModifier;
-                                // take all gases into account for the breathing penalty
-                                float totalGasConcentration = (float) Math.max(1, concentrations.entrySet().stream()
-                                        .filter(e -> e.getKey().isToxic())
-                                        .mapToDouble(Map.Entry::getValue)
-                                        .map(c -> c * finalEntityModifier).sum());
-                                // air supply decreases 4x as fast as underwater under worse conditions
-                                this.setAirSupply(airSupply - 4 * totalGasConcentration);
+                                this.setAirSupply(airSupply - 2);
                             }
                             appliedAirReduction = true;
                         }

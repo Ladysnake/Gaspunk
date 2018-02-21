@@ -31,6 +31,7 @@ public class ItemGlassTube extends Item {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
         RayTraceResult raytraceresult = this.rayTrace(worldIn, playerIn, true);
 
+        //noinspection ConstantConditions
         if (raytraceresult == null) {
             return new ActionResult<>(EnumActionResult.PASS, itemstack);
         } else {
@@ -43,7 +44,7 @@ public class ItemGlassTube extends Item {
 
                 if (worldIn.getBlockState(blockpos).getMaterial() == Material.WATER) {
                     worldIn.playSound(playerIn, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL, 1.0F, 1.0F);
-                    return new ActionResult<>(EnumActionResult.SUCCESS, this.turnBottleIntoItem(itemstack, playerIn, ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(ModGases.VAPOR)));
+                    return new ActionResult<>(EnumActionResult.SUCCESS, this.turnBottleIntoItem(itemstack, playerIn, ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(ModGases.AIR)));
                 }
             }
 

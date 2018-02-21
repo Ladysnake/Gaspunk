@@ -32,7 +32,7 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
     private static final DataParameter<Integer> CLOUD_AGE = EntityDataManager.createKey(EntityGasCloud.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> MAX_LIFESPAN = EntityDataManager.createKey(EntityGasCloud.class, DataSerializers.VARINT);
 
-    private IGas gas = ModGases.VAPOR;
+    private IGas gas = ModGases.AIR;
 
     public EntityGasCloud(World worldIn) {
         super(worldIn);
