@@ -1,6 +1,7 @@
 package ladysnake.sicklib.capability;
 
 import ladysnake.sicklib.Pathos;
+import ladysnake.sicklib.sickness.ISickness;
 import ladysnake.sicklib.sickness.SicknessEffect;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,6 +22,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.BiFunction;
 
 @Mod.EventBusSubscriber(modid = Pathos.MOD_ID)
 public class CapabilitySickness {
@@ -51,7 +53,7 @@ public class CapabilitySickness {
 
     public static class DefaultSicknessHandler implements ISicknessHandler {
         private EntityLivingBase carrier;
-        private List<SicknessEffect> sicknesses = new ArrayList<>();
+        private Map<ISickness, SicknessEffect> sicknesses = new HashMap<>();
 
         DefaultSicknessHandler() {
             super();
@@ -62,14 +64,20 @@ public class CapabilitySickness {
         }
 
         @Override
-        public void addSickness(SicknessEffect effect) {
-            sicknesses.add(effect);
+        public boolean isSicknessActive(ISickness sickness) {
+            return sicknesses.containsKey(sickness);
+        }
+
+        @Override
+        public void addSickness(SicknessEffect effect, BiFunction<SicknessEffect, SicknessEffect, SicknessEffect> mergeFunction) {
+            sicknesses.merge(effect.getSickness(), effect, mergeFunction);
         }
 
         @Override
         public void tick() {
-            for (Iterator<SicknessEffect> iterator = sicknesses.iterator(); iterator.hasNext(); ) {
-                SicknessEffect sickness = iterator.next();
+            for (Iterator<Map.Entry<ISickness, SicknessEffect>> iterator = sicknesses.entrySet().iterator(); iterator.hasNext(); ) {
+                Map.Entry<ISickness, SicknessEffect> entry = iterator.next();
+                SicknessEffect sickness = entry.getValue();
                 sickness.performEffect(carrier);
                 if (sickness.getSeverity() == 0)    // consider that effect cured
                     iterator.remove();
@@ -78,7 +86,7 @@ public class CapabilitySickness {
 
         @Override
         public Collection<SicknessEffect> getActiveSicknesses() {
-            return sicknesses;
+            return sicknesses.values();
         }
     }
 
