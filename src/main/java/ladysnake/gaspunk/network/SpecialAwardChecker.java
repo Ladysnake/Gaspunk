@@ -26,7 +26,7 @@ public class SpecialAwardChecker {
     public static void retrieveModOffWinners() {
         try {
             Gson GSON = new Gson();
-            URLConnection database = new URL("http://ladysnake.glitch.me/gaspunk/modoff").openConnection();
+            URLConnection database = new URL("http://ladysnake.glitch.me/gaspunk/rewards").openConnection();
             database.connect();
             BufferedReader in = new BufferedReader(new InputStreamReader(database.getInputStream()));
             String inputLine;
