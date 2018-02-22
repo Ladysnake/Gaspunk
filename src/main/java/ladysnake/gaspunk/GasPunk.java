@@ -16,7 +16,8 @@ import org.apache.logging.log4j.Logger;
         modid = GasPunk.MOD_ID,
         name = GasPunk.MOD_NAME,
         version = GasPunk.VERSION,
-        dependencies = GasPunk.DEPENDENCIES
+        dependencies = GasPunk.DEPENDENCIES,
+        guiFactory = "ladysnake.gaspunk.client.config.GasPunkConfigFactory"
 )
 public class GasPunk {
 
@@ -54,7 +55,7 @@ public class GasPunk {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         LOGGER = event.getModLog();
-        proxy.preInit();
+        proxy.preInit(event);
     }
 
     /**

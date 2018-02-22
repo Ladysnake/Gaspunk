@@ -11,32 +11,36 @@ import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.BehaviorProjectileDispense;
 import net.minecraft.dispenser.IPosition;
 import net.minecraft.entity.IProjectile;
-import ladysnake.gaspunk.network.SpecialAwardChecker;
+import ladysnake.gaspunk.util.SpecialRewardChecker;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import javax.annotation.Nonnull;
 
 public class CommonProxy {
+    protected Configuration config;
 
-    public void preInit() {
+    public void preInit(FMLPreInitializationEvent event) {
         CapabilityBreathing.register();
+        config = new Configuration(event.getSuggestedConfigurationFile());
     }
 
     public void init() {
         PacketHandler.initPackets();
-        if (Configuration.alternativeAshRecipe)
+        if (GasPunkConfig.alternativeAshRecipe)
             GameRegistry.addSmelting(Items.NETHER_WART, new ItemStack(ModItems.ASH), 0.8f);
         else
             GameRegistry.addSmelting(Items.ROTTEN_FLESH, new ItemStack(ModItems.ASH), 0.35f);
         ModGases.initRecipes();
         if (Loader.isModLoaded("baubles"))
             MinecraftForge.EVENT_BUS.register(new BaublesCompatHandler());
-        new Thread(SpecialAwardChecker::retrieveModOffWinners).start();
+        new Thread(SpecialRewardChecker::retrieveModOffWinners).start();
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.GRENADE, new BehaviorProjectileDispense() {
             @Nonnull
             @Override
@@ -47,11 +51,22 @@ public class CommonProxy {
     }
 
     public void postInit() {
-
+        // NO-OP
     }
 
     public void makeSmoke(World world, double x, double y, double z, int color, int amount, int radX, int radY, IGas.ParticleTypes texture) {
+        // NO-OP
+    }
 
+    /**
+     * Called by {@link SpecialRewardChecker#retrieveModOffWinners()} when the list of winners has been successfully retrieved
+     */
+    public void onSpecialRewardsRetrieved() {
+        // NO-OP
+    }
+
+    public SpecialRewardChecker.GrenadeSkins getSelectedSkin() {
+        return SpecialRewardChecker.GrenadeSkins.NONE;
     }
 
 }

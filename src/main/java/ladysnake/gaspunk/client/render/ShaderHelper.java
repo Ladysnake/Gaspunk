@@ -1,6 +1,6 @@
 package ladysnake.gaspunk.client.render;
 
-import ladysnake.gaspunk.Configuration;
+import ladysnake.gaspunk.GasPunkConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -39,7 +39,7 @@ public final class ShaderHelper {
     }
 
     public static boolean noShaders() {
-        return !OpenGlHelper.shadersSupported || !Configuration.client.useShaders;
+        return !OpenGlHelper.shadersSupported || !GasPunkConfig.client.useShaders;
     }
 
     /**

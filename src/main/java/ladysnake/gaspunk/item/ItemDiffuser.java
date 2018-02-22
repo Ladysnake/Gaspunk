@@ -1,7 +1,7 @@
 package ladysnake.gaspunk.item;
 
 import ladysnake.gaspunk.GasPunk;
-import ladysnake.gaspunk.network.SpecialAwardChecker;
+import ladysnake.gaspunk.util.SpecialRewardChecker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
@@ -28,7 +28,6 @@ public class ItemDiffuser extends Item {
             nbt = new NBTTagCompound();
             stack.setTagCompound(nbt);
         }
-        if (SpecialAwardChecker.isModOffWinner(playerIn))
-            nbt.setFloat(TAG_CUSTOM_SKIN, 1F);
+        nbt.setFloat(TAG_CUSTOM_SKIN, SpecialRewardChecker.getSelectedReward(playerIn).ordinal());
     }
 }

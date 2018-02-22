@@ -8,17 +8,13 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Config(modid = GasPunk.MOD_ID)
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
-public class Configuration {
+public class GasPunkConfig {
 
     @Config.Comment("Disables gas / smoke / vapor clouds checking for a clear path to entities and make them only check straight distance instead")
     public static boolean fastGas = false;
 
     @Config.Comment("Makes ash require smelting nether wart instead of rotten flesh")
     public static boolean alternativeAshRecipe = false;
-
-    @Config.Comment({"If set to true, gaspunk will connect to the external Ladysnake server to detect if a player has special mod rewards (for instance, grenade skins)",
-    "The only sent information is the player's Universally Unique Identifier (UUID for short)"})
-    public static boolean ladysnakeServerConnection = false;
 
     public static Client client = new Client();
 
@@ -35,7 +31,8 @@ public class Configuration {
 
     @SubscribeEvent
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equals(GasPunk.MOD_ID))
+        if (event.getModID().equals(GasPunk.MOD_ID)) {
             ConfigManager.sync(GasPunk.MOD_ID, Config.Type.INSTANCE);
+        }
     }
 }
