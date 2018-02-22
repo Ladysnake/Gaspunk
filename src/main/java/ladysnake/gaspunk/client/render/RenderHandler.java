@@ -1,17 +1,9 @@
 package ladysnake.gaspunk.client.render;
 
-import ladysnake.gaspunk.Configuration;
+import ladysnake.gaspunk.GasPunkConfig;
 import ladysnake.gaspunk.GasPunk;
-import ladysnake.gaspunk.client.model.ModelBandoulier;
 import ladysnake.gaspunk.gas.core.CapabilityBreathing;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -27,7 +19,7 @@ public class RenderHandler {
 
     @SubscribeEvent
     public static void onRenderGameOverlay(RenderGameOverlayEvent.Pre event) {
-        if (event.getType() == RenderGameOverlayEvent.ElementType.ALL && Configuration.client.renderGasOverlays) {
+        if (event.getType() == RenderGameOverlayEvent.ElementType.ALL && GasPunkConfig.client.renderGasOverlays) {
             CapabilityBreathing.getHandler(Minecraft.getMinecraft().player)
                     .ifPresent(handler -> handler.getGasConcentrations()
                             .forEach((gas, concentration) -> gas.renderOverlay(concentration, event.getPartialTicks(), event.getResolution())));

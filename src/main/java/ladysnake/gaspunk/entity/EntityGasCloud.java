@@ -1,7 +1,7 @@
 package ladysnake.gaspunk.entity;
 
 import io.netty.buffer.ByteBuf;
-import ladysnake.gaspunk.Configuration;
+import ladysnake.gaspunk.GasPunkConfig;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.gas.core.CapabilityBreathing;
 import ladysnake.gaspunk.gas.core.IGas;
@@ -82,7 +82,7 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
         else
             entities = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
         for (EntityLivingBase entity : entities) {
-            float distance = Configuration.fastGas
+            float distance = GasPunkConfig.fastGas
                     ? this.getDistance(entity)
                     : GasUtil.getPropagationDistance(world, new BlockPos(this), new BlockPos(entity));
             if (distance >= 0) {

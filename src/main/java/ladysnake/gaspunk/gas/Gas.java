@@ -1,6 +1,6 @@
 package ladysnake.gaspunk.gas;
 
-import ladysnake.gaspunk.Configuration;
+import ladysnake.gaspunk.GasPunkConfig;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.client.render.ShaderUtil;
 import ladysnake.gaspunk.gas.core.IGas;
@@ -61,7 +61,7 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
     }
 
     protected ResourceLocation getOverlayTexture() {
-        return Configuration.client.useShaders ? NOISE_TEX_PATH : GAS_TEX_PATH;
+        return GasPunkConfig.client.useShaders ? NOISE_TEX_PATH : GAS_TEX_PATH;
     }
 
     @SideOnly(Side.CLIENT)
