@@ -28,6 +28,6 @@ public class ItemDiffuser extends Item {
             nbt = new NBTTagCompound();
             stack.setTagCompound(nbt);
         }
-        nbt.setFloat(TAG_CUSTOM_SKIN, SpecialRewardChecker.getSelectedReward(playerIn).ordinal());
+        nbt.setFloat(TAG_CUSTOM_SKIN, SpecialRewardChecker.getSelectedSkin(playerIn).ordinal());
     }
 }

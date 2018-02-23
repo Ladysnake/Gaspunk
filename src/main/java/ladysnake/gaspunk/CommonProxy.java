@@ -38,9 +38,10 @@ public class CommonProxy {
         else
             GameRegistry.addSmelting(Items.ROTTEN_FLESH, new ItemStack(ModItems.ASH), 0.35f);
         ModGases.initRecipes();
+        ModItems.registerOres();
         if (Loader.isModLoaded("baubles"))
             MinecraftForge.EVENT_BUS.register(new BaublesCompatHandler());
-        new Thread(SpecialRewardChecker::retrieveModOffWinners).start();
+        new Thread(SpecialRewardChecker::retrieveSpecialRewards).start();
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.GRENADE, new BehaviorProjectileDispense() {
             @Nonnull
             @Override
@@ -59,7 +60,7 @@ public class CommonProxy {
     }
 
     /**
-     * Called by {@link SpecialRewardChecker#retrieveModOffWinners()} when the list of winners has been successfully retrieved
+     * Called by {@link SpecialRewardChecker#retrieveSpecialRewards()} when the list of winners has been successfully retrieved
      */
     public void onSpecialRewardsRetrieved() {
         // NO-OP

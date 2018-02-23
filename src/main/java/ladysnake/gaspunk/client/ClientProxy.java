@@ -103,7 +103,7 @@ public class ClientProxy extends CommonProxy {
     public SpecialRewardChecker.GrenadeSkins getSelectedSkin() {
         return getGrenadeSkinProperty()
                 .map(Property::getString)
-                .map(String::toUpperCase)
+                .map(String::toUpperCase)   // Enum#valueOf is case-sensitive
                 .map(SpecialRewardChecker.GrenadeSkins::valueOf)
                 .orElse(SpecialRewardChecker.GrenadeSkins.NONE);
     }
