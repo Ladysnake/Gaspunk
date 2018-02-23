@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -31,6 +32,8 @@ public class CapabilitySickness {
     public static Capability<ISicknessHandler> CAPABILITY_SICKNESS;
 
     public static void register() {
+        // Because apparently EventBusSubscriber is broken in this source set
+        MinecraftForge.EVENT_BUS.register(CapabilitySickness.class);
         CapabilityManager.INSTANCE.register(ISicknessHandler.class, new Storage(), DefaultSicknessHandler::new);
     }
 
@@ -43,7 +46,7 @@ public class CapabilitySickness {
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof EntityLivingBase)
-            event.addCapability(new ResourceLocation(Pathos.MOD_ID, "breathing_cap"), new Provider((EntityLivingBase) event.getObject()));
+            event.addCapability(new ResourceLocation(Pathos.MOD_ID, "sickness_cap"), new Provider((EntityLivingBase) event.getObject()));
     }
 
     @SubscribeEvent

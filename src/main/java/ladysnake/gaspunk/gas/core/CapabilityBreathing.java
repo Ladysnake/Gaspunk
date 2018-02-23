@@ -3,6 +3,7 @@ package ladysnake.gaspunk.gas.core;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.event.GasEvent;
 import ladysnake.gaspunk.item.ItemGasMask;
+import ladysnake.sicklib.capability.CapabilitySickness;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.INpc;

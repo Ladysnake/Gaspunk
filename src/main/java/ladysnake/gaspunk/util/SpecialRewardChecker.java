@@ -24,6 +24,7 @@ public class SpecialRewardChecker {
     // Uses NetHandlerPlayServer as key as it keeps being the same object as long as the player does not disconnect
     private static Map<NetHandlerPlayServer, GrenadeSkins> playerSelectedSkins = new WeakHashMap<>();
     private static ImmutableMap<UUID, ImmutableList<GrenadeSkins>> specialPersons = ImmutableMap.of();
+    private static final ImmutableList<GrenadeSkins> DEFAULT_SKINS = ImmutableList.of(GrenadeSkins.NONE);
 
     /**
      * Checks if the given uuid is known to LadySnake's special rewards page
@@ -38,7 +39,7 @@ public class SpecialRewardChecker {
      * @return a list of grenade skins that the corresponding player can obtain
      */
     public static ImmutableList<GrenadeSkins> getRewards(UUID uuid) {
-        return specialPersons.getOrDefault(uuid, ImmutableList.of(GrenadeSkins.NONE));
+        return specialPersons.getOrDefault(uuid, DEFAULT_SKINS);
     }
 
     /**
@@ -95,7 +96,7 @@ public class SpecialRewardChecker {
 
     /**
      * @param entry a serialized entry containing a uuid and a list of skins
-     * @return a pair representing the deserialized entry, or null if an error occured
+     * @return a pair representing the deserialized entry, or null if an error occurred
      */
     @Nullable
     private static Pair<UUID, ImmutableList<GrenadeSkins>> deserializeEntry(Map.Entry<String, List<String>> entry) {

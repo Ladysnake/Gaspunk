@@ -7,6 +7,7 @@ import ladysnake.gaspunk.gas.core.IGas;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.network.PacketHandler;
+import ladysnake.sicklib.capability.CapabilitySickness;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.BehaviorProjectileDispense;
 import net.minecraft.dispenser.IPosition;
@@ -28,6 +29,7 @@ public class CommonProxy {
 
     public void preInit(FMLPreInitializationEvent event) {
         CapabilityBreathing.register();
+        CapabilitySickness.register();
         config = new Configuration(event.getSuggestedConfigurationFile());
     }
 
