@@ -17,8 +17,8 @@ public class ModItems {
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(
-                new ItemSyringe().setRegistryName("empty_syringe"),
-                new ItemFilledSyringe().setRegistryName("filled_syringe")
+                new ItemSyringe().setRegistryName("empty_syringe").setUnlocalizedName("pathos.syringe"),
+                new ItemFilledSyringe().setRegistryName("filled_syringe").setUnlocalizedName("pathos.filled_syringe")
         );
     }
 
