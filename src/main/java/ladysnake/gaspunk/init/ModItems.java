@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.Collections;
@@ -34,6 +35,7 @@ public final class ModItems {
     public static final Item GLASS_TUBE = Items.AIR;
     public static final Item GRENADE = Items.AIR;
     public static final Item GRENADE_BELT = new ItemGrenadeBelt();
+    public static final Item SULFUR = Items.AIR;
     public static final Item SMOKE_POWDER = Items.AIR;
 
     private static final Set<Item> allItems = new HashSet<>();
@@ -54,7 +56,8 @@ public final class ModItems {
                 name(new ItemGasTube(), "gas_tube"),
                 name(new ItemGlassTube(), "glass_tube"),
                 name(new ItemGrenade(), "grenade"),
-                name(new Item(), "smoke_powder")
+                name(new Item(), "smoke_powder"),
+                name(new Item(), "sulfur")
         );
         if (Loader.isModLoaded("baubles")) {
             allItems.add(name(GRENADE_BELT, "grenade_belt"));
@@ -64,6 +67,10 @@ public final class ModItems {
             item.setCreativeTab(GasPunk.CREATIVE_TAB);
             reg.register(item);
         }
+    }
+
+    public static void registerOres() {
+        OreDictionary.registerOre("dustSulfur", SULFUR);
     }
 
     @SideOnly(Side.CLIENT)

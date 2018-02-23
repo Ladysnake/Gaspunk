@@ -13,7 +13,7 @@ public class SpecialRewardMessageHandler implements IMessageHandler<SpecialRewar
     @Override
     @SideOnly(Side.CLIENT)
     public IMessage onMessage(final SpecialRewardMessage message, final MessageContext ctx) {
-        FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> SpecialRewardChecker.setSelectedReward(ctx.getServerHandler(), message.selectedSkin));
+        FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> SpecialRewardChecker.setSelectedGrenadeSkin(ctx.getServerHandler(), message.selectedSkin));
         return null;
     }
 }
