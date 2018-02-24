@@ -32,8 +32,6 @@ public class CapabilitySickness {
     public static Capability<ISicknessHandler> CAPABILITY_SICKNESS;
 
     public static void register() {
-        // Because apparently EventBusSubscriber is broken in this source set
-        MinecraftForge.EVENT_BUS.register(CapabilitySickness.class);
         CapabilityManager.INSTANCE.register(ISicknessHandler.class, new Storage(), DefaultSicknessHandler::new);
     }
 
