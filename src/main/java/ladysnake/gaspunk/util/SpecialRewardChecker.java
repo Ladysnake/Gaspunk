@@ -22,7 +22,7 @@ import java.util.*;
 
 public class SpecialRewardChecker {
     // Uses NetHandlerPlayServer as key as it keeps being the same object as long as the player does not disconnect
-    private static Map<NetHandlerPlayServer, GrenadeSkins> playerSelectedSkins = new WeakHashMap<>();
+    private static Map<NetHandlerPlayServer, GrenadeSkins> playerSelectedSkins = Collections.synchronizedMap(new WeakHashMap<>());
     private static ImmutableMap<UUID, ImmutableList<GrenadeSkins>> specialPersons = ImmutableMap.of();
     private static final ImmutableList<GrenadeSkins> DEFAULT_SKINS = ImmutableList.of(GrenadeSkins.NONE);
 
