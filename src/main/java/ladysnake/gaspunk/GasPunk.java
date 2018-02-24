@@ -1,6 +1,7 @@
 package ladysnake.gaspunk;
 
 import ladysnake.gaspunk.init.ModItems;
+import ladysnake.sicklib.Pathos;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
@@ -56,6 +57,7 @@ public class GasPunk {
     public void preInit(FMLPreInitializationEvent event) {
         LOGGER = event.getModLog();
         proxy.preInit(event);
+        Pathos.preInit(event);
     }
 
     /**
