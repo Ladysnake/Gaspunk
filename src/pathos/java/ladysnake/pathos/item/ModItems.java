@@ -1,13 +1,14 @@
-package ladysnake.sicklib.item;
+package ladysnake.pathos.item;
 
-import ladysnake.sicklib.Pathos;
+import ladysnake.pathos.Pathos;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
-
+@GameRegistry.ObjectHolder(Pathos.MOD_ID)
 @Mod.EventBusSubscriber(modid = Pathos.MOD_ID)
 public class ModItems {
 

@@ -3,7 +3,7 @@ package ladysnake.gaspunk.gas;
 import ladysnake.gaspunk.gas.core.IBreathingHandler;
 import ladysnake.gaspunk.gas.core.IGasType;
 import ladysnake.gaspunk.gas.core.ILingeringGas;
-import ladysnake.sicklib.sickness.SicknessEffect;
+import ladysnake.pathos.sickness.SicknessEffect;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 

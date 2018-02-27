@@ -1,7 +1,7 @@
-package ladysnake.sicklib;
+package ladysnake.pathos;
 
-import ladysnake.sicklib.capability.CapabilitySickness;
-import ladysnake.sicklib.item.ModItems;
+import ladysnake.pathos.capability.CapabilitySickness;
+import ladysnake.pathos.item.ModItems;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 

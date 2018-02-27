@@ -1,9 +1,9 @@
 package ladysnake.gaspunk.gas.core;
 
 import ladysnake.gaspunk.sickness.SicknessGas;
-import ladysnake.sicklib.capability.CapabilitySickness;
-import ladysnake.sicklib.sickness.ISickness;
-import ladysnake.sicklib.sickness.SicknessEffect;
+import ladysnake.pathos.capability.CapabilitySickness;
+import ladysnake.pathos.sickness.ISickness;
+import ladysnake.pathos.sickness.SicknessEffect;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.registries.IForgeRegistryInternal;
 import net.minecraftforge.registries.RegistryManager;
