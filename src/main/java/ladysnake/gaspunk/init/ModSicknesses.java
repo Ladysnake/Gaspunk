@@ -1,10 +1,10 @@
 package ladysnake.gaspunk.init;
 
 import ladysnake.gaspunk.GasPunk;
-import ladysnake.sicklib.Pathos;
-import ladysnake.sicklib.sickness.ISickness;
-import ladysnake.sicklib.sickness.Sickness;
-import ladysnake.sicklib.sickness.SicknessEffect;
+import ladysnake.pathos.Pathos;
+import ladysnake.pathos.sickness.ISickness;
+import ladysnake.pathos.sickness.Sickness;
+import ladysnake.pathos.sickness.SicknessEffect;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;

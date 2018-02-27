@@ -1,7 +1,7 @@
-package ladysnake.sicklib.item;
+package ladysnake.pathos.item;
 
-import ladysnake.sicklib.Pathos;
-import ladysnake.sicklib.capability.CapabilitySickness;
+import ladysnake.pathos.Pathos;
+import ladysnake.pathos.capability.CapabilitySickness;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

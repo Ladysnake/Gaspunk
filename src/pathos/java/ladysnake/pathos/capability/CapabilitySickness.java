@@ -1,8 +1,8 @@
-package ladysnake.sicklib.capability;
+package ladysnake.pathos.capability;
 
-import ladysnake.sicklib.Pathos;
-import ladysnake.sicklib.sickness.ISickness;
-import ladysnake.sicklib.sickness.SicknessEffect;
+import ladysnake.pathos.Pathos;
+import ladysnake.pathos.sickness.ISickness;
+import ladysnake.pathos.sickness.SicknessEffect;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTBase;
@@ -10,7 +10,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;

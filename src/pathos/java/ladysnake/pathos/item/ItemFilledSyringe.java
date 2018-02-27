@@ -1,8 +1,8 @@
-package ladysnake.sicklib.item;
+package ladysnake.pathos.item;
 
-import ladysnake.sicklib.capability.CapabilitySickness;
-import ladysnake.sicklib.sickness.ISickness;
-import ladysnake.sicklib.sickness.Sickness;
+import ladysnake.pathos.capability.CapabilitySickness;
+import ladysnake.pathos.sickness.ISickness;
+import ladysnake.pathos.sickness.Sickness;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -27,7 +28,7 @@ public class ItemFilledSyringe extends ItemSyringe {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand handIn) {
         playerIn.setActiveHand(handIn);
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+        return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
     }
 
     @Override
@@ -48,15 +49,15 @@ public class ItemFilledSyringe extends ItemSyringe {
         if (nbt != null && nbt.hasKey(TAG_AFFLICTIONS))
             CapabilitySickness.getHandler(entityLiving).ifPresent(h -> CapabilitySickness.CAPABILITY_SICKNESS.readNBT(h, null, nbt.getTagList(TAG_AFFLICTIONS, 10)));
         if (entityLiving instanceof EntityPlayer)
-            turnSyringeIntoFilledSyringe(stack, (EntityPlayer) entityLiving, new ItemStack(ModItems.EMPTY_SYRINGE));
+            return turnSyringeIntoFilledSyringe(stack, (EntityPlayer) entityLiving, new ItemStack(ModItems.EMPTY_SYRINGE));
         return super.onItemUseFinish(stack, worldIn, entityLiving);
     }
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         NBTTagCompound nbt = stack.getTagCompound();
-        if (nbt != null && nbt.hasKey("afflictions")) {
-            NBTTagList afflictions = nbt.getTagList("afflictions", 10);
+        if (nbt != null && nbt.hasKey(TAG_AFFLICTIONS)) {
+            NBTTagList afflictions = nbt.getTagList(TAG_AFFLICTIONS, 10);
             for (NBTBase affliction : afflictions) {
                 ISickness sickness = Sickness.REGISTRY.getValue(new ResourceLocation(((NBTTagCompound)affliction).getString("effect")));
                 if (sickness != Sickness.NONE) {

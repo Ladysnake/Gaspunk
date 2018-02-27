@@ -14,13 +14,17 @@ buildscript {
 apply plugin: "net.minecraftforge.gradle.forge"
 
 version = modVersion
-//group = modGroup
-//archivesBaseName = modBaseName
+group = modGroup
+archivesBaseName = modBaseName
 
 sourceSets {
     pathos {
         compileClasspath = main.compileClasspath
         runtimeClasspath = main.runtimeClasspath
+    }
+    main {
+        compileClasspath += pathos.output
+        runtimeClasspath += pathos.output
     }
 }
 
@@ -60,8 +64,6 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     deobfCompile "com.azanor.baubles:Baubles:1.12-1.5.2"
     deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}:api"
-    compile sourceSets.pathos.output
-    runtime configurations.pathosRuntime
     runtime "mezz.jei:jei_${mc_version}:${jei_version}"
 }
 
@@ -82,4 +84,8 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude "mcmod.info"
     }
+}
+
+jar {
+    from sourceSets.pathos.output
 }

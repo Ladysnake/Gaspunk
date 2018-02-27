@@ -1,4 +1,4 @@
-package ladysnake.sicklib.sickness;
+package ladysnake.pathos.sickness;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;

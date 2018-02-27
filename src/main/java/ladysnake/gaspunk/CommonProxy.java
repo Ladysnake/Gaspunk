@@ -7,7 +7,7 @@ import ladysnake.gaspunk.gas.core.IGas;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.network.PacketHandler;
-import ladysnake.sicklib.capability.CapabilitySickness;
+import ladysnake.pathos.capability.CapabilitySickness;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.BehaviorProjectileDispense;
 import net.minecraft.dispenser.IPosition;

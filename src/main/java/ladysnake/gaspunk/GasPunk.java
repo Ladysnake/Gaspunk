@@ -1,7 +1,7 @@
 package ladysnake.gaspunk;
 
 import ladysnake.gaspunk.init.ModItems;
-import ladysnake.sicklib.Pathos;
+import ladysnake.pathos.Pathos;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;

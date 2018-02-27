@@ -1,7 +1,7 @@
-package ladysnake.sicklib.capability;
+package ladysnake.pathos.capability;
 
-import ladysnake.sicklib.sickness.ISickness;
-import ladysnake.sicklib.sickness.SicknessEffect;
+import ladysnake.pathos.sickness.ISickness;
+import ladysnake.pathos.sickness.SicknessEffect;
 
 import java.util.Collection;
 import java.util.function.BiFunction;

@@ -1,8 +1,8 @@
 package ladysnake.gaspunk.sickness;
 
 import ladysnake.gaspunk.gas.core.ILingeringGas;
-import ladysnake.sicklib.sickness.Sickness;
-import ladysnake.sicklib.sickness.SicknessEffect;
+import ladysnake.pathos.sickness.Sickness;
+import ladysnake.pathos.sickness.SicknessEffect;
 import net.minecraft.entity.EntityLivingBase;
 
 public class SicknessGas extends Sickness {
