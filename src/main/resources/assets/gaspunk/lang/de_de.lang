@@ -1,4 +1,4 @@
-#Items
+gas.gaspunk.sarin=Sarin
 item.gaspunk.ash.name=Asche
 item.gaspunk.diffuser.name=Diffusor
 item.gaspunk.empty_grenade.name=Granatenhülle
@@ -8,6 +8,4 @@ item.gaspunk.glass_tube.name=Glasrohr
 item.gaspunk.grenade.name=Gasgranate
 item.gaspunk.grenade_belt.name=Granatengürtel
 item.gaspunk.smoke_powder.name=Rauchpulver
-
-#Creative Tab
 itemGroup.gaspunk=Gaspunk
