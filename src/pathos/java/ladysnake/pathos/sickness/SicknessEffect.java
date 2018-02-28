@@ -99,4 +99,8 @@ public class SicknessEffect {
         nbt.setInteger("ticksSinceBeginning", this.ticksSinceBeginning);
         return nbt;
     }
+
+    public void onCured(EntityLivingBase carrier) {
+        this.sickness.onCured(this, carrier);
+    }
 }
