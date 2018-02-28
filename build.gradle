@@ -41,6 +41,24 @@ minecraft {
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     replace '@VERSION@', modVersion
 
+    if (project.hasProperty('mc_username')) {
+        clientRunArgs += ['--username', "${project.mc_username}"]
+        if (project.hasProperty('mc_password')) {
+            clientRunArgs += ['--password=', "${project.mc_password}"]
+        }
+    }
+    if (project.hasProperty('mc_uuid')) {
+        clientRunArgs += ['--uuid', "${project.mc_uuid}"]
+    }
+    serverRunArgs += "nogui"
+
+    if (project.hasProperty('client_args')) {
+        clientJvmArgs += "${project.client_args}"
+    }
+    if (project.hasProperty('server_args')) {
+        serverJvmArgs += "${project.server_args}"
+    }
+
     serverJvmArgs += "-Dfml.doNotBackup=true"
     clientJvmArgs += "-Dfml.doNotBackup=true"
 
@@ -92,5 +110,7 @@ processResources {
 }
 
 jar {
+    from sourceSets.api.output
+    from sourceSets.main.output
     from sourceSets.pathos.output
 }

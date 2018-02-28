@@ -24,6 +24,8 @@ public abstract class SicknessGas extends Sickness {
         float severity = effect.getSeverity();
         if (severity > 0)
             effect.setSeverity(severity - severityDecreasePerTick);
+        else
+            effect.setSeverity(0);
     }
 
     public LingeringGas getGas() {

@@ -15,16 +15,18 @@ public interface ISicknessHandler {
      * In the default implementation, if a sickness effect of the same type already exists, the two severities are cumulated
      *
      * @param effect the effect to afflict the capability owner with
+     * @see ladysnake.pathos.api.event.SicknessEvent.SicknessAddEvent
      */
     default void addSickness(SicknessEffect effect) {
         addSickness(effect, SicknessEffect::mergeSeverities);
     }
 
     /**
-     * Adds a sickness effect. If one already exists, the given merge function is used
+     * Adds a sickness effect. If one already exists, the given merge function is used.
      *
      * @param effect        the effect to afflict the capability owner with
      * @param mergeFunction the function to recompute a value if one is already present
+     * @see ladysnake.pathos.api.event.SicknessEvent.SicknessAddEvent
      */
     void addSickness(SicknessEffect effect, BiFunction<SicknessEffect, SicknessEffect, SicknessEffect> mergeFunction);
 

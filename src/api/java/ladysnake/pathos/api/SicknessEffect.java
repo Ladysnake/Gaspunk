@@ -45,9 +45,8 @@ public class SicknessEffect {
      * Sets the severity of this effect.
      * If the severity is 0 at any given tick, this effect will get cleared.
      *
-     * @see #onCured(EntityLivingBase)
-     *
      * @param severity the new severity for this sickness effect
+     * @see #onCured(EntityLivingBase)
      */
     public void setSeverity(float severity) {
         this.severity = severity;
@@ -76,7 +75,9 @@ public class SicknessEffect {
     /**
      * Affects the passed in entity with the disease. <br/>
      * Also resets <code>ticksSinceLastPerform</code> if the effect was performed correctly by the proxied sickness
+     *
      * @param carrier the entity being affected
+     * @see ladysnake.pathos.api.event.SicknessEvent.SicknessTickEvent
      */
     public void performEffect(EntityLivingBase carrier) {
         if(this.sickness.performEffect(carrier, this))
@@ -109,8 +110,11 @@ public class SicknessEffect {
     }
 
     /**
-     * Called when this effect is about to be removed from the entity's list of active sicknesses
+     * Called when this effect is about to be removed from the entity's list of active sicknesses <br/>
+     * This method is generally called when the effect's <code>severity</code> falls to 0
+     *
      * @param carrier the entity afflicted by this effect
+     * @see ladysnake.pathos.api.event.SicknessEvent.SicknessCureEvent*
      */
     public void onCured(EntityLivingBase carrier) {
         this.sickness.onCured(this, carrier);
