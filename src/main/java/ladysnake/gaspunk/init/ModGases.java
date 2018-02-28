@@ -3,12 +3,14 @@ package ladysnake.gaspunk.init;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.gas.GasTear;
-import ladysnake.gaspunk.gas.GasToxic;
+import ladysnake.gaspunk.gas.LingeringGas;
 import ladysnake.gaspunk.gas.core.GasHealingVapor;
 import ladysnake.gaspunk.gas.core.GasTypes;
 import ladysnake.gaspunk.gas.core.IGas;
 import ladysnake.gaspunk.gas.core.ILingeringGas;
 import ladysnake.gaspunk.item.ItemGasTube;
+import ladysnake.gaspunk.sickness.SicknessTearGas;
+import ladysnake.gaspunk.sickness.SicknessToxicGas;
 import ladysnake.pathos.sickness.ISickness;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
@@ -38,10 +40,24 @@ public class ModGases {
      */
     public static final Gas AIR = new Gas(GasTypes.VAPOR, 0x99FFFFFF, 0xAA0033FF);
     public static final Gas HEALING_VAPOR = new GasHealingVapor();
-    public static final Gas SARIN_GAS = new GasToxic(GasTypes.GAS, 0x00FFFFFF);
+    public static final Gas SARIN_GAS = new LingeringGas.Builder()
+            .setSicknessFactory(SicknessToxicGas::new)
+            .setGasType(GasTypes.GAS)
+            .setColor(0x00FFFFFF)
+            .setIgnoreBreath()
+            .build();
     public static final Gas SMOKE = new Gas(GasTypes.SMOKE, 0xFFFFFFFF);
-    public static final Gas TEAR_GAS = new GasTear(0xAACCCCCC);
-    public static final Gas TOXIC_SMOKE = new GasToxic(GasTypes.SMOKE, 0xFF000000);
+    public static final Gas TEAR_GAS = new LingeringGas.Builder()
+            .setSicknessFactory(g -> new SicknessTearGas())
+            .setGasType(GasTypes.SMOKE)
+            .setColor(0xAACCCCCC)
+            .setIgnoreBreath()
+            .build();
+    public static final Gas TOXIC_SMOKE = new LingeringGas.Builder()
+            .setSicknessFactory(SicknessToxicGas::new)
+            .setGasType(GasTypes.SMOKE)
+            .setColor(0xFF000000)
+            .build();
 
     @SubscribeEvent
     public static void addRegistries(RegistryEvent.NewRegistry event) {

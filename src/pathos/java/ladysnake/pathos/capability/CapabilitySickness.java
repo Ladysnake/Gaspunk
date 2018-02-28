@@ -79,8 +79,10 @@ public class CapabilitySickness {
                 Map.Entry<ISickness, SicknessEffect> entry = iterator.next();
                 SicknessEffect sickness = entry.getValue();
                 sickness.performEffect(carrier);
-                if (sickness.getSeverity() == 0)    // consider that effect cured
+                if (sickness.getSeverity() == 0) {   // consider that effect cured
+                    sickness.onCured(carrier);
                     iterator.remove();
+                }
             }
         }
 
