@@ -106,7 +106,7 @@ public class ItemGasTube extends Item {
     @Override
     public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items) {
         if (tab == GasPunk.CREATIVE_TAB) {
-            for (IGas gas : ModGases.REGISTRY.getValuesCollection()) {
+            for (IGas gas : ModGases.REGISTRY.getValues()) {
                 items.add(getItemStackFor(gas));
             }
         }

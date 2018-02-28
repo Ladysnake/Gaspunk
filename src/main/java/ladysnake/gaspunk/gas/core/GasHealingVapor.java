@@ -16,6 +16,7 @@ public class GasHealingVapor extends Gas {
     public void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick) {
         super.applyEffect(entity, handler, concentration, firstTick);
         if (!entity.world.isRemote)
-            entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, 1));
+            // Why 202 you ask ? Well to be sure that the gui displays "10 seconds"
+            entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 202, 1));
     }
 }

@@ -28,8 +28,6 @@ public class GasPunk {
     public static final String VERSION = "@VERSION@";
 
     public static final String DEPENDENCIES =
-            // Version 2594 introduced IForgeRegistry#getValuesCollection
-            "required:forge@[14.23.1.2594,);" +
             "after:jei;" +
             "after:baubles;";
 

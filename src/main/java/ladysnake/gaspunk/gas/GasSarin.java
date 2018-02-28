@@ -12,7 +12,7 @@ public class GasSarin extends LingeringGas {
 
     @Override
     public void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick) {
-        if (!entity.isSneaking())
+        if (!entity.isSneaking() || handler.getAirSupply() <= 0)
             super.applyEffect(entity, handler, concentration, firstTick);
     }
 }

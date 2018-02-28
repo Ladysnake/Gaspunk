@@ -3,6 +3,7 @@ package ladysnake.gaspunk.init;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.gas.GasSarin;
+import ladysnake.gaspunk.gas.GasToxicSmoke;
 import ladysnake.gaspunk.gas.LingeringGas;
 import ladysnake.gaspunk.gas.core.GasHealingVapor;
 import ladysnake.gaspunk.gas.core.GasTypes;
@@ -44,7 +45,7 @@ public class ModGases {
     public static final Gas SARIN_GAS = new GasSarin();
     public static final Gas SMOKE = new Gas(GasTypes.SMOKE, 0xFFFFFFFF);
     public static final Gas TEAR_GAS;
-    public static final Gas TOXIC_SMOKE;
+    public static final Gas TOXIC_SMOKE = new GasToxicSmoke(GasTypes.SMOKE, 0xFF000000);
 
     static {
         TEAR_GAS = new LingeringGas.Builder()
@@ -54,12 +55,6 @@ public class ModGases {
                 .setColor(0xAACCCCCC)
                 .setParticleType(IGas.ParticleTypes.TEARGAS)
                 .setIgnoreBreath()
-                .build();
-        TOXIC_SMOKE = new LingeringGas.Builder()
-                .setSicknessFactory(SicknessToxicGas::new)
-                .setGasType(GasTypes.SMOKE)
-                .setToxicity(0.5F)
-                .setColor(0xFF000000)
                 .build();
     }
 
