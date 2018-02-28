@@ -1,9 +1,9 @@
-package ladysnake.gaspunk.gas.core;
+package ladysnake.gaspunk.api;
 
 public interface IGasType {
 
     /**
-     * Whether this gas type suffocates entities by default (can be overriden by gases)
+     * Whether this gas type suffocates entities by default (can be overridden by individual gases)
      */
     boolean isToxic();
 

@@ -1,11 +1,12 @@
 package ladysnake.gaspunk.gas;
 
-import ladysnake.gaspunk.gas.core.IBreathingHandler;
-import ladysnake.gaspunk.gas.core.IGasType;
-import ladysnake.gaspunk.gas.core.ILingeringGas;
+import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.api.IBreathingHandler;
+import ladysnake.gaspunk.api.IGasType;
+import ladysnake.gaspunk.api.ILingeringGas;
 import ladysnake.pathos.capability.CapabilitySickness;
-import ladysnake.pathos.sickness.ISickness;
-import ladysnake.pathos.sickness.SicknessEffect;
+import ladysnake.pathos.api.ISickness;
+import ladysnake.pathos.api.SicknessEffect;
 import net.minecraft.entity.EntityLivingBase;
 
 import java.util.Objects;
@@ -15,12 +16,14 @@ public class LingeringGas extends Gas implements ILingeringGas {
     private final Function<LingeringGas, ISickness> sicknessSupplier;
     protected float toxicity;
     protected boolean ignoreBreath;
+    protected ParticleTypes particleType;
 
-    public LingeringGas(Function<LingeringGas, ISickness> sicknessSupplier, IGasType type, int color, int bottleColor, float toxicity, boolean ignoreBreath) {
+    public LingeringGas(Function<LingeringGas, ISickness> sicknessSupplier, IGasType type, int color, int bottleColor, float toxicity, boolean ignoreBreath, ParticleTypes particleType) {
         super(type, color, bottleColor);
         this.sicknessSupplier = sicknessSupplier;
         this.toxicity = toxicity;
         this.ignoreBreath = ignoreBreath;
+        this.particleType = particleType;
     }
 
     @Override
@@ -62,20 +65,30 @@ public class LingeringGas extends Gas implements ILingeringGas {
             addEffectToEntity(entity, concentration);
     }
 
+    @Override
+    public ParticleTypes getParticleType() {
+        return particleType;
+    }
+
+    /**
+     * {@code LingeringGas.Builder} is used for creating a {@code LingeringGas} from
+     * various gas parameters.
+     */
     public static class Builder {
         private Function<LingeringGas, ISickness> sicknessFactory;
         private IGasType gasType;
         private int color, liquidColor;
         private float toxicity;
         private boolean ignoreBreath;
+        private ParticleTypes particleType;
 
         public Builder setSicknessFactory(Function<LingeringGas, ISickness> factory) {
-            this.sicknessFactory = factory;
+            this.sicknessFactory = Objects.requireNonNull(factory);
             return this;
         }
 
         public Builder setGasType(IGasType gasType) {
-            this.gasType = gasType;
+            this.gasType = Objects.requireNonNull(gasType);
             return this;
         }
 
@@ -99,12 +112,22 @@ public class LingeringGas extends Gas implements ILingeringGas {
             return this;
         }
 
+        public Builder setParticleType(ParticleTypes type) {
+            this.particleType = type;
+            return this;
+        }
+
         public LingeringGas build() {
             if (sicknessFactory == null)
                 throw new IllegalStateException("gas sickness factory not provided");
             if (gasType == null)
                 throw new IllegalStateException("gas type not provided");
-            return new LingeringGas(sicknessFactory, gasType, color, liquidColor, toxicity, ignoreBreath);
+            if (particleType == null)
+                particleType = gasType.getParticleType();
+            if (toxicity == 0f)
+                // display the calling line for easier debugging
+                GasPunk.LOGGER.warn("Lingering gas created with 0 toxicity, it will not do anything.", Thread.currentThread().getStackTrace()[2]);
+            return new LingeringGas(sicknessFactory, gasType, color, liquidColor, toxicity, ignoreBreath, particleType);
         }
     }
 

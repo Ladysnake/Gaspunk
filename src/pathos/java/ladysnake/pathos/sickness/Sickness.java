@@ -1,6 +1,7 @@
 package ladysnake.pathos.sickness;
 
 import ladysnake.pathos.Pathos;
+import ladysnake.pathos.api.ISickness;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;

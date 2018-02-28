@@ -1,4 +1,4 @@
-package ladysnake.gaspunk.gas.core;
+package ladysnake.gaspunk.api;
 
 import java.util.Map;
 

@@ -1,7 +1,7 @@
 package ladysnake.gaspunk.compat;
 
 import baubles.api.BaublesApi;
-import ladysnake.gaspunk.event.GasEvent;
+import ladysnake.gaspunk.api.event.GasEvent;
 import ladysnake.gaspunk.init.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

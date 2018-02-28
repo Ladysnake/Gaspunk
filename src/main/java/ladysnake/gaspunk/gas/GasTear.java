@@ -1,13 +1,10 @@
 package ladysnake.gaspunk.gas;
 
 import ladysnake.gaspunk.gas.core.GasTypes;
-import ladysnake.gaspunk.gas.core.IBreathingHandler;
-import ladysnake.gaspunk.gas.core.IGas;
-import ladysnake.gaspunk.gas.core.ILingeringGas;
+import ladysnake.gaspunk.api.IBreathingHandler;
+import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.network.PacketHandler;
 import ladysnake.gaspunk.network.ShaderMessage;
-import ladysnake.pathos.sickness.ISickness;
-import ladysnake.pathos.sickness.SicknessEffect;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;

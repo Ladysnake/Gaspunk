@@ -40,6 +40,11 @@ minecraft {
     mappings = project.mcpVersion
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     replace '@VERSION@', modVersion
+
+    serverJvmArgs += "-Dfml.doNotBackup=true"
+    clientJvmArgs += "-Dfml.doNotBackup=true"
+
+    serverJvmArgs += "-Dfml.queryResult=confirm"
 }
 
 repositories {

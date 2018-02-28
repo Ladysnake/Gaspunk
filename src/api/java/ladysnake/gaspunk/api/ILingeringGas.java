@@ -1,6 +1,6 @@
-package ladysnake.gaspunk.gas.core;
+package ladysnake.gaspunk.api;
 
-import ladysnake.pathos.sickness.ISickness;
+import ladysnake.pathos.api.ISickness;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.registries.IForgeRegistryInternal;
 import net.minecraftforge.registries.RegistryManager;
@@ -17,7 +17,7 @@ public interface ILingeringGas extends IGas {
     Map<ILingeringGas, ISickness> LINGERING_EFFECTS = new HashMap<>();
 
     /**
-     * Called whenever a gas is added to the registry
+     * Called whenever a gas is added to the registry <br/>
      * Generates a sickness associated to the gas
      */
     @SuppressWarnings("unused")
@@ -26,15 +26,6 @@ public interface ILingeringGas extends IGas {
             LINGERING_EFFECTS.put((ILingeringGas) obj, ((ILingeringGas) obj).createSickness());
         }
     }
-
-    /*
-     * Called each tick an entity is afflicted by the sickness associated with this gas
-     *
-     * @param entity the afflicted entity
-     * @param effect the instance of the sickness effect afflicting the entity
-     * @return true to reset the ticksSinceLastPerform counter on the effect
-     */
-//    boolean applyLingeringEffect(EntityLivingBase entity, SicknessEffect effect);
 
     /**
      * Creates a {@link ISickness} object that will be registered automatically when this gas is itself registered

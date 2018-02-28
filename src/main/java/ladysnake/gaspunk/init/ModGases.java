@@ -2,16 +2,16 @@ package ladysnake.gaspunk.init;
 
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.gas.Gas;
-import ladysnake.gaspunk.gas.GasTear;
+import ladysnake.gaspunk.gas.GasSarin;
 import ladysnake.gaspunk.gas.LingeringGas;
 import ladysnake.gaspunk.gas.core.GasHealingVapor;
 import ladysnake.gaspunk.gas.core.GasTypes;
-import ladysnake.gaspunk.gas.core.IGas;
-import ladysnake.gaspunk.gas.core.ILingeringGas;
+import ladysnake.gaspunk.api.IGas;
+import ladysnake.gaspunk.api.ILingeringGas;
 import ladysnake.gaspunk.item.ItemGasTube;
 import ladysnake.gaspunk.sickness.SicknessTearGas;
 import ladysnake.gaspunk.sickness.SicknessToxicGas;
-import ladysnake.pathos.sickness.ISickness;
+import ladysnake.pathos.api.ISickness;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
@@ -37,27 +37,31 @@ public class ModGases {
 
     /**
      * The default gas, does nothing. Is actually water vapor in game
+     * Is initialized to null to replace null checks
      */
-    public static final Gas AIR = new Gas(GasTypes.VAPOR, 0x99FFFFFF, 0xAA0033FF);
+    public static final Gas AIR = null;
     public static final Gas HEALING_VAPOR = new GasHealingVapor();
-    public static final Gas SARIN_GAS = new LingeringGas.Builder()
-            .setSicknessFactory(SicknessToxicGas::new)
-            .setGasType(GasTypes.GAS)
-            .setColor(0x00FFFFFF)
-            .setIgnoreBreath()
-            .build();
+    public static final Gas SARIN_GAS = new GasSarin();
     public static final Gas SMOKE = new Gas(GasTypes.SMOKE, 0xFFFFFFFF);
-    public static final Gas TEAR_GAS = new LingeringGas.Builder()
-            .setSicknessFactory(g -> new SicknessTearGas())
-            .setGasType(GasTypes.SMOKE)
-            .setColor(0xAACCCCCC)
-            .setIgnoreBreath()
-            .build();
-    public static final Gas TOXIC_SMOKE = new LingeringGas.Builder()
-            .setSicknessFactory(SicknessToxicGas::new)
-            .setGasType(GasTypes.SMOKE)
-            .setColor(0xFF000000)
-            .build();
+    public static final Gas TEAR_GAS;
+    public static final Gas TOXIC_SMOKE;
+
+    static {
+        TEAR_GAS = new LingeringGas.Builder()
+                .setSicknessFactory(SicknessTearGas::new)
+                .setGasType(GasTypes.SMOKE)
+                .setToxicity(0.2F)
+                .setColor(0xAACCCCCC)
+                .setParticleType(IGas.ParticleTypes.TEARGAS)
+                .setIgnoreBreath()
+                .build();
+        TOXIC_SMOKE = new LingeringGas.Builder()
+                .setSicknessFactory(SicknessToxicGas::new)
+                .setGasType(GasTypes.SMOKE)
+                .setToxicity(0.5F)
+                .setColor(0xFF000000)
+                .build();
+    }
 
     @SubscribeEvent
     public static void addRegistries(RegistryEvent.NewRegistry event) {
@@ -72,7 +76,7 @@ public class ModGases {
     @SubscribeEvent
     public static void addGases(RegistryEvent.Register<IGas> event) {
         event.getRegistry().registerAll(
-                AIR.setRegistryName("air"),
+                new Gas(GasTypes.VAPOR, 0x99FFFFFF, 0xAA0033FF).setRegistryName("air"),
                 SMOKE.setRegistryName("smoke"),
                 HEALING_VAPOR.setRegistryName("healing_vapor"),
                 TOXIC_SMOKE.setRegistryName("toxic_smoke"),

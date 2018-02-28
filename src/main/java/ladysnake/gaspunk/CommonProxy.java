@@ -3,7 +3,7 @@ package ladysnake.gaspunk;
 import ladysnake.gaspunk.compat.BaublesCompatHandler;
 import ladysnake.gaspunk.entity.EntityGrenade;
 import ladysnake.gaspunk.gas.core.CapabilityBreathing;
-import ladysnake.gaspunk.gas.core.IGas;
+import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.network.PacketHandler;
