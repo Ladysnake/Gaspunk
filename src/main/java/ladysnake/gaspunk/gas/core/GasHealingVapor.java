@@ -1,5 +1,6 @@
 package ladysnake.gaspunk.gas.core;
 
+import ladysnake.gaspunk.api.IBreathingHandler;
 import ladysnake.gaspunk.gas.Gas;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
@@ -15,6 +16,6 @@ public class GasHealingVapor extends Gas {
     public void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick) {
         super.applyEffect(entity, handler, concentration, firstTick);
         if (!entity.world.isRemote)
-            entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 1));
+            entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, 1));
     }
 }

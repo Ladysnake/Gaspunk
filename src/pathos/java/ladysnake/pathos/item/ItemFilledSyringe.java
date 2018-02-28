@@ -1,7 +1,7 @@
 package ladysnake.pathos.item;
 
 import ladysnake.pathos.capability.CapabilitySickness;
-import ladysnake.pathos.sickness.ISickness;
+import ladysnake.pathos.api.ISickness;
 import ladysnake.pathos.sickness.Sickness;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;

@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import ladysnake.gaspunk.GasPunkConfig;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.gas.core.CapabilityBreathing;
-import ladysnake.gaspunk.gas.core.IGas;
+import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.util.GasUtil;
 import net.minecraft.entity.Entity;

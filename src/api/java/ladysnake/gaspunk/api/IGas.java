@@ -1,4 +1,4 @@
-package ladysnake.gaspunk.gas.core;
+package ladysnake.gaspunk.api;
 
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.EntityLivingBase;

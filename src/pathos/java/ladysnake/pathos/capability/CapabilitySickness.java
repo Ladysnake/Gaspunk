@@ -1,8 +1,10 @@
 package ladysnake.pathos.capability;
 
 import ladysnake.pathos.Pathos;
-import ladysnake.pathos.sickness.ISickness;
-import ladysnake.pathos.sickness.SicknessEffect;
+import ladysnake.pathos.api.ISickness;
+import ladysnake.pathos.api.ISicknessHandler;
+import ladysnake.pathos.api.SicknessEffect;
+import ladysnake.pathos.api.event.SicknessEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTBase;
@@ -10,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -70,7 +73,9 @@ public class CapabilitySickness {
 
         @Override
         public void addSickness(SicknessEffect effect, BiFunction<SicknessEffect, SicknessEffect, SicknessEffect> mergeFunction) {
-            sicknesses.merge(effect.getSickness(), effect, mergeFunction);
+            SicknessEvent.SicknessAddEvent event = new SicknessEvent.SicknessAddEvent(this, carrier, effect, mergeFunction);
+            if (!MinecraftForge.EVENT_BUS.post(event))
+                sicknesses.merge(effect.getSickness(), effect, event.getMergeFunction());
         }
 
         @Override
@@ -78,8 +83,14 @@ public class CapabilitySickness {
             for (Iterator<Map.Entry<ISickness, SicknessEffect>> iterator = sicknesses.entrySet().iterator(); iterator.hasNext(); ) {
                 Map.Entry<ISickness, SicknessEffect> entry = iterator.next();
                 SicknessEffect sickness = entry.getValue();
-                sickness.performEffect(carrier);
+
+                // only perform the effect if the event is not canceled
+                if (!MinecraftForge.EVENT_BUS.post(new SicknessEvent.SicknessTickEvent(this, carrier, sickness)))
+                    sickness.performEffect(carrier);
+
                 if (sickness.getSeverity() == 0) {   // consider that effect cured
+                    if (MinecraftForge.EVENT_BUS.post(new SicknessEvent.SicknessCureEvent(this, carrier, sickness)))
+                        continue;
                     sickness.onCured(carrier);
                     iterator.remove();
                 }
@@ -96,7 +107,7 @@ public class CapabilitySickness {
         final ISicknessHandler instance;
 
         Provider(EntityLivingBase object) {
-                this.instance = new DefaultSicknessHandler(object);
+            this.instance = new DefaultSicknessHandler(object);
         }
 
         @Override
@@ -136,7 +147,7 @@ public class CapabilitySickness {
         @Override
         public void readNBT(Capability<ISicknessHandler> capability, ISicknessHandler instance, EnumFacing side, NBTBase nbt) {
             if (nbt instanceof NBTTagList) {
-                for (NBTBase effect : ((NBTTagList)nbt)) {
+                for (NBTBase effect : ((NBTTagList) nbt)) {
                     if (effect instanceof NBTTagCompound)
                         instance.addSickness(new SicknessEffect((NBTTagCompound) effect));
                 }

@@ -1,8 +1,7 @@
-package ladysnake.gaspunk.event;
+package ladysnake.gaspunk.api.event;
 
-import ladysnake.gaspunk.gas.core.CapabilityBreathing;
-import ladysnake.gaspunk.gas.core.IBreathingHandler;
-import ladysnake.gaspunk.gas.core.IGas;
+import ladysnake.gaspunk.api.IBreathingHandler;
+import ladysnake.gaspunk.api.IGas;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -87,9 +86,7 @@ public class GasEvent extends LivingEvent {
 
     /**
      * GasImmunityEvent is fired whenever an entity checks whether they're affected by surrounding gases
-     * in {@link CapabilityBreathing.DefaultBreathingHandler#isImmune()}.<br>
-     * <p>
-     * <br>
+     * in {@link IBreathingHandler#isImmune()}.<br>
      */
     public static class GasImmunityEvent extends GasEvent {
         private boolean immune;

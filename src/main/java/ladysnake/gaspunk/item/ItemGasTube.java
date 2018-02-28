@@ -2,7 +2,7 @@ package ladysnake.gaspunk.item;
 
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.entity.EntityGasCloud;
-import ladysnake.gaspunk.gas.core.IGas;
+import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.init.ModItems;
 import net.minecraft.client.resources.I18n;

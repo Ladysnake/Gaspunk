@@ -1,11 +1,16 @@
-package ladysnake.pathos.sickness;
+package ladysnake.pathos.api;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.registries.RegistryManager;
 
 import java.util.Objects;
 
+/**
+ * @see net.minecraft.potion.PotionEffect
+ */
 public class SicknessEffect {
     private ISickness sickness;
     private float severity;
@@ -26,7 +31,7 @@ public class SicknessEffect {
      * @param nbt the serialized effect
      */
     public SicknessEffect(NBTTagCompound nbt) {
-        this.sickness = Sickness.REGISTRY.getValue(new ResourceLocation(nbt.getString("effect")));
+        this.sickness = RegistryManager.ACTIVE.getRegistry(ISickness.class).getValue(new ResourceLocation(nbt.getString("effect")));
         this.severity = nbt.getFloat("severity");
         this.ticksSinceLastPerform = nbt.getInteger("ticksSinceLastPerform");
         this.ticksSinceBeginning = nbt.getInteger("ticksSinceBeginning");
@@ -39,6 +44,9 @@ public class SicknessEffect {
     /**
      * Sets the severity of this effect.
      * If the severity is 0 at any given tick, this effect will get cleared.
+     *
+     * @see #onCured(EntityLivingBase)
+     *
      * @param severity the new severity for this sickness effect
      */
     public void setSeverity(float severity) {
@@ -66,8 +74,8 @@ public class SicknessEffect {
     }
 
     /**
-     * Affect the passed in entity with the disease
-     * Also resets ticksSinceLastPerform if the effect was performed correctly by the proxied sickness
+     * Affects the passed in entity with the disease. <br/>
+     * Also resets <code>ticksSinceLastPerform</code> if the effect was performed correctly by the proxied sickness
      * @param carrier the entity being affected
      */
     public void performEffect(EntityLivingBase carrier) {
@@ -100,6 +108,10 @@ public class SicknessEffect {
         return nbt;
     }
 
+    /**
+     * Called when this effect is about to be removed from the entity's list of active sicknesses
+     * @param carrier the entity afflicted by this effect
+     */
     public void onCured(EntityLivingBase carrier) {
         this.sickness.onCured(this, carrier);
     }

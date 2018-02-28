@@ -1,4 +1,4 @@
-package ladysnake.pathos.sickness;
+package ladysnake.pathos.api;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -7,6 +7,7 @@ public interface ISickness extends IForgeRegistryEntry<ISickness> {
 
     /**
      * Performs this sickness effect on the afflicted entity
+     *
      * @param carrier the entity affected by this disease
      * @param effect the specific effect afflicting this entity
      * @return true to reset the ticksSinceLastPerform counter on the effect

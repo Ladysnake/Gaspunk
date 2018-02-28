@@ -1,5 +1,8 @@
 package ladysnake.gaspunk.gas.core;
 
+import ladysnake.gaspunk.api.IGas;
+import ladysnake.gaspunk.api.IGasType;
+
 public enum GasTypes implements IGasType {
     GAS(true, IGas.ParticleTypes.VAPOR), SMOKE(false, IGas.ParticleTypes.SMOKE), VAPOR(false, IGas.ParticleTypes.VAPOR);
 
