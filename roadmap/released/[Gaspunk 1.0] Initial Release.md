@@ -10,7 +10,7 @@
 - Ash: Obtained by smelting zombie flesh or nether wart in a furnace. Used to brew toxic gas. The recipe with zombie flesh can be disabled in the configuration options in order to avoid conflicts.
 - Gasmask: The gasmask is a helmet piece of gear that allow breathing in smokes / gases / vapours, therefore countering their effects. Armour rate and durability same as leather helmet.
 
--         Grenade belt: The grenade belt is an additional gear for Baubles. It changes the max grenade stacking from 1 to 4 of the same type when equipped.
+- Grenade belt: The grenade belt is an additional gear for Baubles. It changes the max grenade stacking from 1 to 4 of the same type when equipped.
 
 #### Smokes:
 
@@ -21,7 +21,7 @@
 
 -         
   Invisible gas (sarin): Obtained by brewing a poisonous potato into a water tube, this gas is living up to its name. It's totally invisible and undetectable, unless you're inside it. Suffocates entities going through it.
-- Teargas: Slows the player and blurs its vision
+-         Teargas: Slows the player and blurs its vision
 
 #### Vapours:
 
