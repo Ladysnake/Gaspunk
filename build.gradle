@@ -59,10 +59,6 @@ minecraft {
         serverJvmArgs += "${project.server_args}"
     }
 
-    serverJvmArgs += "-Dfml.doNotBackup=true"
-    clientJvmArgs += "-Dfml.doNotBackup=true"
-
-    serverJvmArgs += "-Dfml.queryResult=confirm"
 }
 
 repositories {
