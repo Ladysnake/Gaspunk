@@ -2,7 +2,6 @@ package ladysnake.pathos.item;
 
 import ladysnake.pathos.Pathos;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -20,14 +19,14 @@ import java.util.Objects;
 @Mod.EventBusSubscriber(modid = Pathos.MOD_ID)
 public class ModItems {
 
-    public static final Item EMPTY_SYRINGE = Items.AIR;
-    public static final Item FILLED_SYRINGE = Items.AIR;
+    public static final Item EMPTY_SYRINGE = new ItemSyringe();
+    public static final Item FILLED_SYRINGE = new ItemFilledSyringe();
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(
-                new ItemSyringe().setRegistryName("empty_syringe").setUnlocalizedName("pathos.syringe"),
-                new ItemFilledSyringe().setRegistryName("filled_syringe").setUnlocalizedName("pathos.filled_syringe")
+                EMPTY_SYRINGE.setRegistryName("empty_syringe").setUnlocalizedName("pathos.syringe"),
+                FILLED_SYRINGE.setRegistryName("filled_syringe").setUnlocalizedName("pathos.filled_syringe")
         );
     }
 

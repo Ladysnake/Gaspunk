@@ -1,17 +1,16 @@
 package ladysnake.gaspunk.init;
 
 import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.api.IGas;
+import ladysnake.gaspunk.api.ILingeringGas;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.gas.GasSarin;
 import ladysnake.gaspunk.gas.GasToxicSmoke;
 import ladysnake.gaspunk.gas.LingeringGas;
 import ladysnake.gaspunk.gas.core.GasHealingVapor;
 import ladysnake.gaspunk.gas.core.GasTypes;
-import ladysnake.gaspunk.api.IGas;
-import ladysnake.gaspunk.api.ILingeringGas;
 import ladysnake.gaspunk.item.ItemGasTube;
 import ladysnake.gaspunk.sickness.SicknessTearGas;
-import ladysnake.gaspunk.sickness.SicknessToxicGas;
 import ladysnake.pathos.api.ISickness;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
@@ -92,8 +91,8 @@ public class ModGases {
     public static void initRecipes() {
         addRecipe(AIR, new ItemStack(ModItems.SMOKE_POWDER), SMOKE);
         addRecipe(AIR, new ItemStack(Items.GHAST_TEAR), HEALING_VAPOR);
-        addRecipe(AIR, new ItemStack(ModItems.ASH), TOXIC_SMOKE);
         addRecipe(AIR, new ItemStack(Items.POISONOUS_POTATO), SARIN_GAS);
+        addRecipe(SMOKE, new ItemStack(ModItems.ASH), TOXIC_SMOKE);
         addRecipe(SMOKE, new ItemStack(Items.FERMENTED_SPIDER_EYE), TEAR_GAS);
         for (EnumDyeColor color : EnumDyeColor.values()) {
             addRecipe(SMOKE, new ItemStack(Items.DYE, 1, color.getDyeDamage()), REGISTRY.getValue(new ResourceLocation(GasPunk.MOD_ID, "colored_smoke_" + color.getName())));
