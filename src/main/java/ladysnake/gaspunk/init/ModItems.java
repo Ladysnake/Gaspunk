@@ -67,6 +67,8 @@ public final class ModItems {
             item.setCreativeTab(GasPunk.CREATIVE_TAB);
             reg.register(item);
         }
+        ladysnake.pathos.item.ModItems.EMPTY_SYRINGE.setCreativeTab(GasPunk.CREATIVE_TAB);
+        ladysnake.pathos.item.ModItems.FILLED_SYRINGE.setCreativeTab(GasPunk.CREATIVE_TAB);
     }
 
     public static void registerOres() {
