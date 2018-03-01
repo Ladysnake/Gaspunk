@@ -14,7 +14,7 @@ import java.util.UUID;
 public class SicknessTearGas extends SicknessGas {
 
     private static final UUID TEAR_SLOWNESS_ID = UUID.fromString("6372ad90-c462-4223-8638-898c1166f824");
-    private static final AttributeModifier TEAR_SLOWNESS = new AttributeModifier(TEAR_SLOWNESS_ID, "Tear gas slowness penalty", -0.2D, 2);
+    private static final AttributeModifier TEAR_SLOWNESS = new AttributeModifier(TEAR_SLOWNESS_ID, "Tear gas slowness penalty", -0.1D, 2);
 
     public SicknessTearGas(LingeringGas gas) {
         super(gas, 0.001f);
