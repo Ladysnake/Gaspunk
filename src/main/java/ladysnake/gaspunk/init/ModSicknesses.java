@@ -10,14 +10,19 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.ForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 
+@GameRegistry.ObjectHolder(GasPunk.MOD_ID)
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
 public class ModSicknesses {
 
+    public static final ISickness TEAR_GAS = null;
+
     @SubscribeEvent
     public static void addRegistries(RegistryEvent.NewRegistry event) {
-        Sickness.REGISTRY = new RegistryBuilder<ISickness>()
+        Sickness.REGISTRY = (ForgeRegistry<ISickness>)new RegistryBuilder<ISickness>()
                 .setType(ISickness.class)
                 .setName(new ResourceLocation(Pathos.MOD_ID, "sicknesses"))
                 .setDefaultKey(new ResourceLocation(Pathos.MOD_ID, "none"))

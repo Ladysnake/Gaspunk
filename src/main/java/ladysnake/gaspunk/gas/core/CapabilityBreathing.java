@@ -81,9 +81,9 @@ public class CapabilityBreathing {
          */
         protected float airSupply;
         protected int maxAirSupply;
-        private final EntityLivingBase owner;
-        private final Map<IGas, Float> prevConcentrations = new HashMap<>();
-        private final Map<IGas, Float> concentrations = new HashMap<>();
+        protected final EntityLivingBase owner;
+        protected final Map<IGas, Float> prevConcentrations = new HashMap<>();
+        protected final Map<IGas, Float> concentrations = new HashMap<>();
 
         DefaultBreathingHandler() {
             this(null, 300);

@@ -7,6 +7,7 @@ import ladysnake.pathos.api.SicknessEffect;
 import ladysnake.pathos.api.event.SicknessEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -86,7 +87,7 @@ public class CapabilitySickness {
 
                 // only perform the effect if the event is not canceled
                 if (!MinecraftForge.EVENT_BUS.post(new SicknessEvent.SicknessTickEvent(this, carrier, sickness)))
-                    sickness.performEffect(carrier);
+                    updateEffect(sickness);
 
                 if (sickness.getSeverity() == 0) {   // consider that effect cured
                     if (MinecraftForge.EVENT_BUS.post(new SicknessEvent.SicknessCureEvent(this, carrier, sickness)))
@@ -97,9 +98,18 @@ public class CapabilitySickness {
             }
         }
 
+        protected void updateEffect(SicknessEffect effect) {
+            effect.performEffect(carrier);
+        }
+
         @Override
         public Collection<SicknessEffect> getActiveSicknesses() {
             return sicknesses.values();
+        }
+
+        @Override
+        public SicknessEffect getActiveEffect(ISickness sickness) {
+            return sicknesses.get(sickness);
         }
     }
 
@@ -107,7 +117,10 @@ public class CapabilitySickness {
         final ISicknessHandler instance;
 
         Provider(EntityLivingBase object) {
-            this.instance = new DefaultSicknessHandler(object);
+            if (object instanceof EntityPlayerMP)
+                this.instance = new PlayerSicknessHandler((EntityPlayerMP) object);
+            else
+                this.instance = new DefaultSicknessHandler(object);
         }
 
         @Override
