@@ -59,6 +59,7 @@ minecraft {
         serverJvmArgs += "${project.server_args}"
     }
 
+    clientJvmArgs += "-Dlog4j.skipJansi=true"
     serverJvmArgs += "-Dlog4j.skipJansi=true"
 
 }

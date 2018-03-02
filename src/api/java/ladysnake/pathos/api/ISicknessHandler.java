@@ -1,6 +1,7 @@
 package ladysnake.pathos.api;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.function.BiFunction;
 
 public interface ISicknessHandler {
@@ -26,7 +27,9 @@ public interface ISicknessHandler {
      *
      * @param effect        the effect to afflict the capability owner with
      * @param mergeFunction the function to recompute a value if one is already present
+     *                      first parameter will be the old effect, second parameter will be the new
      * @see ladysnake.pathos.api.event.SicknessEvent.SicknessAddEvent
+     * @see Map#merge(Object, Object, BiFunction)
      */
     void addSickness(SicknessEffect effect, BiFunction<SicknessEffect, SicknessEffect, SicknessEffect> mergeFunction);
 
@@ -39,5 +42,7 @@ public interface ISicknessHandler {
      * @return all the sickness effects this handler is afflicted with
      */
     Collection<SicknessEffect> getActiveSicknesses();
+
+    SicknessEffect getActiveEffect(ISickness sickness);
 
 }

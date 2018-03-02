@@ -1,10 +1,11 @@
 package ladysnake.gaspunk.sickness;
 
+import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.gas.LingeringGas;
-import ladysnake.gaspunk.network.PacketHandler;
-import ladysnake.gaspunk.network.ShaderMessage;
+import ladysnake.gaspunk.init.ModSicknesses;
 import ladysnake.pathos.api.SicknessEffect;
 import ladysnake.pathos.api.event.SicknessEvent;
+import ladysnake.pathos.capability.CapabilitySickness;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.shader.Shader;
@@ -13,8 +14,9 @@ import net.minecraft.client.shader.ShaderUniform;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -40,9 +42,11 @@ public class SicknessTearGas extends SicknessGas {
     public boolean performEffect(EntityLivingBase carrier, SicknessEffect effect) {
         if (effect.getTicksSinceBeginning() == 0) {
             if (!carrier.world.isRemote) {
-                if (carrier instanceof EntityPlayerMP)
-                    PacketHandler.NET.sendTo(new ShaderMessage("shaders/post/blur.json"), (EntityPlayerMP) carrier);
-                carrier.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(TEAR_SLOWNESS);
+//                if (carrier instanceof EntityPlayerMP)
+//                    PacketHandler.NET.sendTo(new ShaderMessage("shaders/post/blur.json"), (EntityPlayerMP) carrier);
+                IAttributeInstance attribute = carrier.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+                if (attribute.getModifier(TEAR_SLOWNESS_ID) == null)
+                    attribute.applyModifier(TEAR_SLOWNESS);
                 return true;
             }
         }
@@ -53,26 +57,29 @@ public class SicknessTearGas extends SicknessGas {
     public void onCured(SicknessEffect sicknessEffect, EntityLivingBase carrier) {
         if (!carrier.world.isRemote) {
             carrier.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(TEAR_SLOWNESS_ID);
-            if (carrier instanceof EntityPlayerMP)
-                PacketHandler.NET.sendTo(new ShaderMessage(null), (EntityPlayerMP) carrier);
+//            if (carrier instanceof EntityPlayerMP)
+//                PacketHandler.NET.sendTo(new ShaderMessage(null), (EntityPlayerMP) carrier);
         }
+    }
+
+    @Override
+    public boolean isSynchronized() {
+        return true;
     }
 
     /**
      * This class has been adapted from Blur's source code under MIT License
      * https://github.com/tterrag1098/Blur/blob/master/src/main/java/com/tterrag/blur/Blur.java
-     *
+     * <p>
      * <p>See <em>notice.md</em> in assets/minecraft/shaders</p>
      *
      * @author tterag
      */
     @SideOnly(Side.CLIENT)
-//    @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
+    @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
     public static class ClientTearEffect {
 
         private static MethodHandle _listShaders;
-        private static long start;
-        private static int fadeTime = 200;
 
         static {
             try {
@@ -85,32 +92,39 @@ public class SicknessTearGas extends SicknessGas {
 
         @SubscribeEvent
         public static void onSicknessAdd(SicknessEvent.SicknessAddEvent event) {
-            // FIXME oops this is only fired serverside
             if (!event.getEntity().world.isRemote) return;
             EntityRenderer er = Minecraft.getMinecraft().entityRenderer;
             if (!er.isShaderActive()) {
                 er.loadShader(new ResourceLocation("shaders/post/fade_in_blur.json"));
-                start = System.currentTimeMillis();
             }
         }
 
         @SubscribeEvent
-        public static void onRenderTick(TickEvent.RenderTickEvent event) throws Throwable {
+        public static void onRenderTick(TickEvent.RenderTickEvent event) {
             if (_listShaders != null && event.phase == TickEvent.Phase.END && Minecraft.getMinecraft().entityRenderer.isShaderActive()) {
-                ShaderGroup sg = Minecraft.getMinecraft().entityRenderer.getShaderGroup();
-                @SuppressWarnings("unchecked")
-                List<Shader> shaders = (List<Shader>) _listShaders.invoke(sg);
-                for (Shader s : shaders) {
-                    ShaderUniform su = s.getShaderManager().getShaderUniform("Progress");
-                    if (su != null) {
-                        su.set(getProgress());
-                    }
-                }
+                // check that the player has an active eye irritation effect
+                CapabilitySickness.getHandler(Minecraft.getMinecraft().player)
+                        .map(h -> h.getActiveEffect(ModSicknesses.TEAR_GAS))
+                        .ifPresent(effect -> {
+                            ShaderGroup sg = Minecraft.getMinecraft().entityRenderer.getShaderGroup();
+                            try {
+                                @SuppressWarnings("unchecked")
+                                List<Shader> shaders = (List<Shader>) _listShaders.invoke(sg);
+                                for (Shader s : shaders) {
+                                    ShaderUniform su = s.getShaderManager().getShaderUniform("Progress");
+                                    if (su != null) {
+                                        su.set(getProgress(effect));
+                                    }
+                                }
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                        });
             }
         }
 
-        private static float getProgress() {
-            return Math.min((System.currentTimeMillis() - start) / (float) fadeTime, 1);
+        private static float getProgress(SicknessEffect effect) {
+            return effect.getSeverity() * 2;
         }
 
     }

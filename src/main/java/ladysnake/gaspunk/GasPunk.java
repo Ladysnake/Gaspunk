@@ -64,6 +64,7 @@ public class GasPunk {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         proxy.init();
+        Pathos.init(event);
     }
 
     /**

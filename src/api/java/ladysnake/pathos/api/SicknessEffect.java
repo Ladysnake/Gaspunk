@@ -14,7 +14,8 @@ import java.util.Objects;
 public class SicknessEffect {
     private ISickness sickness;
     private float severity;
-    private int ticksSinceBeginning, ticksSinceLastPerform;
+    private int ticksSinceBeginning;
+    private int ticksSinceLastPerform;
 
     /**
      * Creates a new sickness effect
@@ -22,8 +23,23 @@ public class SicknessEffect {
      * @param severity the severity of this effect
      */
     public SicknessEffect(ISickness sickness, float severity) {
+        this(sickness, severity, 0, 0);
+    }
+
+    /**
+     * Creates a new sickness effect with the provided properties. <br/>
+     * This constructor is intended to be used for deserialization purposes
+     *
+     * @param sickness the sickness proxied by this effect
+     * @param severity the severity of this effect
+     * @param ticksSinceBeginning the amount of ticks passed since the beginning of the effect
+     * @param ticksSinceLastPerform the amount of ticks passed since the last true perform
+     */
+    public SicknessEffect(ISickness sickness, float severity, int ticksSinceBeginning, int ticksSinceLastPerform) {
         this.sickness = sickness;
         this.severity = severity;
+        this.ticksSinceBeginning = ticksSinceBeginning;
+        this.ticksSinceLastPerform = ticksSinceLastPerform;
     }
 
     /**

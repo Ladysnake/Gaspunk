@@ -30,4 +30,17 @@ public interface ISickness extends IForgeRegistryEntry<ISickness> {
     default void onCured(SicknessEffect sicknessEffect, EntityLivingBase carrier) {
         // NO-OP
     }
+
+    /**
+     * Returns whether this sickness should be synchronized with the client.
+     * <p>
+     * This usually means that it has graphical effects.
+     * Remember that it may be a good idea to use {@link ladysnake.pathos.api.event.SicknessEvent}
+     * to interact with sicknesses on the client
+     * </p>
+     * @return true if this sickness should be synchronized with the client
+     */
+    default boolean isSynchronized() {
+        return false;
+    }
 }
