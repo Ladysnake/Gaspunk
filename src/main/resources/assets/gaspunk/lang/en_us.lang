@@ -30,5 +30,5 @@ item.gaspunk.grenade.name=Gas Grenade
 item.gaspunk.grenade_belt.name=Grenade Belt
 item.gaspunk.smoke_powder.name=Smoke Powder
 itemGroup.gaspunk=Gaspunk
-sickness.gaspunk.sarin_gas=Sarin Intoxication
-sickness.gaspunk.toxic_smoke=Toxic Smoke Intoxication
+sickness.gaspunk.sarin_gas=Lung Control Loss
+sickness.gaspunk.tear_gas=Eye Irritation

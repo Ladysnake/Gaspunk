@@ -59,6 +59,8 @@ minecraft {
         serverJvmArgs += "${project.server_args}"
     }
 
+    serverJvmArgs += "-Dlog4j.skipJansi=true"
+
 }
 
 repositories {

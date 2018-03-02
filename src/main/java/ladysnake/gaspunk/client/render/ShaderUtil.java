@@ -28,8 +28,8 @@ public class ShaderUtil {
     private static int prevProgram = 0, currentProgram = 0;
     static final String RUNTIME_LOCATION_PREFIX = "shaders/";
     private static final String JAR_LOCATION_PREFIX = "/assets/" + GasPunk.MOD_ID + "/shaders/";
-    static String vertex = "vertex_base.vsh";
-    static String fragment = "fragment_test.fsh";
+    static String vertex = "gas_overlay.vsh";
+    static String fragment = "gas_overlay.fsh";
 
     static {
         initShaders();
