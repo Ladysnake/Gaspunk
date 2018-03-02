@@ -31,4 +31,4 @@ item.gaspunk.grenade_belt.name=Ceinture de grenades
 item.gaspunk.smoke_powder.name=Poudre fumigène
 itemGroup.gaspunk=Gaspunk
 sickness.gaspunk.sarin=Intoxication au sarin
-sickness.gaspunk.toxic_smoke=Intoxication à la fumée toxique
+sickness.gaspunk.tear_gas=Irritation oculaire
