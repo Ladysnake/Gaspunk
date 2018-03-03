@@ -9,14 +9,15 @@ uniform vec2 InSize;
 
 uniform vec2 BlurDir;
 uniform float Radius;
-uniform float Progress;
+// different name to avoid clashing with Blur
+uniform float GaspunkProgress;
 
 void main() {
     vec4 blurred = vec4(0.0);
     float totalStrength = 0.0;
     float totalAlpha = 0.0;
     float totalSamples = 0.0;
-    float progRadius = floor(Radius * Progress);
+    float progRadius = floor(Radius * GaspunkProgress);
     for(float r = -progRadius; r <= progRadius; r += 1.0) {
         vec4 sample = texture2D(DiffuseSampler, texCoord + oneTexel * r * BlurDir);
 

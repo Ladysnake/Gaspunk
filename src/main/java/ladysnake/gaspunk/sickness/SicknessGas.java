@@ -1,16 +1,13 @@
 package ladysnake.gaspunk.sickness;
 
-import ladysnake.gaspunk.gas.LingeringGas;
 import ladysnake.pathos.api.SicknessEffect;
 import ladysnake.pathos.sickness.Sickness;
 import net.minecraft.entity.EntityLivingBase;
 
 public abstract class SicknessGas extends Sickness {
-    protected final LingeringGas gas;
     protected float severityDecreasePerTick;
 
-    protected SicknessGas(LingeringGas gas, float severityDecreasePerTick) {
-        this.gas = gas;
+    protected SicknessGas(float severityDecreasePerTick) {
         this.severityDecreasePerTick = severityDecreasePerTick;
     }
 
@@ -26,9 +23,5 @@ public abstract class SicknessGas extends Sickness {
             effect.setSeverity(severity - severityDecreasePerTick);
         else
             effect.setSeverity(0);
-    }
-
-    public LingeringGas getGas() {
-        return gas;
     }
 }

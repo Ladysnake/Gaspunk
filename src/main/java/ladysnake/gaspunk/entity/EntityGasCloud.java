@@ -1,10 +1,10 @@
 package ladysnake.gaspunk.entity;
 
 import io.netty.buffer.ByteBuf;
-import ladysnake.gaspunk.GasPunkConfig;
 import ladysnake.gaspunk.GasPunk;
-import ladysnake.gaspunk.gas.core.CapabilityBreathing;
+import ladysnake.gaspunk.GasPunkConfig;
 import ladysnake.gaspunk.api.IGas;
+import ladysnake.gaspunk.gas.core.CapabilityBreathing;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.util.GasUtil;
 import net.minecraft.entity.Entity;
@@ -48,22 +48,7 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
         super.onUpdate();
 
         float ageRatio = 1 - getCloudAge() / (float) getMaxLifeSpan();
-        int particleAmount = 1;
-
-        switch (gas.getParticleType()) {
-            case SMOKE:
-                particleAmount = 1;
-                break;
-            case TEARGAS:
-                particleAmount = 1;
-                break;
-            case VAPOR:
-                particleAmount = 1;
-                break;
-            case CHLORINE:
-                particleAmount = 1;
-        }
-
+        int particleAmount = gas.getParticleType().getParticleAmount();
         int color = gas.getColor();
         GasPunk.proxy.makeSmoke(world, posX, posY, posZ, color, particleAmount, MAX_PROPAGATION_DISTANCE-2, 2, gas.getParticleType());
 
@@ -84,7 +69,7 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
         for (EntityLivingBase entity : entities) {
             float distance = GasPunkConfig.fastGas
                     ? this.getDistance(entity)
-                    : GasUtil.getPropagationDistance(world, new BlockPos(this), new BlockPos(entity));
+                    : GasUtil.getPropagationDistance(world, new BlockPos(this), new BlockPos(entity), MAX_PROPAGATION_DISTANCE);
             if (distance >= 0) {
                 float concentration = ageRatio * (1 - distance / (float) MAX_PROPAGATION_DISTANCE);
                 CapabilityBreathing.getHandler(entity).ifPresent(h -> h.setConcentration(gas, concentration));

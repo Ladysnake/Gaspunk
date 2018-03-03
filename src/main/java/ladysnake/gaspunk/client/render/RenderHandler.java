@@ -1,11 +1,10 @@
 package ladysnake.gaspunk.client.render;
 
-import ladysnake.gaspunk.GasPunkConfig;
 import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.GasPunkConfig;
 import ladysnake.gaspunk.gas.core.CapabilityBreathing;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -33,8 +32,4 @@ public class RenderHandler {
         }
     }
 
-    @SubscribeEvent
-    public void onRenderPlayer(RenderPlayerEvent.Post event) {
-//        ModelBandoulier.BANDOULIER_LAYER.doRender(event.getEntityPlayer(), event.getX(), event.getY(), event.getZ(), event.getEntity().rotationYaw, event.getPartialRenderTick());
-    }
 }

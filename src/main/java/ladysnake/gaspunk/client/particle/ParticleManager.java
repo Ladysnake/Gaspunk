@@ -1,6 +1,9 @@
 package ladysnake.gaspunk.client.particle;
 
 import ladysnake.gaspunk.GasPunkConfig;
+import ladysnake.gaspunk.api.IGas;
+import ladysnake.gaspunk.api.IGasParticleType;
+import ladysnake.gaspunk.init.ModGases;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -38,10 +41,12 @@ public class ParticleManager {
 
     @SubscribeEvent
     public static void onTextureStitch(TextureStitchEvent.Pre event) {
-        event.getMap().registerSprite(ParticleGasSmoke.SMOKE_TEXTURE);
-        event.getMap().registerSprite(ParticleGasSmoke.CHLORINE_TEXTURE);
-        event.getMap().registerSprite(ParticleGasSmoke.VAPOR_TEXTURE);
-        event.getMap().registerSprite(ParticleGasSmoke.TEARGAS_TEXTURE);
+        // gets every possible particle texture from registered gases and register them as sprites
+        ModGases.REGISTRY.getValues().stream()
+                .map(IGas::getParticleType)
+                .map(IGasParticleType::getParticleTexture)
+                .distinct()
+                .forEach(event.getMap()::registerSprite);
     }
 
     @SubscribeEvent

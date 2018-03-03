@@ -1,7 +1,6 @@
 package ladysnake.gaspunk.sickness;
 
 import ladysnake.gaspunk.GasPunk;
-import ladysnake.gaspunk.gas.LingeringGas;
 import ladysnake.gaspunk.init.ModSicknesses;
 import ladysnake.pathos.api.SicknessEffect;
 import ladysnake.pathos.api.event.SicknessEvent;
@@ -34,16 +33,14 @@ public class SicknessTearGas extends SicknessGas {
     private static final UUID TEAR_SLOWNESS_ID = UUID.fromString("6372ad90-c462-4223-8638-898c1166f824");
     private static final AttributeModifier TEAR_SLOWNESS = new AttributeModifier(TEAR_SLOWNESS_ID, "Tear gas slowness penalty", -0.1D, 2);
 
-    public SicknessTearGas(LingeringGas gas) {
-        super(gas, 0.001f);
+    public SicknessTearGas() {
+        super(0.001f);
     }
 
     @Override
     public boolean performEffect(EntityLivingBase carrier, SicknessEffect effect) {
         if (effect.getTicksSinceBeginning() == 0) {
             if (!carrier.world.isRemote) {
-//                if (carrier instanceof EntityPlayerMP)
-//                    PacketHandler.NET.sendTo(new ShaderMessage("shaders/post/blur.json"), (EntityPlayerMP) carrier);
                 IAttributeInstance attribute = carrier.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
                 if (attribute.getModifier(TEAR_SLOWNESS_ID) == null)
                     attribute.applyModifier(TEAR_SLOWNESS);
@@ -57,8 +54,6 @@ public class SicknessTearGas extends SicknessGas {
     public void onCured(SicknessEffect sicknessEffect, EntityLivingBase carrier) {
         if (!carrier.world.isRemote) {
             carrier.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(TEAR_SLOWNESS_ID);
-//            if (carrier instanceof EntityPlayerMP)
-//                PacketHandler.NET.sendTo(new ShaderMessage(null), (EntityPlayerMP) carrier);
         }
     }
 
@@ -92,7 +87,7 @@ public class SicknessTearGas extends SicknessGas {
 
         @SubscribeEvent
         public static void onSicknessAdd(SicknessEvent.SicknessAddEvent event) {
-            if (!event.getEntity().world.isRemote) return;
+            if (!event.getEntity().world.isRemote || event.getEffect().getSickness() instanceof SicknessTearGas) return;
             EntityRenderer er = Minecraft.getMinecraft().entityRenderer;
             if (!er.isShaderActive()) {
                 er.loadShader(new ResourceLocation("shaders/post/fade_in_blur.json"));
@@ -103,28 +98,27 @@ public class SicknessTearGas extends SicknessGas {
         public static void onRenderTick(TickEvent.RenderTickEvent event) {
             if (_listShaders != null && event.phase == TickEvent.Phase.END && Minecraft.getMinecraft().entityRenderer.isShaderActive()) {
                 // check that the player has an active eye irritation effect
-                CapabilitySickness.getHandler(Minecraft.getMinecraft().player)
+                float progress = CapabilitySickness.getHandler(Minecraft.getMinecraft().player)
                         .map(h -> h.getActiveEffect(ModSicknesses.TEAR_GAS))
-                        .ifPresent(effect -> {
-                            ShaderGroup sg = Minecraft.getMinecraft().entityRenderer.getShaderGroup();
-                            try {
-                                @SuppressWarnings("unchecked")
-                                List<Shader> shaders = (List<Shader>) _listShaders.invoke(sg);
-                                for (Shader s : shaders) {
-                                    ShaderUniform su = s.getShaderManager().getShaderUniform("Progress");
-                                    if (su != null) {
-                                        su.set(getProgress(effect));
-                                    }
-                                }
-                            } catch (Throwable throwable) {
-                                throwable.printStackTrace();
-                            }
-                        });
+                        .map(ClientTearEffect::getProgress).orElse(0F);
+                ShaderGroup sg = Minecraft.getMinecraft().entityRenderer.getShaderGroup();
+                try {
+                    @SuppressWarnings("unchecked")
+                    List<Shader> shaders = (List<Shader>) _listShaders.invoke(sg);
+                    for (Shader s : shaders) {
+                        ShaderUniform su = s.getShaderManager().getShaderUniform("GaspunkProgress");
+                        if (su != null) {
+                            su.set(progress);
+                        }
+                    }
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
         }
 
         private static float getProgress(SicknessEffect effect) {
-            return effect.getSeverity() * 2;
+            return effect == null ? 0 : effect.getSeverity() * 2;
         }
 
     }

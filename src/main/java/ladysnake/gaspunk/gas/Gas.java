@@ -1,43 +1,72 @@
 package ladysnake.gaspunk.gas;
 
-import ladysnake.gaspunk.GasPunkConfig;
 import ladysnake.gaspunk.GasPunk;
-import ladysnake.gaspunk.client.render.ShaderUtil;
+import ladysnake.gaspunk.GasPunkConfig;
+import ladysnake.gaspunk.api.IBreathingHandler;
 import ladysnake.gaspunk.api.IGas;
+import ladysnake.gaspunk.api.IGasAgent;
 import ladysnake.gaspunk.api.IGasType;
+import ladysnake.gaspunk.client.render.ShaderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
+import javax.annotation.Nullable;
 import java.awt.image.ColorModel;
+import java.util.Arrays;
+import java.util.List;
 
+/**
+ * An implementation of {@link IGas} that delegates its effect to one or more gas agents
+ * @see IGasAgent
+ */
 public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
     public static final ResourceLocation GAS_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/vapor_overlay.png");
     public static final ResourceLocation NOISE_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/noise.png");
 
     protected final IGasType type;
     protected int color, bottleColor;
+    protected List<AgentEffect> agents;
 
-    public Gas(IGasType type, int color) {
-        this(type, color, color);
+    public Gas(IGasType type, int color, IGasAgent agent, float potency) {
+        this(type, color, new AgentEffect(agent, potency));
     }
 
-    public Gas(IGasType type, int color, int bottleColor) {
+    public Gas(IGasType type, int color, AgentEffect... agents) {
+        this(type, color, color, Arrays.asList(agents));
+    }
+
+    public Gas(IGasType type, int color, int bottleColor, List<AgentEffect> agents) {
         this.type = type;
         this.color = color;
         this.bottleColor = bottleColor;
+        this.agents = agents;
     }
 
     @Override
     public IGasType getType() {
         return type;
+    }
+
+    @Override
+    public void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick) {
+        agents.forEach(agent -> agent.getAgent().applyEffect(entity, handler, concentration, firstTick, agent.getPotency()));
+    }
+
+    @Override
+    public void onExitCloud(EntityLivingBase entity, IBreathingHandler handler) {
+        agents.forEach(agent -> agent.getAgent().onExitCloud(entity, handler));
     }
 
     /**
@@ -58,6 +87,17 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
     @Override
     public int getBottleColor() {
         return bottleColor;
+    }
+
+    @Override
+    public boolean isToxic() {
+        return agents.stream().map(AgentEffect::getAgent).anyMatch(IGasAgent::isToxic);
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        for (AgentEffect effect : agents)
+            tooltip.add(effect.getAgent().getLocalizedName());
     }
 
     protected ResourceLocation getOverlayTexture() {
@@ -95,6 +135,24 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
         GlStateManager.enableDepth();
         GlStateManager.enableAlpha();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    }
+
+    public static class AgentEffect {
+        private final IGasAgent agent;
+        private final float potency;
+
+        public AgentEffect(IGasAgent agent, float potency) {
+            this.agent = agent;
+            this.potency = potency;
+        }
+
+        public IGasAgent getAgent() {
+            return agent;
+        }
+
+        public float getPotency() {
+            return potency;
+        }
     }
 
 }

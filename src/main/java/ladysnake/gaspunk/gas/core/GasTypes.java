@@ -1,15 +1,15 @@
 package ladysnake.gaspunk.gas.core;
 
-import ladysnake.gaspunk.api.IGas;
+import ladysnake.gaspunk.api.IGasParticleType;
 import ladysnake.gaspunk.api.IGasType;
 
 public enum GasTypes implements IGasType {
-    GAS(true, IGas.ParticleTypes.VAPOR), SMOKE(false, IGas.ParticleTypes.SMOKE), VAPOR(false, IGas.ParticleTypes.VAPOR);
+    GAS(true, GasParticleTypes.VAPOR), SMOKE(false, GasParticleTypes.SMOKE), VAPOR(false, GasParticleTypes.VAPOR);
 
     private final boolean isToxic;
-    private final IGas.ParticleTypes particle;
+    private final IGasParticleType particle;
 
-    GasTypes(boolean isToxic, IGas.ParticleTypes particle) {
+    GasTypes(boolean isToxic, IGasParticleType particle) {
         this.isToxic = isToxic;
         this.particle = particle;
     }
@@ -24,7 +24,7 @@ public enum GasTypes implements IGasType {
     }
 
     @Override
-    public IGas.ParticleTypes getParticleType() {
+    public IGasParticleType getParticleType() {
         return particle;
     }
 
