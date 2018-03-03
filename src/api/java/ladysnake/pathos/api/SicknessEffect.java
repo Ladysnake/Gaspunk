@@ -3,7 +3,6 @@ package ladysnake.pathos.api;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.registries.RegistryManager;
 
 import java.util.Objects;
@@ -134,5 +133,15 @@ public class SicknessEffect {
      */
     public void onCured(EntityLivingBase carrier) {
         this.sickness.onCured(this, carrier);
+    }
+
+    @Override
+    public String toString() {
+        return "SicknessEffect{" +
+                "sickness=" + sickness +
+                ", severity=" + severity +
+                ", ticksSinceBeginning=" + ticksSinceBeginning +
+                ", ticksSinceLastPerform=" + ticksSinceLastPerform +
+                '}';
     }
 }

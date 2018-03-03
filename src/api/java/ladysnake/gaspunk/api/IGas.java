@@ -1,14 +1,28 @@
 package ladysnake.gaspunk.api;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.image.ColorModel;
+import java.util.List;
 
+/**
+ * A gas that can be used in a gas grenade and affect entities that breath it.
+ * <p>A gas has a {@link IGasType} which defines graphical properties for the tube and the cloud,<br/>
+ * a {@link IGasParticleType} which defines particle texture and density used by the cloud</p>
+ * <p>Implementations should extend {@link IForgeRegistryEntry.Impl}. <br/>
+ * For an existing implementation you can extend, see <code>ladysnake.gaspunk.Gas</code>.
+ */
 public interface IGas extends IForgeRegistryEntry<IGas> {
 
     IGasType getType();
@@ -16,16 +30,15 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
     /**
      * @return true if this gas triggers asphyxia
      */
-    default boolean isToxic() {
-        return getType().isToxic();
-    }
+    boolean isToxic();
 
     /**
      * Called each tick to affect entities inside a gas cloud
-     * @param entity the entity breathing this gas
-     * @param handler the entity's breathing handler
+     *
+     * @param entity        the entity breathing this gas
+     * @param handler       the entity's breathing handler
      * @param concentration the concentration of this gas in the air breathed by the entity
-     * @param firstTick true if this entity was not affected by this gas during the previous tick
+     * @param firstTick     true if this entity was not affected by this gas during the previous tick
      */
     default void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick) {
         // NO-OP
@@ -34,7 +47,8 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
     /**
      * Called the tick after an entity has stopped being affected directly by this gas
      * Can be used to clean up toggled effects
-     * @param entity the entity that has stopped breathing this gas
+     *
+     * @param entity  the entity that has stopped breathing this gas
      * @param handler the entity's breathing handler
      */
     default void onExitCloud(EntityLivingBase entity, IBreathingHandler handler) {
@@ -57,6 +71,7 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
     /**
      * Returns the RGB value representing the color of the liquid associated with this gas
      * (What color the gas layer will be in the tube and grenades item)
+     *
      * @return the RGB value of the color in the default sRGB
      * <code>ColorModel</code>.
      * @see #getColor()
@@ -66,19 +81,36 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
         return getColor();
     }
 
-    default ParticleTypes getParticleType() {
+    default IGasParticleType getParticleType() {
         return getType().getParticleType();
     }
 
+    /**
+     * Called during {@link net.minecraftforge.client.event.RenderGameOverlayEvent.Pre} if the <tt>renderGasOverlay</tt>
+     * configuration option is set to true
+     */
     @SideOnly(Side.CLIENT)
     void renderOverlay(float concentration, float partialTicks, ScaledResolution resolution);
 
+    /**
+     * @return the unlocalized name for this gas
+     * @see Item#getUnlocalizedName()
+     * @see Block#getUnlocalizedName()
+     */
     default String getUnlocalizedName() {
         // pattern : gas.<modid>.<name>
         return ("gas." + getRegistryName()).replace(':', '.');
     }
 
-    enum ParticleTypes {
-        CHLORINE, TEARGAS, SMOKE, VAPOR
+    /**
+     * Can be used to control tooltips on item stacks containing this gas
+     *
+     * @see Item#addInformation(ItemStack, World, List, ITooltipFlag)
+     */
+    @SideOnly(Side.CLIENT)
+    default void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        // NO-OP
     }
+
+
 }

@@ -2,17 +2,14 @@ package ladysnake.gaspunk.init;
 
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.api.IGas;
-import ladysnake.gaspunk.api.ILingeringGas;
 import ladysnake.gaspunk.gas.Gas;
-import ladysnake.gaspunk.gas.GasSarin;
-import ladysnake.gaspunk.gas.GasToxicSmoke;
-import ladysnake.gaspunk.gas.LingeringGas;
-import ladysnake.gaspunk.gas.core.GasHealingVapor;
+import ladysnake.gaspunk.gas.GasAgents;
+import ladysnake.gaspunk.gas.core.GasFactories;
 import ladysnake.gaspunk.gas.core.GasTypes;
 import ladysnake.gaspunk.item.ItemGasTube;
-import ladysnake.gaspunk.sickness.SicknessTearGas;
 import ladysnake.pathos.api.ISickness;
 import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -27,6 +24,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
 @GameRegistry.ObjectHolder(GasPunk.MOD_ID)
@@ -40,22 +38,12 @@ public class ModGases {
      * Is initialized to null to replace null checks
      */
     public static final Gas AIR = null;
-    public static final Gas HEALING_VAPOR = new GasHealingVapor();
-    public static final Gas SARIN_GAS = new GasSarin();
+    public static final Gas HEALING_VAPOR = GasFactories.createGasPotion(MobEffects.REGENERATION, 219, 1);
+    public static final Gas SARIN_GAS = new Gas(GasTypes.GAS, 0x00FFFFFF, GasAgents.SARIN, 0.8F);
     public static final Gas SMOKE = new Gas(GasTypes.SMOKE, 0xFFFFFFFF);
-    public static final Gas TEAR_GAS;
-    public static final Gas TOXIC_SMOKE = new GasToxicSmoke(GasTypes.SMOKE, 0xFF000000);
-
-    static {
-        TEAR_GAS = new LingeringGas.Builder()
-                .setSicknessFactory(SicknessTearGas::new)
-                .setGasType(GasTypes.SMOKE)
-                .setToxicity(0.2F)
-                .setColor(0xAACCCCCC)
-                .setParticleType(IGas.ParticleTypes.TEARGAS)
-                .setIgnoreBreath()
-                .build();
-    }
+    public static final Gas TEAR_GAS = new Gas(GasTypes.SMOKE, 0xAACCCCCC, GasAgents.TEAR_GAS, 0.2F);
+    // 0.1 potency for the damage agent means 1 heart per hit
+    public static final Gas TOXIC_SMOKE = new Gas(GasTypes.SMOKE, 0xFF000000, GasAgents.DAMAGE_AGENT, 0.1F);
 
     @SubscribeEvent
     public static void addRegistries(RegistryEvent.NewRegistry event) {
@@ -63,14 +51,13 @@ public class ModGases {
                 .setType(IGas.class)
                 .setName(new ResourceLocation(GasPunk.MOD_ID, "gases"))
                 .setDefaultKey(new ResourceLocation("air"))
-                .add((ILingeringGas::onRegistryAddGas))
                 .create();
     }
 
     @SubscribeEvent
     public static void addGases(RegistryEvent.Register<IGas> event) {
         event.getRegistry().registerAll(
-                new Gas(GasTypes.VAPOR, 0x99FFFFFF, 0xAA0033FF).setRegistryName("air"),
+                new Gas(GasTypes.VAPOR, 0x99FFFFFF, 0xAA0033FF, Collections.emptyList()).setRegistryName("air"),
                 SMOKE.setRegistryName("smoke"),
                 HEALING_VAPOR.setRegistryName("healing_vapor"),
                 TOXIC_SMOKE.setRegistryName("toxic_smoke"),
@@ -85,7 +72,7 @@ public class ModGases {
 
     @SubscribeEvent
     public static void addPotions(RegistryEvent.Register<ISickness> event) {
-        ILingeringGas.LINGERING_EFFECTS.values().forEach(event.getRegistry()::register);
+        GasAgents.LINGERING_EFFECTS.values().forEach(event.getRegistry()::register);
     }
 
     public static void initRecipes() {

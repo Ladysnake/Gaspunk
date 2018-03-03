@@ -1,8 +1,8 @@
 package ladysnake.gaspunk.item;
 
 import ladysnake.gaspunk.GasPunk;
-import ladysnake.gaspunk.entity.EntityGasCloud;
 import ladysnake.gaspunk.api.IGas;
+import ladysnake.gaspunk.entity.EntityGasCloud;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.init.ModItems;
 import net.minecraft.client.resources.I18n;
@@ -55,7 +55,9 @@ public class ItemGasTube extends Item {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(I18n.format(getContainedGas(stack).getUnlocalizedName()));
+        IGas containedGas = getContainedGas(stack);
+        tooltip.add(I18n.format(containedGas.getUnlocalizedName()));
+        containedGas.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
     @Nonnull

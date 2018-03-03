@@ -3,7 +3,6 @@ package ladysnake.gaspunk.util;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import ladysnake.gaspunk.entity.EntityGasCloud;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -21,17 +20,19 @@ public class GasUtil {
             .build(CacheLoader.from(GasUtil::computeDistance));
 
     /**
-     * Gets the minimum number of air blocks between start and goal
+     * Gets the minimum distance in air blocks between start and goal <br/>
      * Information may be outdated by up to a second but gases don't update instantly irl either
      *
-     * @param world the world in which the gas is
-     * @param start the emission point of the gas
-     * @param goal  the location to check
+     * @param world                  the world in which the gas is
+     * @param start                  the emission point of the gas
+     * @param goal                   the location to check
+     * @param maxPropagationDistance the maximum amount of blocks the gas can travel.
+     *                               For an optimal use of the cache, this number should not vary between method calls with the same 3 other parameters
      * @return the minimum number of air blocks between start and goal, or -1 if no path is found
      */
-    public static int getPropagationDistance(World world, BlockPos start, BlockPos goal) {
+    public static int getPropagationDistance(World world, BlockPos start, BlockPos goal, int maxPropagationDistance) {
         try {
-            return distanceCache.get(new CacheKey(world, start, goal));
+            return distanceCache.get(new CacheKey(world, start, goal, maxPropagationDistance));
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
@@ -62,7 +63,7 @@ public class GasUtil {
 
             for (EnumFacing facing : EnumFacing.VALUES) {
                 BlockPos neighbour = current.offset(facing);
-                if (/*!dataIn.world.isAirBlock(neighbour) || */dataIn.start.distanceSq(neighbour) > EntityGasCloud.MAX_PROPAGATION_DISTANCE_SQ)
+                if (/*!dataIn.world.isAirBlock(neighbour) || */dataIn.start.distanceSq(neighbour) > dataIn.maxDistanceSq)
                     continue; // gases can only propagate through air and up to a maximum distance from emission
                 Material mat = dataIn.world.getBlockState(neighbour).getMaterial();
                 if (mat.isSolid() || mat.isLiquid() || mat.blocksMovement())
@@ -86,26 +87,36 @@ public class GasUtil {
         final World world;
         final BlockPos start;
         final BlockPos goal;
+        private int maxDistanceSq;
 
-        public CacheKey(World world, BlockPos start, BlockPos goal) {
+        public CacheKey(World world, BlockPos start, BlockPos goal, int maxDistance) {
             this.world = world;
             this.start = start;
             this.goal = goal;
+            this.maxDistanceSq = maxDistance * maxDistance;
         }
 
+        @SuppressWarnings("SimplifiableIfStatement")
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
+
             CacheKey cacheKey = (CacheKey) o;
-            return Objects.equals(world, cacheKey.world) &&
-                    Objects.equals(start, cacheKey.start) &&
-                    Objects.equals(goal, cacheKey.goal);
+
+            if (maxDistanceSq != cacheKey.maxDistanceSq) return false;
+            if (world != null ? !world.equals(cacheKey.world) : cacheKey.world != null) return false;
+            if (start != null ? !start.equals(cacheKey.start) : cacheKey.start != null) return false;
+            return goal != null ? goal.equals(cacheKey.goal) : cacheKey.goal == null;
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(world, start, goal);
+            int result = world != null ? world.hashCode() : 0;
+            result = 31 * result + (start != null ? start.hashCode() : 0);
+            result = 31 * result + (goal != null ? goal.hashCode() : 0);
+            result = 31 * result + maxDistanceSq;
+            return result;
         }
     }
 }

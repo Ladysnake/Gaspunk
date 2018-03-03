@@ -2,10 +2,10 @@ package ladysnake.gaspunk.client;
 
 import ladysnake.gaspunk.CommonProxy;
 import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.api.IGasParticleType;
 import ladysnake.gaspunk.client.particle.ParticleGasSmoke;
 import ladysnake.gaspunk.client.particle.ParticleManager;
 import ladysnake.gaspunk.client.render.entity.LayerBelt;
-import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.item.ItemGasTube;
 import ladysnake.gaspunk.util.SpecialRewardChecker;
@@ -37,7 +37,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void makeSmoke(World world, double x, double y, double z, int color, int amount, int radX, int radY, IGas.ParticleTypes texture) {
+    public void makeSmoke(World world, double x, double y, double z, int color, int amount, int radX, int radY, IGasParticleType texture) {
         if (!world.isRemote) return;
         float b = (color & 0xFF) / 255F;
         float g = (color >> 8 & 0xFF) / 255F;
@@ -53,19 +53,7 @@ public class ClientProxy extends CommonProxy {
                 double posY = y + world.rand.nextGaussian() * radY % radY;
                 double posZ = z + world.rand.nextGaussian() * radX % radX;
                 ParticleGasSmoke particle = new ParticleGasSmoke(world, posX, posY, posZ, r, g, b, a, (float) (55 + 20 * world.rand.nextGaussian()));
-                switch (texture) {
-                    case CHLORINE:
-                        particle.setTexture(ParticleGasSmoke.CHLORINE_TEXTURE);
-                        break;
-                    case TEARGAS:
-                        particle.setTexture(ParticleGasSmoke.TEARGAS_TEXTURE);
-                        break;
-                    case SMOKE:
-                        particle.setTexture(ParticleGasSmoke.SMOKE_TEXTURE);
-                        break;
-                    default:
-                        particle.setTexture(ParticleGasSmoke.VAPOR_TEXTURE);
-                }
+                particle.setTexture(texture.getParticleTexture());
                 ParticleManager.INSTANCE.addParticle(particle);
             }
         }

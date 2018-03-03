@@ -1,18 +1,18 @@
 package ladysnake.gaspunk;
 
+import ladysnake.gaspunk.api.IGasParticleType;
 import ladysnake.gaspunk.compat.BaublesCompatHandler;
 import ladysnake.gaspunk.entity.EntityGrenade;
 import ladysnake.gaspunk.gas.core.CapabilityBreathing;
-import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.network.PacketHandler;
+import ladysnake.gaspunk.util.SpecialRewardChecker;
 import ladysnake.pathos.capability.CapabilitySickness;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.BehaviorProjectileDispense;
 import net.minecraft.dispenser.IPosition;
 import net.minecraft.entity.IProjectile;
-import ladysnake.gaspunk.util.SpecialRewardChecker;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -57,7 +57,7 @@ public class CommonProxy {
         // NO-OP
     }
 
-    public void makeSmoke(World world, double x, double y, double z, int color, int amount, int radX, int radY, IGas.ParticleTypes texture) {
+    public void makeSmoke(World world, double x, double y, double z, int color, int amount, int radX, int radY, IGasParticleType texture) {
         // NO-OP
     }
 
