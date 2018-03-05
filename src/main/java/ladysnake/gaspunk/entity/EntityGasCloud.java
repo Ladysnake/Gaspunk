@@ -50,7 +50,8 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
         float ageRatio = 1 - getCloudAge() / (float) getMaxLifeSpan();
         int particleAmount = gas.getParticleType().getParticleAmount();
         int color = gas.getColor();
-        GasPunk.proxy.makeSmoke(world, posX, posY, posZ, color, particleAmount, MAX_PROPAGATION_DISTANCE-2, 2, gas.getParticleType());
+        if (this.getCloudAge() % 5 == 0)
+            GasPunk.proxy.makeSmoke(world, posX, posY, posZ, color, particleAmount, MAX_PROPAGATION_DISTANCE-2, 2, gas.getParticleType());
 
         if (!world.isRemote) {
             int age = getCloudAge();
