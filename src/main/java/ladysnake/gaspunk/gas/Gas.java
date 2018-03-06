@@ -1,5 +1,6 @@
 package ladysnake.gaspunk.gas;
 
+import com.google.common.collect.ImmutableList;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.GasPunkConfig;
 import ladysnake.gaspunk.api.IBreathingHandler;
@@ -37,17 +38,17 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
 
     protected final IGasType type;
     protected int color, bottleColor;
-    protected List<AgentEffect> agents;
+    protected ImmutableList<AgentEffect> agents;
 
     public Gas(IGasType type, int color, IGasAgent agent, float potency) {
         this(type, color, new AgentEffect(agent, potency));
     }
 
     public Gas(IGasType type, int color, AgentEffect... agents) {
-        this(type, color, color, Arrays.asList(agents));
+        this(type, color, color, ImmutableList.copyOf(agents));
     }
 
-    public Gas(IGasType type, int color, int bottleColor, List<AgentEffect> agents) {
+    public Gas(IGasType type, int color, int bottleColor, ImmutableList<AgentEffect> agents) {
         this.type = type;
         this.color = color;
         this.bottleColor = bottleColor;
@@ -98,6 +99,10 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         for (AgentEffect effect : agents)
             tooltip.add(effect.getAgent().getLocalizedName());
+    }
+
+    public ImmutableList<AgentEffect> getAgents() {
+        return agents;
     }
 
     protected ResourceLocation getOverlayTexture() {
