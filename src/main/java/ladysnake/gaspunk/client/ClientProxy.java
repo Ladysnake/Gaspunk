@@ -68,13 +68,13 @@ public class ClientProxy extends CommonProxy {
             List<SpecialRewardChecker.GrenadeSkins> awardedSkins = SpecialRewardChecker.getRewards(profileID);
             // list of valid skins this player can have
             String[] skinNames = awardedSkins.stream()
-                    .map(SpecialRewardChecker.GrenadeSkins::name)
+                    .map(SpecialRewardChecker.GrenadeSkins::getDisplayName)
                     .toArray(String[]::new);
             // this guy has a special skin, don't hide it by default
             String defaultSkin = awardedSkins.stream()
                     .filter(g -> g != SpecialRewardChecker.GrenadeSkins.NONE)
                     .findAny()
-                    .orElse(SpecialRewardChecker.GrenadeSkins.NONE).name();
+                    .orElse(SpecialRewardChecker.GrenadeSkins.NONE).getDisplayName();
             selectedSkin = config.get(
                     "general",
                     "specialGrenadeSkin",
@@ -89,8 +89,7 @@ public class ClientProxy extends CommonProxy {
     public SpecialRewardChecker.GrenadeSkins getSelectedSkin() {
         return getGrenadeSkinProperty()
                 .map(Property::getString)
-                .map(String::toUpperCase)   // Enum#valueOf is case-sensitive
-                .map(SpecialRewardChecker.GrenadeSkins::valueOf)
+                .map(SpecialRewardChecker.GrenadeSkins::fromDisplayName)
                 .orElse(SpecialRewardChecker.GrenadeSkins.NONE);
     }
 
