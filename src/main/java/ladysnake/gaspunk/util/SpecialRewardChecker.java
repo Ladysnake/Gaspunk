@@ -120,7 +120,7 @@ public class SpecialRewardChecker {
     }
 
     public enum GrenadeSkins {
-        NONE(0F), MODOFF(1F);
+        NONE(0F, "Classic"), MODOFF(1F, "Steampunk");
 
         public static final GrenadeSkins[] VALUES = values();
 
@@ -128,9 +128,19 @@ public class SpecialRewardChecker {
          * The texture used by the item
          */
         public final float textureId;
+        private final String displayName;
 
-        GrenadeSkins(float textureId) {
+        GrenadeSkins(float textureId, String displayName) {
             this.textureId = textureId;
+            this.displayName = displayName;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
+
+        public static GrenadeSkins fromDisplayName(String displayName) {
+            return Arrays.stream(VALUES).filter(s -> s.getDisplayName().equalsIgnoreCase(displayName)).findAny().orElse(NONE);
         }
     }
 }
