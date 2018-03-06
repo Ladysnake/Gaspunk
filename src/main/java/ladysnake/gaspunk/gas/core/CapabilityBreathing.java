@@ -8,6 +8,8 @@ import ladysnake.gaspunk.item.ItemGasMask;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.INpc;
+import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -39,6 +41,7 @@ import java.util.Optional;
 public class CapabilityBreathing {
 
     private static final MethodHandle entityLivingBase$decreaseAirSupply;
+    public static final IAttribute MAX_AIR_SUPPLY = new RangedAttribute(null, GasPunk.MOD_ID + ".maxAirSupply", 300, 0, 1024).setDescription("Max Air Supply").setShouldWatch(true);
 
     static {
         MethodHandle temp = null;
@@ -66,8 +69,9 @@ public class CapabilityBreathing {
 
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        if (event.getObject() instanceof EntityLivingBase)
+        if (event.getObject() instanceof EntityLivingBase) {
             event.addCapability(new ResourceLocation(GasPunk.MOD_ID, "breathing_cap"), new Provider((EntityLivingBase) event.getObject()));
+        }
     }
 
     @SubscribeEvent
@@ -80,19 +84,17 @@ public class CapabilityBreathing {
          * a value between 0 and 300, emulating the entity air stat with greater precision
          */
         protected float airSupply;
-        protected int maxAirSupply;
         protected final EntityLivingBase owner;
         protected final Map<IGas, Float> prevConcentrations = new HashMap<>();
         protected final Map<IGas, Float> concentrations = new HashMap<>();
 
         DefaultBreathingHandler() {
-            this(null, 300);
+            this(null);
         }
 
-        public DefaultBreathingHandler(EntityLivingBase owner, int maxAirSupply) {
+        public DefaultBreathingHandler(EntityLivingBase owner) {
             this.owner = owner;
-            this.maxAirSupply = maxAirSupply;
-            this.airSupply = maxAirSupply;
+            this.airSupply = getMaxAirSupply();
         }
 
         /**
@@ -152,7 +154,7 @@ public class CapabilityBreathing {
                 prevConcentrations.clear();
                 prevConcentrations.putAll(concentrations);
                 // regenerate air supply if no toxic gas was inhaled
-                if (!appliedAirReduction && airSupply < maxAirSupply) {
+                if (!appliedAirReduction && airSupply < getMaxAirSupply()) {
                     this.setAirSupply(airSupply + 2);
                 }
             }
@@ -175,7 +177,11 @@ public class CapabilityBreathing {
 
         @Override
         public void setAirSupply(float airSupply) {
-            this.airSupply = Math.min(airSupply, maxAirSupply);
+            this.airSupply = Math.min(airSupply, getMaxAirSupply());
+        }
+
+        protected float getMaxAirSupply() {
+            return (float) owner.getEntityAttribute(MAX_AIR_SUPPLY).getAttributeValue();
         }
     }
 
@@ -183,17 +189,18 @@ public class CapabilityBreathing {
         final IBreathingHandler instance;
 
         Provider(EntityLivingBase object) {
+            int maxAir;
+            if (object instanceof EntityPlayer)
+                maxAir = 300;
+            else if (object instanceof INpc)
+                maxAir = 200;
+            else
+                maxAir = 40;
+            object.getAttributeMap().registerAttribute(MAX_AIR_SUPPLY).setBaseValue(maxAir);
             if (object instanceof EntityPlayerMP)
                 this.instance = new PlayerBreathingHandler((EntityPlayerMP) object);
             else {
-                int maxAir;
-                if (object instanceof EntityPlayer)
-                    maxAir = 300;
-                else if (object instanceof INpc)
-                    maxAir = 200;
-                else
-                    maxAir = 40;
-                this.instance = new DefaultBreathingHandler(object, maxAir);
+                this.instance = new DefaultBreathingHandler(object);
             }
         }
 

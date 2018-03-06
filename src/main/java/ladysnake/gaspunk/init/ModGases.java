@@ -1,5 +1,6 @@
 package ladysnake.gaspunk.init;
 
+import com.google.common.collect.ImmutableList;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.gas.Gas;
@@ -57,7 +58,7 @@ public class ModGases {
     @SubscribeEvent
     public static void addGases(RegistryEvent.Register<IGas> event) {
         event.getRegistry().registerAll(
-                new Gas(GasTypes.VAPOR, 0x99FFFFFF, 0xAA0033FF, Collections.emptyList()).setRegistryName("air"),
+                new Gas(GasTypes.VAPOR, 0x99FFFFFF, 0xAA0033FF, ImmutableList.of()).setRegistryName("air"),
                 SMOKE.setRegistryName("smoke"),
                 HEALING_VAPOR.setRegistryName("healing_vapor"),
                 TOXIC_SMOKE.setRegistryName("toxic_smoke"),

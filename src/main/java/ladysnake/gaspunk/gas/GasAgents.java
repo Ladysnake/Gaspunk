@@ -6,7 +6,7 @@ import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.api.IGasAgent;
 import ladysnake.gaspunk.gas.agent.*;
 import ladysnake.gaspunk.sickness.SicknessTearGas;
-import ladysnake.gaspunk.sickness.SicknessToxicGas;
+import ladysnake.gaspunk.sickness.SicknessSarin;
 import ladysnake.pathos.api.ISickness;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
@@ -24,7 +24,7 @@ public class GasAgents {
 
     public static final IGasAgent TEAR_GAS = createSicknessAgent("tear_gas", true, true, SicknessTearGas::new);
     public static final IGasAgent DAMAGE_AGENT = createDamageAgent("toxic_smoke");
-    public static final IGasAgent SARIN = createSicknessAgent("sarin_gas", SarinAgent::new, SicknessToxicGas::new);
+    public static final IGasAgent SARIN = createSicknessAgent("sarin_gas", SarinAgent::new, SicknessSarin::new);
 
     public static IGasAgent createDamageAgent(String name) {
         IGasAgent ret = name(new DamageAgent(20), name);
