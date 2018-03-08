@@ -1,7 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "gaspunk:items/liquid_vapor_underlay",
-    "layer1": "gaspunk:items/nade_unpinned_modoff"
-  }
-}
