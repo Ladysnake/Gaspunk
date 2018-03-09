@@ -22,9 +22,9 @@ public class GasAgents {
     public static final BiMap<LingeringAgent, ISickness> LINGERING_EFFECTS = HashBiMap.create();
     public static final Map<ResourceLocation, IGasAgent> AGENT_MAP = new HashMap<>();
 
-    public static final IGasAgent TEAR_GAS = createSicknessAgent("tear_gas", true, true, SicknessTearGas::new);
-    public static final IGasAgent DAMAGE_AGENT = createDamageAgent("toxic_smoke");
-    public static final IGasAgent SARIN = createSicknessAgent("sarin_gas", SarinAgent::new, SicknessSarin::new);
+    public static final IGasAgent LACHRYMATOR = createSicknessAgent("tear_gas", true, true, SicknessTearGas::new);
+    public static final IGasAgent PULMONARY = createDamageAgent("toxic_smoke");
+    public static final IGasAgent NERVE = createSicknessAgent("sarin_gas", SarinAgent::new, SicknessSarin::new);
 
     public static IGasAgent createDamageAgent(String name) {
         IGasAgent ret = name(new DamageAgent(20), name);

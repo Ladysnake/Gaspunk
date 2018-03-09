@@ -4,7 +4,7 @@ import ladysnake.gaspunk.api.IGasParticleType;
 import ladysnake.gaspunk.api.IGasType;
 
 public enum GasTypes implements IGasType {
-    GAS(true, GasParticleTypes.VAPOR), SMOKE(false, GasParticleTypes.SMOKE), VAPOR(false, GasParticleTypes.VAPOR);
+    GAS(true, GasParticleTypes.GAS), SMOKE(false, GasParticleTypes.SMOKE);
 
     private final boolean isToxic;
     private final IGasParticleType particle;

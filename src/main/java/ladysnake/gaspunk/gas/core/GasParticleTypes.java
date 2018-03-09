@@ -8,11 +8,13 @@ import javax.annotation.Nonnull;
 import java.util.Locale;
 
 public enum GasParticleTypes implements IGasParticleType {
-    CHLORINE, LACHRYMATOR, SMOKE, VAPOR;
+    SMOKE(5), GAS(1);
 
     private final ResourceLocation particleTexture;
+    private int particleAmount;
 
-    GasParticleTypes() {
+    GasParticleTypes(int particleAmount) {
+        this.particleAmount = particleAmount;
         particleTexture = new ResourceLocation(GasPunk.MOD_ID, "entity/particle_" + this.name().toLowerCase(Locale.ENGLISH));
     }
 
@@ -24,6 +26,6 @@ public enum GasParticleTypes implements IGasParticleType {
 
     @Override
     public int getParticleAmount() {
-        return 1;
+        return this.particleAmount;
     }
 }
