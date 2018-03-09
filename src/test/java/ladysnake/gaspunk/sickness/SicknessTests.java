@@ -1,7 +1,6 @@
 package ladysnake.gaspunk.sickness;
 
 import ladysnake.gaspunk.api.IBreathingHandler;
-import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.gas.GasAgents;
 import ladysnake.gaspunk.gas.agent.LingeringAgent;
 import ladysnake.gaspunk.gas.core.CapabilityBreathing;
@@ -86,7 +85,7 @@ public class SicknessTests {
 
     @Test
     public void testLingeringAssociation() {
-        assertNotNull(GasAgents.LINGERING_EFFECTS.get(GasAgents.SARIN));
+        assertNotNull(GasAgents.LINGERING_EFFECTS.get(GasAgents.NERVE));
     }
 
     @Test
@@ -95,7 +94,7 @@ public class SicknessTests {
         handler.setConcentration(ModGases.SARIN_GAS, 0.5f);
         handler.tick();
         ISicknessHandler sicknessHandler = CapabilitySickness.getHandler(mockedCreeper).get();
-        assertNotNull(sicknessHandler.getActiveEffect(GasAgents.LINGERING_EFFECTS.get(GasAgents.SARIN)));
+        assertNotNull(sicknessHandler.getActiveEffect(GasAgents.LINGERING_EFFECTS.get(GasAgents.NERVE)));
     }
 
     @Test
@@ -108,7 +107,7 @@ public class SicknessTests {
             breathingHandler.tick();
         }
         ISicknessHandler sicknessHandler = CapabilitySickness.getHandler(mockedCreeper).get();
-        LingeringAgent sarinAgent = (LingeringAgent) GasAgents.SARIN;
+        LingeringAgent sarinAgent = (LingeringAgent) GasAgents.NERVE;
         SicknessEffect effect = sicknessHandler.getActiveEffect(GasAgents.LINGERING_EFFECTS.get(sarinAgent));
         float potency = ModGases.SARIN_GAS.getAgents().get(0).getPotency();
         float toxicityPerTick = potency * concentration / 20;

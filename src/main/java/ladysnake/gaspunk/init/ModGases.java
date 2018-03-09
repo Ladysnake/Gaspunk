@@ -25,7 +25,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
 @GameRegistry.ObjectHolder(GasPunk.MOD_ID)
@@ -40,11 +39,12 @@ public class ModGases {
      */
     public static final Gas AIR = null;
     public static final Gas HEALING_VAPOR = GasFactories.createGasPotion(MobEffects.REGENERATION, 219, 1);
-    public static final Gas SARIN_GAS = new Gas(GasTypes.GAS, 0x00FFFFFF, GasAgents.SARIN, 0.8F);
+    public static final Gas SARIN_GAS = new Gas(GasTypes.GAS, 0x00FFFFFF, GasAgents.NERVE, 0.8F);
     public static final Gas SMOKE = new Gas(GasTypes.SMOKE, 0xFFFFFFFF);
-    public static final Gas TEAR_GAS = new Gas(GasTypes.SMOKE, 0xAACCCCCC, GasAgents.TEAR_GAS, 0.2F);
+    public static final Gas TEAR_GAS = new Gas(GasTypes.SMOKE, 0xAACCCCCC, GasAgents.LACHRYMATOR, 0.2F);
     // 0.1 potency for the damage agent means 1 heart per hit
-    public static final Gas TOXIC_SMOKE = new Gas(GasTypes.SMOKE, 0xFF000000, GasAgents.DAMAGE_AGENT, 0.1F);
+    public static final Gas TOXIC_SMOKE = new Gas(GasTypes.SMOKE, 0xFF000000, GasAgents.PULMONARY, 0.1F);
+    public static final Gas MUSTARD_GAS = new Gas(GasTypes.GAS, 0xFFB4A000, GasAgents.NERVE, 0.2F);
 
     @SubscribeEvent
     public static void addRegistries(RegistryEvent.NewRegistry event) {
@@ -58,12 +58,13 @@ public class ModGases {
     @SubscribeEvent
     public static void addGases(RegistryEvent.Register<IGas> event) {
         event.getRegistry().registerAll(
-                new Gas(GasTypes.VAPOR, 0x99FFFFFF, 0xAA0033FF, ImmutableList.of()).setRegistryName("air"),
+                new Gas(GasTypes.GAS, 0x99FFFFFF, 0xAA0033FF, ImmutableList.of()).setRegistryName("air"),
                 SMOKE.setRegistryName("smoke"),
                 HEALING_VAPOR.setRegistryName("healing_vapor"),
-                TOXIC_SMOKE.setRegistryName("toxic_smoke"),
+                TOXIC_SMOKE.setRegistryName("choke_smoke"),
                 SARIN_GAS.setRegistryName("sarin_gas"),
-                TEAR_GAS.setRegistryName("tear_gas")
+                TEAR_GAS.setRegistryName("tear_gas"),
+                MUSTARD_GAS.setRegistryName("mustard_gas")
         );
         for (EnumDyeColor color : EnumDyeColor.values()) {
             // this is probably illegal in 53 states but I didn't want to parse the value back from the table
@@ -82,6 +83,7 @@ public class ModGases {
         addRecipe(AIR, new ItemStack(Items.POISONOUS_POTATO), SARIN_GAS);
         addRecipe(SMOKE, new ItemStack(ModItems.ASH), TOXIC_SMOKE);
         addRecipe(SMOKE, new ItemStack(Items.FERMENTED_SPIDER_EYE), TEAR_GAS);
+        addRecipe(AIR, new ItemStack(ModItems.SULFUR), MUSTARD_GAS);
         for (EnumDyeColor color : EnumDyeColor.values()) {
             addRecipe(SMOKE, new ItemStack(Items.DYE, 1, color.getDyeDamage()), REGISTRY.getValue(new ResourceLocation(GasPunk.MOD_ID, "colored_smoke_" + color.getName())));
         }
