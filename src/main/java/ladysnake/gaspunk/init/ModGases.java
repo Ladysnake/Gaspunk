@@ -90,22 +90,24 @@ public class ModGases {
     }
 
     public static void addRecipe(IGas prerequisite, ItemStack ingredient, IGas result) {
-        BrewingRecipeRegistry.addRecipe(new GasBrewingRecipe(prerequisite, ingredient, result));
+        ItemStack bottle;
+        if (prerequisite == AIR)
+            bottle = new ItemStack(Items.GLASS_BOTTLE);
+        else
+            bottle = ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(prerequisite);
+        BrewingRecipeRegistry.addRecipe(new GasBrewingRecipe(bottle, ingredient, result));
     }
 
     public static class GasBrewingRecipe extends BrewingRecipe {
 
-        private final IGas base;
-
-        public GasBrewingRecipe(IGas base, ItemStack reagent, IGas result) {
-            super(((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(base), reagent, ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(result));
-            this.base = base;
+        public GasBrewingRecipe(ItemStack base, ItemStack reagent, IGas result) {
+            super(base, reagent, ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(result));
         }
 
         @Nonnull
         @Override
         public ItemStack getOutput(@Nonnull ItemStack input, @Nonnull ItemStack ingredient) {
-            if (isInput(input) && isIngredient(ingredient) && ItemGasTube.getContainedGas(input) == base)
+            if (isInput(input) && isIngredient(ingredient) && ItemGasTube.getContainedGas(input) == ItemGasTube.getContainedGas(getInput()))
                 return getOutput().copy();
             return ItemStack.EMPTY;
         }

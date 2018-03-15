@@ -1,4 +1,5 @@
-package ladysnake.gaspunk.sickness;
+// why in this package ? Well, to let mockito access protected methods from entity
+package net.minecraft.entity;
 
 import ladysnake.gaspunk.api.IBreathingHandler;
 import ladysnake.gaspunk.gas.GasAgents;
@@ -60,6 +61,7 @@ public class SicknessTests {
                         ? sicknessHandler
                         : breathingHandler);
         when(mockedCreeper.getItemStackFromSlot(any())).thenReturn(ItemStack.EMPTY);
+        when(mockedCreeper.decreaseAirSupply(anyInt())).then(InvocationOnMock::callRealMethod);
     }
 
     @Test
@@ -113,5 +115,10 @@ public class SicknessTests {
         float toxicityPerTick = potency * concentration / 20;
         float oracle = toxicityPerTick * time;
         assertEquals(oracle, effect.getSeverity(), 1E-8f);
+    }
+
+    @Test
+    public void testSarinSickness() {
+
     }
 }
