@@ -29,6 +29,7 @@ item.gaspunk.glass_tube.name=Glass Tube
 item.gaspunk.grenade.name=Gas Grenade
 item.gaspunk.grenade_belt.name=Grenade Belt
 item.gaspunk.smoke_powder.name=Smoke Powder
+item.gaspunk.sulfur.name=Sulfur
 itemGroup.gaspunk=Gaspunk
 sickness.gaspunk.sarin_gas=Lung Control Loss
 sickness.gaspunk.tear_gas=Eye Irritation
