@@ -11,8 +11,10 @@ import ladysnake.gaspunk.item.ItemGasTube;
 import ladysnake.pathos.api.ISickness;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
+import net.minecraft.init.PotionTypes;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
@@ -92,7 +94,7 @@ public class ModGases {
     public static void addRecipe(IGas prerequisite, ItemStack ingredient, IGas result) {
         ItemStack bottle;
         if (prerequisite == AIR)
-            bottle = new ItemStack(Items.GLASS_BOTTLE);
+            bottle = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER);
         else
             bottle = ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(prerequisite);
         BrewingRecipeRegistry.addRecipe(new GasBrewingRecipe(bottle, ingredient, result));

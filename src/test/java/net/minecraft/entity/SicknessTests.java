@@ -117,8 +117,4 @@ public class SicknessTests {
         assertEquals(oracle, effect.getSeverity(), 1E-8f);
     }
 
-    @Test
-    public void testSarinSickness() {
-
-    }
 }

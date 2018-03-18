@@ -9,6 +9,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -63,7 +64,7 @@ public class ItemGasTube extends Item {
     @Nonnull
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand handIn) {
-        return new ActionResult<>(EnumActionResult.SUCCESS, this.turnBottleIntoItem(playerIn.getHeldItem(handIn), playerIn, new ItemStack(ModItems.GLASS_TUBE)));
+        return new ActionResult<>(EnumActionResult.SUCCESS, this.turnBottleIntoItem(playerIn.getHeldItem(handIn), playerIn, new ItemStack(Items.GLASS_BOTTLE)));
     }
 
     protected ItemStack turnBottleIntoItem(ItemStack emptyTubes, EntityPlayer player, ItemStack stack) {

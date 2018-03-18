@@ -6,9 +6,16 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.LootEntry;
+import net.minecraft.world.storage.loot.LootEntryTable;
+import net.minecraft.world.storage.loot.LootPool;
+import net.minecraft.world.storage.loot.RandomValueRange;
+import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -32,7 +39,6 @@ public final class ModItems {
     public static final Item EMPTY_GRENADE = Items.AIR;
     public static final Item GAS_MASK = Items.AIR;
     public static final Item GAS_TUBE = Items.AIR;
-    public static final Item GLASS_TUBE = Items.AIR;
     public static final Item GRENADE = Items.AIR;
     public static final Item GRENADE_BELT = new ItemGrenadeBelt();
     public static final Item SULFUR = Items.AIR;
@@ -46,6 +52,16 @@ public final class ModItems {
     }
 
     @SubscribeEvent
+    public static void onLootTableLoad(LootTableLoadEvent event) {
+        if (event.getName().toString().equals("minecraft:chests/nether_bridge")) {
+            ResourceLocation loc = new ResourceLocation(GasPunk.MOD_ID, "inject/nether_bridge");
+            LootEntry entry = new LootEntryTable(loc, 1, 1, new LootCondition[0], "gaspunk_sulfur_entry");
+            LootPool pool = new LootPool(new LootEntry[]{entry}, new LootCondition[0], new RandomValueRange(1), new RandomValueRange(0, 1), "gaspunk_sulfur_pool");
+            event.getTable().addPool(pool);
+        }
+    }
+
+    @SubscribeEvent
     public static void addItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> reg = event.getRegistry();
         Collections.addAll(allItems,
@@ -54,7 +70,6 @@ public final class ModItems {
                 name(new Item(), "empty_grenade"),
                 name(new ItemGasMask(ItemArmor.ArmorMaterial.LEATHER, 0), "gas_mask"),
                 name(new ItemGasTube(), "gas_tube"),
-                name(new ItemGlassTube(), "glass_tube"),
                 name(new ItemGrenade(), "grenade"),
                 name(new Item(), "smoke_powder"),
                 name(new Item(), "sulfur")
@@ -89,5 +104,13 @@ public final class ModItems {
     @SideOnly(Side.CLIENT)
     private static void registerRender(Item item, ModelResourceLocation loc) {
         ModelLoader.setCustomModelResourceLocation(item, 0, loc);
+    }
+
+    @SubscribeEvent
+    public static void onRegistryMissingMappings(RegistryEvent.MissingMappings<Item> event) {
+        for (RegistryEvent.MissingMappings.Mapping<Item> mapping : event.getMappings()) {
+            if (mapping.key.equals(new ResourceLocation("gaspunk:glass_tube")))
+                mapping.remap(Items.GLASS_BOTTLE);
+        }
     }
 }
