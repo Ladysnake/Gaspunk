@@ -1,4 +1,5 @@
 gas.gaspunk.air=Wasserdampf
+gas.gaspunk.choke_smoke=Giftiger Rauch
 gas.gaspunk.colored_smoke_black=schwarzer Rauch
 gas.gaspunk.colored_smoke_blue=blauer Rauch
 gas.gaspunk.colored_smoke_brown=brauner Rauch
@@ -19,7 +20,6 @@ gas.gaspunk.healing_vapor=heilender Dampf
 gas.gaspunk.sarin_gas=Sarin
 gas.gaspunk.smoke=Rauch
 gas.gaspunk.tear_gas=Tränengas
-gas.gaspunk.toxic_smoke=Giftiger Rauch
 item.gaspunk.ash.name=Asche
 item.gaspunk.diffuser.name=Diffusor
 item.gaspunk.empty_grenade.name=Granatenhülle
