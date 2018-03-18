@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "gaspunk:items/nade_empty_modoff.png"
+    "layer0": "gaspunk:items/nade_empty_modoff"
   }
 }

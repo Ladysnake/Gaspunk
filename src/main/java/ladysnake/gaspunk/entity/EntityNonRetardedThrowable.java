@@ -31,7 +31,6 @@ public abstract class EntityNonRetardedThrowable extends Entity implements IProj
     protected int xTile;
     protected int yTile;
     protected int zTile;
-    protected Block inTile;
     protected boolean inGround;
     public int throwableShake;
     /**
@@ -274,8 +273,6 @@ public abstract class EntityNonRetardedThrowable extends Entity implements IProj
         compound.setInteger("xTile", this.xTile);
         compound.setInteger("yTile", this.yTile);
         compound.setInteger("zTile", this.zTile);
-        ResourceLocation resourcelocation = Block.REGISTRY.getNameForObject(this.inTile);
-        compound.setString("inTile", resourcelocation.toString());
         compound.setByte("shake", (byte) this.throwableShake);
         compound.setByte("inGround", (byte) (this.inGround ? 1 : 0));
 
@@ -293,12 +290,6 @@ public abstract class EntityNonRetardedThrowable extends Entity implements IProj
         this.xTile = compound.getInteger("xTile");
         this.yTile = compound.getInteger("yTile");
         this.zTile = compound.getInteger("zTile");
-
-        if (compound.hasKey("inTile", 8)) {
-            this.inTile = Block.getBlockFromName(compound.getString("inTile"));
-        } else {
-            this.inTile = Block.getBlockById(compound.getByte("inTile") & 255);
-        }
 
         this.throwableShake = compound.getByte("shake") & 255;
         this.inGround = compound.getByte("inGround") == 1;

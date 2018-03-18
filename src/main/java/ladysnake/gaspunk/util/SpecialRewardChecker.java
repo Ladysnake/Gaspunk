@@ -114,13 +114,15 @@ public class SpecialRewardChecker {
                     builder.build()
             );
         } catch (IllegalArgumentException e) {
-            GasPunk.LOGGER.error("Either an UUID is wrong or you're using an outdated version. If you do have the latest version, please report this issue", e);
+            GasPunk.LOGGER.error("Invalid Skin: Either an UUID is wrong or you're using an outdated version. If you do have the latest version, please report this issue", e);
         }
         return null;
     }
 
     public enum GrenadeSkins {
-        NONE(0F, "Classic"), MODOFF(1F, "Steampunk");
+        NONE(0F, "Classic"),
+        MODOFF(1F, "Steampunk"),
+        LADYSNAKE(2F, "Ladysnake");
 
         public static final GrenadeSkins[] VALUES = values();
 

@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "gaspunk:items/liquid_gas_underlay",
+    "layer0": "gaspunk:items/grenade_gas_underlay",
     "layer1": "gaspunk:items/nade_pinned"
   },
   "overrides": [
@@ -28,23 +28,15 @@
     },
     {
       "predicate": {
-        "gaspunk:unpinned": 0,
-        "gaspunk:gas_type": 2
+        "gaspunk:custom_skin": 1
       },
-      "model": "gaspunk:item/grenade/vapor_grenade_pinned"
-    },
-    {
-      "predicate": {
-        "gaspunk:unpinned": 1,
-        "gaspunk:gas_type": 2
-      },
-      "model": "gaspunk:item/grenade/vapor_grenade_unpinned"
+      "model": "gaspunk:item/grenade/skins/modoff/grenade"
     },
     {
       "predicate": {
         "gaspunk:custom_skin": 1
       },
-      "model": "gaspunk:item/grenade/skins/modoff/grenade"
+      "model": "gaspunk:item/grenade/skins/ladysnake/grenade"
     }
   ]
 }

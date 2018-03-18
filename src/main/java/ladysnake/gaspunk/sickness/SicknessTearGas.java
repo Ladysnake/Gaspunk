@@ -87,7 +87,7 @@ public class SicknessTearGas extends SicknessGas {
 
         @SubscribeEvent
         public static void onSicknessAdd(SicknessEvent.SicknessAddEvent event) {
-            if (!event.getEntity().world.isRemote || event.getEffect().getSickness() instanceof SicknessTearGas) return;
+            if (!event.getEntity().world.isRemote || !(event.getEffect().getSickness() instanceof SicknessTearGas)) return;
             EntityRenderer er = Minecraft.getMinecraft().entityRenderer;
             if (!er.isShaderActive()) {
                 er.loadShader(new ResourceLocation("shaders/post/fade_in_blur.json"));
