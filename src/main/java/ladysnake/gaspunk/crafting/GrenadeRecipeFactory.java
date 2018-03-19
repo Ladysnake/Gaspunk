@@ -2,9 +2,8 @@ package ladysnake.gaspunk.crafting;
 
 import com.google.gson.JsonObject;
 import ladysnake.gaspunk.GasPunk;
-import ladysnake.gaspunk.item.ItemDiffuser;
+import ladysnake.gaspunk.api.customization.IHasSkin;
 import ladysnake.gaspunk.item.ItemGasTube;
-import ladysnake.gaspunk.item.ItemGrenade;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,7 +16,6 @@ import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class GrenadeRecipeFactory implements IRecipeFactory {
@@ -37,18 +35,19 @@ public class GrenadeRecipeFactory implements IRecipeFactory {
         @Override
         @Nonnull
         public ItemStack getCraftingResult(@Nonnull InventoryCrafting var1) {
+            // the item stack that determines the gas contained in the resulting item
             ItemStack tube = null;
+            // the item stack that determines the skin of the resulting item
             ItemStack diffuser = null;
             for (int i = 0; i < var1.getSizeInventory(); ++i) {
                 ItemStack stack = var1.getStackInSlot(i);
 
-                if (!stack.isEmpty()) {
+                if (!stack.isEmpty()) {     // most slots are empty, no need to do other checks if that's the case
                     Item item = stack.getItem();
                     if (item instanceof ItemGasTube) {
                         tube = stack;
                     }
-                    // If it's already a grenade, it's a refill recipe
-                    if (item instanceof ItemDiffuser || item instanceof ItemGrenade) {
+                    if (item instanceof IHasSkin) {
                         diffuser = stack;
                     }
                     // both the tube and the diffuser have been found
@@ -58,9 +57,8 @@ public class GrenadeRecipeFactory implements IRecipeFactory {
             }
             if (tube != null && output.getItem() instanceof ItemGasTube) {
                 ItemStack craftedStack = ((ItemGasTube) output.getItem()).getItemStackFor(ItemGasTube.getContainedGas(tube));
-                if (diffuser != null && diffuser.getTagCompound() != null) {
-                    Objects.requireNonNull(craftedStack.getTagCompound()).setFloat(ItemDiffuser.TAG_CUSTOM_SKIN, diffuser.getTagCompound().getFloat(ItemDiffuser.TAG_CUSTOM_SKIN));
-                }
+                if (diffuser != null && craftedStack.getItem() instanceof IHasSkin)
+                    ((IHasSkin) craftedStack.getItem()).setSkin(craftedStack, ((IHasSkin)diffuser.getItem()).getSkin(diffuser));
                 return craftedStack;
             }
 

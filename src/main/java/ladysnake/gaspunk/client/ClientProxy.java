@@ -3,6 +3,7 @@ package ladysnake.gaspunk.client;
 import ladysnake.gaspunk.CommonProxy;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.api.IGasParticleType;
+import ladysnake.gaspunk.api.customization.GrenadeSkins;
 import ladysnake.gaspunk.client.particle.ParticleGasSmoke;
 import ladysnake.gaspunk.client.particle.ParticleManager;
 import ladysnake.gaspunk.client.render.entity.LayerBelt;
@@ -65,16 +66,16 @@ public class ClientProxy extends CommonProxy {
         // If the profile has been rewarded with one or more custom skins,
         // add the config option to choose which one will appear on new grenades
         if (SpecialRewardChecker.isSpecialPerson(profileID)) {
-            List<SpecialRewardChecker.GrenadeSkins> awardedSkins = SpecialRewardChecker.getRewards(profileID);
+            List<GrenadeSkins> awardedSkins = SpecialRewardChecker.getRewards(profileID);
             // list of valid skins this player can have
             String[] skinNames = awardedSkins.stream()
-                    .map(SpecialRewardChecker.GrenadeSkins::getDisplayName)
+                    .map(GrenadeSkins::getDisplayName)
                     .toArray(String[]::new);
             // this guy has a special skin, don't hide it by default
             String defaultSkin = awardedSkins.stream()
-                    .filter(g -> g != SpecialRewardChecker.GrenadeSkins.NONE)
+                    .filter(g -> g != GrenadeSkins.NONE)
                     .findAny()
-                    .orElse(SpecialRewardChecker.GrenadeSkins.NONE).getDisplayName();
+                    .orElse(GrenadeSkins.NONE).getDisplayName();
             selectedSkin = config.get(
                     "general",
                     "specialGrenadeSkin",
@@ -86,11 +87,11 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public SpecialRewardChecker.GrenadeSkins getSelectedSkin() {
+    public GrenadeSkins getSelectedSkin() {
         return getGrenadeSkinProperty()
                 .map(Property::getString)
-                .map(SpecialRewardChecker.GrenadeSkins::fromDisplayName)
-                .orElse(SpecialRewardChecker.GrenadeSkins.NONE);
+                .map(GrenadeSkins::fromDisplayName)
+                .orElse(GrenadeSkins.NONE);
     }
 
     /**

@@ -1,9 +1,13 @@
 package ladysnake.gaspunk;
 
+import ladysnake.gaspunk.api.customization.IHasSkin;
 import ladysnake.gaspunk.init.ModItems;
+import ladysnake.gaspunk.util.SpecialRewardChecker;
 import ladysnake.pathos.Pathos;
+import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -12,6 +16,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nonnull;
 
 @Mod(
         modid = GasPunk.MOD_ID,
@@ -29,7 +35,7 @@ public class GasPunk {
 
     public static final String DEPENDENCIES =
             "after:jei;" +
-            "after:baubles;";
+                    "after:baubles;";
 
     @SidedProxy(
             modId = GasPunk.MOD_ID,
@@ -40,12 +46,7 @@ public class GasPunk {
 
     public static Logger LOGGER;
 
-    public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(MOD_ID) {
-        @SideOnly(Side.CLIENT)
-        public ItemStack getTabIconItem() {
-            return new ItemStack(ModItems.GRENADE);
-        }
-    };
+    public static final CreativeTabs CREATIVE_TAB = new GasPunkTabs();
 
     /**
      * This is the first initialization event. Register tile entities here.
@@ -73,5 +74,27 @@ public class GasPunk {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit();
+    }
+
+    public static class GasPunkTabs extends CreativeTabs {
+        public GasPunkTabs() {
+            super(MOD_ID);
+        }
+
+        @Nonnull
+        @SideOnly(Side.CLIENT)
+        public ItemStack getTabIconItem() {
+            return new ItemStack(ModItems.GRENADE);
+        }
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        public void displayAllRelevantItems(@Nonnull NonNullList<ItemStack> itemList) {
+            super.displayAllRelevantItems(itemList);
+            // set the skin of every item that supports it to the one currently selected
+            itemList.stream()
+                    .filter(stack -> stack.getItem() instanceof IHasSkin)
+                    .forEach(stack -> ((IHasSkin)stack.getItem()).setSkin(stack, SpecialRewardChecker.getSelectedSkin(Minecraft.getMinecraft().player)));
+        }
     }
 }

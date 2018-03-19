@@ -1,6 +1,7 @@
 package ladysnake.gaspunk;
 
 import ladysnake.gaspunk.api.IGasParticleType;
+import ladysnake.gaspunk.api.customization.GrenadeSkins;
 import ladysnake.gaspunk.compat.BaublesCompatHandler;
 import ladysnake.gaspunk.entity.EntityGrenade;
 import ladysnake.gaspunk.gas.core.CapabilityBreathing;
@@ -68,8 +69,8 @@ public class CommonProxy {
         // NO-OP
     }
 
-    public SpecialRewardChecker.GrenadeSkins getSelectedSkin() {
-        return SpecialRewardChecker.GrenadeSkins.NONE;
+    public GrenadeSkins getSelectedSkin() {
+        return GrenadeSkins.NONE;
     }
 
 }

@@ -11,7 +11,7 @@ public class SicknessSarin extends SicknessGas {
 //    public static final AttributeModifier SARIN_BREATH_PENALTY = new AttributeModifier(SARIN_BREATH_PENALTY_ID, "Sarin air supply penalty", -0.5, 1);
 
     public SicknessSarin() {
-        super(0.01f);
+        super(0.004f);
     }
 
     @Override
