@@ -4,8 +4,6 @@ import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.entity.EntityGasCloud;
 import ladysnake.gaspunk.init.ModGases;
-import ladysnake.gaspunk.init.ModItems;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -53,11 +51,22 @@ public class ItemGasTube extends Item {
         return stack;
     }
 
+    @Nonnull
+    @Override
+    @SuppressWarnings("deprecation")
+    public String getItemStackDisplayName(@Nonnull ItemStack stack) {
+        // use the deprecated I18n as the method can be called on both sides
+        return net.minecraft.util.text.translation.I18n.translateToLocalFormatted(
+                getUnlocalizedName(),
+                net.minecraft.util.text.translation.I18n.translateToLocalFormatted(getContainedGas(stack).getUnlocalizedName())
+        );
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         IGas containedGas = getContainedGas(stack);
-        tooltip.add(I18n.format(containedGas.getUnlocalizedName()));
+//        tooltip.add(I18n.format(containedGas.getUnlocalizedName()));
         containedGas.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
