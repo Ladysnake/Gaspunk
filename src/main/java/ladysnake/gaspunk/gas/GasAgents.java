@@ -4,9 +4,12 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.api.IGasAgent;
-import ladysnake.gaspunk.gas.agent.*;
-import ladysnake.gaspunk.sickness.SicknessTearGas;
+import ladysnake.gaspunk.gas.agent.DamageAgent;
+import ladysnake.gaspunk.gas.agent.GasAgent;
+import ladysnake.gaspunk.gas.agent.LingeringAgent;
+import ladysnake.gaspunk.gas.agent.PotionAgent;
 import ladysnake.gaspunk.sickness.SicknessSarin;
+import ladysnake.gaspunk.sickness.SicknessTearGas;
 import ladysnake.pathos.api.ISickness;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
@@ -24,7 +27,7 @@ public class GasAgents {
 
     public static final IGasAgent LACHRYMATOR = createSicknessAgent("tear_gas", true, true, SicknessTearGas::new);
     public static final IGasAgent PULMONARY = createDamageAgent("toxic_smoke");
-    public static final IGasAgent NERVE = createSicknessAgent("sarin_gas", SarinAgent::new, SicknessSarin::new);
+    public static final IGasAgent NERVE = createSicknessAgent("sarin_gas", true, true, SicknessSarin::new);
 
     public static IGasAgent createDamageAgent(String name) {
         IGasAgent ret = name(new DamageAgent(20), name);

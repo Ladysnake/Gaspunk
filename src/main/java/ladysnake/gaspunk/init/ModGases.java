@@ -5,6 +5,7 @@ import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.gas.GasAgents;
+import ladysnake.gaspunk.gas.SuspendableGas;
 import ladysnake.gaspunk.gas.core.GasFactories;
 import ladysnake.gaspunk.gas.core.GasTypes;
 import ladysnake.gaspunk.item.ItemGasTube;
@@ -41,7 +42,7 @@ public class ModGases {
      */
     public static final Gas AIR = null;
     public static final Gas HEALING_VAPOR = GasFactories.createGasPotion(MobEffects.REGENERATION, 219, 1);
-    public static final Gas SARIN_GAS = new Gas(GasTypes.GAS, 0x00FFFFFF, GasAgents.NERVE, 0.8F);
+    public static final Gas SARIN_GAS = new SuspendableGas(GasTypes.GAS, 0x00FFFFFF, GasAgents.NERVE, 0.8F);
     public static final Gas SMOKE = new Gas(GasTypes.SMOKE, 0xFFFFFFFF);
     public static final Gas TEAR_GAS = new Gas(GasTypes.SMOKE, 0xAACCCCCC, GasAgents.LACHRYMATOR, 0.2F);
     // 0.1 potency for the damage agent means 1 heart per hit
