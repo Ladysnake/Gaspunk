@@ -47,7 +47,11 @@ public class ModGases {
     public static final Gas TEAR_GAS = new Gas(GasTypes.SMOKE, 0xAACCCCCC, GasAgents.LACHRYMATOR, 0.2F);
     // 0.1 potency for the damage agent means 1 heart per hit
     public static final Gas TOXIC_SMOKE = new Gas(GasTypes.SMOKE, 0xFF000000, GasAgents.PULMONARY, 0.1F);
-    public static final Gas MUSTARD_GAS = new Gas(GasTypes.GAS, 0xFFB4A000, GasAgents.NERVE, 0.2F);
+    // TODO add chemical burning property
+    public static final Gas MUSTARD_GAS = new Gas(GasTypes.GAS, 0xFFB4A000,
+            new Gas.AgentEffect(GasAgents.PULMONARY, 0.2F),
+            new Gas.AgentEffect(GasAgents.LACHRYMATOR, 0.3F)
+    );
 
     @SubscribeEvent
     public static void addRegistries(RegistryEvent.NewRegistry event) {
