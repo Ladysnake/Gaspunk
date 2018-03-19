@@ -126,21 +126,25 @@ public class CapabilityBreathing {
                         }
                 });
                 boolean appliedAirReduction = false;
-                if (!isImmune()) {
-                    float entityModifier = 1;
-                    if (entityLivingBase$decreaseAirSupply != null) {
-                        try {
-                            // entities like iron golems get a chance to nullify the effect
-                            entityModifier = airSupply - (int) entityLivingBase$decreaseAirSupply.invoke(owner, (int) airSupply);
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
-                        }
+                float entityModifier = 1;
+                if (entityLivingBase$decreaseAirSupply != null) {
+                    try {
+                        // entities like iron golems get a chance to nullify the effect
+                        entityModifier = airSupply - (int) entityLivingBase$decreaseAirSupply.invoke(owner, (int) airSupply);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
                     }
-                    for (Map.Entry<IGas, Float> gasEffect : concentrations.entrySet()) {
-                        IGas gas = gasEffect.getKey();
-                        float concentration = gasEffect.getValue() * entityModifier;
+                }
+                for (Map.Entry<IGas, Float> gasEffect : concentrations.entrySet()) {
+                    IGas gas = gasEffect.getKey();
+                    float concentration = gasEffect.getValue() * entityModifier;
+                    if (!isImmune(gas, concentration)) {
+                        // first tick of breathing the gas
                         boolean firstTick = !prevConcentrations.containsKey(gasEffect.getKey());
-                        if (MinecraftForge.EVENT_BUS.post(new GasEvent.GasTickEvent(owner, this, gas, concentration, firstTick)))
+                        if (firstTick)
+                            MinecraftForge.EVENT_BUS.post(new GasEvent.GasEnterEvent(owner, this, gas, concentration));
+
+                        if (MinecraftForge.EVENT_BUS.post(new GasEvent.GasTickEvent(owner, this, gas, concentration)))
                             continue;
                         if (gas.isToxic()) {
                             if (airSupply > 0 && !appliedAirReduction) {
@@ -163,9 +167,9 @@ public class CapabilityBreathing {
         }
 
         @Override
-        public boolean isImmune() {
+        public boolean isImmune(IGas gas, float concentration) {
             boolean immune = owner.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof ItemGasMask;
-            GasEvent.GasImmunityEvent event = new GasEvent.GasImmunityEvent(owner, this, immune);
+            GasEvent.GasImmunityEvent event = new GasEvent.GasImmunityEvent(owner, this, gas, concentration, immune);
             MinecraftForge.EVENT_BUS.post(event);
             return event.isImmune();
         }
