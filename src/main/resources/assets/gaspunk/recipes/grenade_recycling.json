@@ -1,0 +1,11 @@
+{
+  "result": {
+    "item": "gaspunk:diffuser"
+  },
+  "type": "gaspunk:gas_container",
+  "ingredients": [
+    {
+      "item": "gaspunk:empty_grenade"
+    }
+  ]
+}

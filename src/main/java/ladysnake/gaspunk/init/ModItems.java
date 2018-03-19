@@ -67,7 +67,8 @@ public final class ModItems {
         Collections.addAll(allItems,
                 name(new Item(), "ash"),
                 name(new SkinItem(), "diffuser"),
-                name(EMPTY_GRENADE, "empty_grenade"),
+                // empty grenades leave a glass bottle behind when used in crafts
+                name(EMPTY_GRENADE, "empty_grenade").setContainerItem(Items.GLASS_BOTTLE),
                 name(new ItemGasMask(ItemArmor.ArmorMaterial.LEATHER, 0), "gas_mask"),
                 name(new ItemGasTube(), "gas_tube"),
                 name(new ItemGrenade(), "grenade"),
