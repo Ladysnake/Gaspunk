@@ -117,4 +117,21 @@ public class SicknessTests {
         assertEquals(oracle, effect.getSeverity(), 1E-8f);
     }
 
+    @Test
+    public void testMustardGas() {
+        IBreathingHandler breathingHandler = CapabilityBreathing.getHandler(mockedCreeper).get();
+        final float concentration = 1.0f;
+        final float time = 5;
+        for (int i = 0; i < time; i++) {
+            breathingHandler.setConcentration(ModGases.MUSTARD_GAS, concentration);
+            breathingHandler.tick();
+        }
+        ISicknessHandler sicknessHandler = CapabilitySickness.getHandler(mockedCreeper).get();
+        LingeringAgent sarinAgent = (LingeringAgent) GasAgents.NERVE;
+        SicknessEffect effect = sicknessHandler.getActiveEffect(GasAgents.LINGERING_EFFECTS.get(sarinAgent));
+        float potency = ModGases.MUSTARD_GAS.getAgents().get(0).getPotency();
+        float toxicityPerTick = potency * concentration / 20;
+        float oracle = toxicityPerTick * time;
+        assertEquals(oracle, effect.getSeverity(), 1E-8f);
+    }
 }

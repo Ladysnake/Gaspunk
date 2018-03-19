@@ -1,9 +1,13 @@
 package ladysnake.gaspunk.item;
 
 import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.api.IGas;
+import ladysnake.gaspunk.api.customization.IHasSkin;
 import ladysnake.gaspunk.entity.EntityGasCloud;
 import ladysnake.gaspunk.entity.EntityGrenade;
+import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.init.ModItems;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +23,7 @@ import net.minecraft.world.WorldServer;
 import javax.annotation.Nonnull;
 
 
-public class ItemGrenade extends ItemGasTube {
+public class ItemGrenade extends ItemGasTube implements IHasSkin {
 
     public ItemGrenade() {
         super();
@@ -91,4 +95,14 @@ public class ItemGrenade extends ItemGasTube {
     public EnumAction getItemUseAction(ItemStack stack) {
         return EnumAction.BLOCK;
     }
+
+    @Override
+    public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items) {
+        if (isInCreativeTab(tab)) {
+            for (IGas gas : ModGases.REGISTRY.getValues()) {
+                items.add(getItemStackFor(gas));
+            }
+        }
+    }
+
 }
