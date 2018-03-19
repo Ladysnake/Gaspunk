@@ -17,14 +17,39 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  **/
 public class GasEvent extends LivingEvent {
     protected final IBreathingHandler breathHandler;
+    protected final IGas gas;
+    protected final float concentration;
 
-    public GasEvent(EntityLivingBase entity, IBreathingHandler breathHandler) {
+    public GasEvent(EntityLivingBase entity, IBreathingHandler breathHandler, IGas gas, float concentration) {
         super(entity);
         this.breathHandler = breathHandler;
+        this.gas = gas;
+        this.concentration = concentration;
     }
 
     public IBreathingHandler getBreathHandler() {
         return breathHandler;
+    }
+
+    public IGas getGas() {
+        return gas;
+    }
+
+    /**
+     * Gets the concentration of the gas in the air breathed by the entity
+     */
+    public float getConcentration() {
+        return concentration;
+    }
+
+    /**
+     * Fired when an entity starts breathing a gas that it wasn't breathing the previous tick <br/>
+     * This event is fired in addition to {@link GasTickEvent}. It will always be fired before the latter.
+     */
+    public static class GasEnterEvent extends GasEvent {
+        public GasEnterEvent(EntityLivingBase entity, IBreathingHandler breathHandler, IGas gas, float concentration) {
+            super(entity, breathHandler, gas, concentration);
+        }
     }
 
     /**
@@ -33,30 +58,8 @@ public class GasEvent extends LivingEvent {
      */
     @Cancelable
     public static class GasTickEvent extends GasEvent {
-        private final IGas gas;
-        private final float concentration;
-        private final boolean firstBreathingTick;
-
-        public GasTickEvent(EntityLivingBase entity, IBreathingHandler breathHandler, IGas gas, float concentration, boolean firstBreathingTick) {
-            super(entity, breathHandler);
-            this.gas = gas;
-            this.concentration = concentration;
-            this.firstBreathingTick = firstBreathingTick;
-        }
-
-        /**
-         * @return true if the entity was not breathing this gas the previous tick
-         */
-        public boolean isFirstBreathingTick() {
-            return firstBreathingTick;
-        }
-
-        public float getConcentration() {
-            return concentration;
-        }
-
-        public IGas getGas() {
-            return gas;
+        public GasTickEvent(EntityLivingBase entity, IBreathingHandler breathHandler, IGas gas, float concentration) {
+            super(entity, breathHandler, gas, concentration);
         }
     }
 
@@ -66,33 +69,20 @@ public class GasEvent extends LivingEvent {
      */
     @Cancelable
     public static class ExitGasCloudEvent extends GasEvent {
-        private final IGas gas;
-        private final float concentration;
-
         public ExitGasCloudEvent(EntityLivingBase entity, IBreathingHandler breathHandler, IGas gas, float concentration) {
-            super(entity, breathHandler);
-            this.gas = gas;
-            this.concentration = concentration;
-        }
-
-        public float getConcentration() {
-            return concentration;
-        }
-
-        public IGas getGas() {
-            return gas;
+            super(entity, breathHandler, gas, concentration);
         }
     }
 
     /**
      * GasImmunityEvent is fired whenever an entity checks whether they're affected by surrounding gases
-     * in {@link IBreathingHandler#isImmune()}.<br>
+     * in {@link IBreathingHandler#isImmune(IGas, float)}. <br/>
      */
     public static class GasImmunityEvent extends GasEvent {
         private boolean immune;
 
-        public GasImmunityEvent(EntityLivingBase entity, IBreathingHandler breathHandler, boolean immune) {
-            super(entity, breathHandler);
+        public GasImmunityEvent(EntityLivingBase entity, IBreathingHandler breathHandler, IGas gas, float concentration, boolean immune) {
+            super(entity, breathHandler, gas, concentration);
             this.immune = immune;
         }
 
