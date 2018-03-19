@@ -34,7 +34,7 @@
     },
     {
       "predicate": {
-        "gaspunk:custom_skin": 1
+        "gaspunk:custom_skin": 2
       },
       "model": "gaspunk:item/grenade/skins/ladysnake/grenade"
     }

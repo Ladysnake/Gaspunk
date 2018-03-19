@@ -2,5 +2,19 @@
   "parent": "item/generated",
   "textures": {
     "layer0": "gaspunk:items/nade_unpinned"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "gaspunk:custom_skin": 1
+      },
+      "model": "gaspunk:item/grenade/skins/modoff/empty_grenade"
+    },
+    {
+      "predicate": {
+        "gaspunk:custom_skin": 2
+      },
+      "model": "gaspunk:item/grenade/skins/ladysnake/empty_grenade"
+    }
+  ]
 }

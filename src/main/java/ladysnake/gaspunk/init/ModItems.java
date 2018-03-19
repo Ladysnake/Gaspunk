@@ -36,7 +36,7 @@ import java.util.Set;
 public final class ModItems {
 
     public static final Item ASH = Items.AIR;
-    public static final Item EMPTY_GRENADE = Items.AIR;
+    public static final SkinItem EMPTY_GRENADE = new SkinItem();
     public static final Item GAS_MASK = Items.AIR;
     public static final Item GAS_TUBE = Items.AIR;
     public static final Item GRENADE = Items.AIR;
@@ -66,8 +66,8 @@ public final class ModItems {
         IForgeRegistry<Item> reg = event.getRegistry();
         Collections.addAll(allItems,
                 name(new Item(), "ash"),
-                name(new ItemDiffuser(), "diffuser"),
-                name(new Item(), "empty_grenade"),
+                name(new SkinItem(), "diffuser"),
+                name(EMPTY_GRENADE, "empty_grenade"),
                 name(new ItemGasMask(ItemArmor.ArmorMaterial.LEATHER, 0), "gas_mask"),
                 name(new ItemGasTube(), "gas_tube"),
                 name(new ItemGrenade(), "grenade"),

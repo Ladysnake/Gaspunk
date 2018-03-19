@@ -9,6 +9,12 @@
         "gaspunk:custom_skin": 1
       },
       "model": "gaspunk:item/grenade/skins/modoff/diffuser"
+    },
+    {
+      "predicate": {
+        "gaspunk:custom_skin": 2
+      },
+      "model": "gaspunk:item/grenade/skins/ladysnake/diffuser"
     }
   ]
 }
