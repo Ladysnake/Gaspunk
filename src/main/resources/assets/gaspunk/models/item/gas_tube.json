@@ -10,12 +10,6 @@
         "gaspunk:gas_type": 1
       },
       "model": "gaspunk:item/smoke_tube"
-    },
-    {
-      "predicate": {
-        "gaspunk:gas_type": 2
-      },
-      "model": "gaspunk:item/vapor_tube"
     }
   ]
 }

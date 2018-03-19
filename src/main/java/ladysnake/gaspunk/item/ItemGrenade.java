@@ -29,7 +29,7 @@ public class ItemGrenade extends ItemGasTube implements IHasSkin {
         super();
         addPropertyOverride(new ResourceLocation(GasPunk.MOD_ID, "unpinned"),
                 ((stack, worldIn, entityIn) -> entityIn != null && entityIn.getActiveItemStack() == stack ? 1 : 0));
-        addPropertyOverride(ItemDiffuser.CUSTOM_SKIN_PROPERTY, ItemDiffuser.CUSTOM_SKIN_GETTER);
+        addPropertyOverride(SkinItem.CUSTOM_SKIN_PROPERTY, SkinItem.CUSTOM_SKIN_GETTER);
         this.setMaxStackSize(1);
     }
 
@@ -80,8 +80,11 @@ public class ItemGrenade extends ItemGasTube implements IHasSkin {
     public EntityGasCloud explode(WorldServer worldIn, Vec3d pos, ItemStack stack) {
         EntityGasCloud cloud = super.explode(worldIn, pos, stack);
         cloud.setMaxLifespan(600);
-        if (!worldIn.isRemote)
-            worldIn.spawnEntity(new EntityItem(worldIn, pos.x, pos.y, pos.z, new ItemStack(ModItems.EMPTY_GRENADE)));
+        if (!worldIn.isRemote) {
+            ItemStack emptyGrenade = new ItemStack(ModItems.EMPTY_GRENADE);
+            ModItems.EMPTY_GRENADE.setSkin(emptyGrenade, getSkin(stack));
+            worldIn.spawnEntity(new EntityItem(worldIn, pos.x, pos.y, pos.z, emptyGrenade));
+        }
         return cloud;
     }
 

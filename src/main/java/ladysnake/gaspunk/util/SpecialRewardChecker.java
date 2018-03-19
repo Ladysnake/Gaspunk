@@ -60,6 +60,8 @@ public class SpecialRewardChecker {
      * @return the grenade skin selected by this player
      */
     public static GrenadeSkins getSelectedSkin(EntityPlayer player) {
+        if (player == null) return GrenadeSkins.NONE;
+
         GrenadeSkins playerChoice = (player instanceof EntityPlayerMP)
                 ? playerSelectedSkins.get(((EntityPlayerMP) player).connection)
                 : GasPunk.proxy.getSelectedSkin();
