@@ -55,14 +55,16 @@ public class GrenadeRecipeFactory implements IRecipeFactory {
                         break;
                 }
             }
-            if (tube != null && output.getItem() instanceof ItemGasTube) {
-                ItemStack craftedStack = ((ItemGasTube) output.getItem()).getItemStackFor(ItemGasTube.getContainedGas(tube));
-                if (diffuser != null && craftedStack.getItem() instanceof IHasSkin)
-                    ((IHasSkin) craftedStack.getItem()).setSkin(craftedStack, ((IHasSkin)diffuser.getItem()).getSkin(diffuser));
-                return craftedStack;
-            }
-
-            return output.copy();
+            ItemStack craftedStack;
+            // transfer the gas
+            if (tube != null && output.getItem() instanceof ItemGasTube)
+                craftedStack = ((ItemGasTube) output.getItem()).getItemStackFor(ItemGasTube.getContainedGas(tube));
+            else
+                craftedStack = output.copy();
+            // transfer the skin
+            if (diffuser != null && craftedStack.getItem() instanceof IHasSkin)
+                ((IHasSkin) craftedStack.getItem()).setSkin(craftedStack, ((IHasSkin)diffuser.getItem()).getSkin(diffuser));
+            return craftedStack;
         }
     }
 
