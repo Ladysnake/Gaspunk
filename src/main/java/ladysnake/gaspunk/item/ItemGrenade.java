@@ -82,7 +82,7 @@ public class ItemGrenade extends ItemGasTube implements IHasSkin {
         cloud.setMaxLifespan(600);
         if (!worldIn.isRemote) {
             ItemStack emptyGrenade = new ItemStack(ModItems.EMPTY_GRENADE);
-            ModItems.EMPTY_GRENADE.setSkin(emptyGrenade, getSkin(stack));
+            ((SkinItem)ModItems.EMPTY_GRENADE).setSkin(emptyGrenade, getSkin(stack));
             worldIn.spawnEntity(new EntityItem(worldIn, pos.x, pos.y, pos.z, emptyGrenade));
         }
         return cloud;
