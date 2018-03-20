@@ -45,6 +45,7 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
     }
 
     @SubscribeEvent
+    @SideOnly(Side.CLIENT)
     public static void onTextureStitch(TextureStitchEvent.Pre event) {
         // gets every possible particle texture from registered gases and register them as sprites
         ModGases.REGISTRY.getValues().stream()
@@ -114,6 +115,7 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         for (AgentEffect effect : agents)
             tooltip.add(effect.getAgent().getLocalizedName());

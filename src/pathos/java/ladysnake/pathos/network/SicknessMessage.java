@@ -44,10 +44,10 @@ public class SicknessMessage implements IMessage{
         buf.writeInt(effect.getTicksSinceLastPerform());
     }
 
-    @SideOnly(Side.CLIENT)
     public static class SicknessMessageHandler implements IMessageHandler<SicknessMessage, IMessage> {
 
         @Override
+        @SideOnly(Side.CLIENT)
         public IMessage onMessage(SicknessMessage message, MessageContext ctx) {
             FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(
                     () -> CapabilitySickness.getHandler(Minecraft.getMinecraft().player).ifPresent(

@@ -58,7 +58,7 @@ public class GasPunk {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         LOGGER = event.getModLog();
-        lib = LadyLib.newLibInstance(event);
+        lib = LadyLib.initLib(event);
         lib.setCreativeTab(CREATIVE_TAB);
         proxy.preInit(event);
         Pathos.preInit(event);
