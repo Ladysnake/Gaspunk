@@ -17,6 +17,31 @@ version = modVersion
 group = modGroup
 archivesBaseName = modBaseName
 
+/* * * * LadyLib-specific integration * * * */
+ext.ladylibJava = "./Ladylib/java"
+ext.ladylibResources = "./Ladylib/resources"
+
+sourceSets {
+    main {
+        java {
+            srcDir project.ladylibJava
+        }
+        resources {
+            srcDir project.ladylibResources
+        }
+    }
+}
+
+task setupSubmodules(type: Exec) {
+    if (new File('LadyLib').exists())
+        commandLine 'git', 'submodule', 'add', 'https://github.com/Pyrofab/LadyLib.git', 'LadyLib'
+    else
+        commandLine 'git', 'submodule', 'update'
+}
+
+setupDecompWorkspace.dependsOn(setupSubmodules)
+/* * * * * * * * * * * * * * * * * * * * * * */
+
 sourceSets {
     pathos {
         compileClasspath = main.compileClasspath
