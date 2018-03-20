@@ -47,7 +47,7 @@ public class GasPunk {
 
     public static Logger LOGGER;
 
-    public static LadyLib ladyLib;
+    public static LadyLib lib;
 
     public static final CreativeTabs CREATIVE_TAB = new GasPunkTabs();
 
@@ -58,8 +58,8 @@ public class GasPunk {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         LOGGER = event.getModLog();
-        ladyLib = LadyLib.newLibInstance(event);
-        ladyLib.setCreativeTab(CREATIVE_TAB);
+        lib = LadyLib.newLibInstance(event);
+        lib.setCreativeTab(CREATIVE_TAB);
         proxy.preInit(event);
         Pathos.preInit(event);
     }
