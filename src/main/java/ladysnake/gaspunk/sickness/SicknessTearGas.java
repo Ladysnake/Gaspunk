@@ -66,7 +66,7 @@ public class SicknessTearGas extends SicknessGas {
      * @author tterag
      */
     @SideOnly(Side.CLIENT)
-    @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
+    @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID, value = Side.CLIENT)
     public static class ClientTearEffect {
 
         private static MethodHandle _listShaders;
