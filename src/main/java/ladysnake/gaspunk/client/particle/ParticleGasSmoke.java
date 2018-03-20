@@ -1,22 +1,17 @@
 package ladysnake.gaspunk.client.particle;
 
-import ladysnake.gaspunk.GasPunk;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.ResourceLocation;
+import ladylib.client.particle.SpecialParticle;
+import ladysnake.gaspunk.gas.core.GasParticleTypes;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class ParticleGasSmoke extends Particle {
-    public static final ResourceLocation SMOKE_TEXTURE = new ResourceLocation(GasPunk.MOD_ID, "entity/particle_smoke");
-    public static final ResourceLocation GAS_TEXTURE = new ResourceLocation(GasPunk.MOD_ID, "entity/particle_gas");
+public class ParticleGasSmoke extends SpecialParticle {
 
     public float particleMaxAlpha;
 
     public ParticleGasSmoke(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, float red, float green, float blue, float maxAlpha, float scale) {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn);
-        this.setTexture(GAS_TEXTURE);
+        this.setTexture(GasParticleTypes.GAS.getParticleTexture());
         this.particleRed = red;
         this.particleGreen = green;
         this.particleBlue = blue;
@@ -42,11 +37,6 @@ public class ParticleGasSmoke extends Particle {
     @Override
     public int getFXLayer() {
         return 1;
-    }
-
-    public void setTexture(ResourceLocation texture) {
-        TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(texture.toString());
-        this.setParticleTexture(sprite);
     }
 
     @Override
@@ -79,5 +69,4 @@ public class ParticleGasSmoke extends Particle {
             this.motionZ *= 0.699999988079071D;
         }
     }
-
 }

@@ -1,13 +1,12 @@
 package ladysnake.gaspunk.gas;
 
 import com.google.common.collect.ImmutableList;
+import ladylib.client.ShaderRegistryEvent;
+import ladylib.client.ShaderUtil;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.GasPunkConfig;
-import ladysnake.gaspunk.api.IBreathingHandler;
-import ladysnake.gaspunk.api.IGas;
-import ladysnake.gaspunk.api.IGasAgent;
-import ladysnake.gaspunk.api.IGasType;
-import ladysnake.gaspunk.client.render.ShaderUtil;
+import ladysnake.gaspunk.api.*;
+import ladysnake.gaspunk.init.ModGases;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -19,22 +18,41 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.awt.image.ColorModel;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * An implementation of {@link IGas} that delegates its effect to one or more gas agents
  * @see IGasAgent
  */
+@Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
 public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
     public static final ResourceLocation GAS_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/vapor_overlay.png");
     public static final ResourceLocation NOISE_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/noise.png");
+    public static final ResourceLocation OVERLAY_SHADER = new ResourceLocation(GasPunk.MOD_ID, "gas_overlay");
+
+    @SubscribeEvent
+    public static void onShaderRegistry(ShaderRegistryEvent event) {
+        event.registerShader(OVERLAY_SHADER);
+    }
+
+    @SubscribeEvent
+    public static void onTextureStitch(TextureStitchEvent.Pre event) {
+        // gets every possible particle texture from registered gases and register them as sprites
+        ModGases.REGISTRY.getValues().stream()
+                .map(IGas::getParticleType)
+                .map(IGasParticleType::getParticleTexture)
+                .distinct()
+                .forEach(event.getMap()::registerSprite);
+    }
 
     protected final IGasType type;
     protected int color, bottleColor;
@@ -124,8 +142,8 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         Minecraft.getMinecraft().getTextureManager().bindTexture(getOverlayTexture());
-        ShaderUtil.useShader(ShaderUtil.test);
-        ShaderUtil.setUniform("gasColor", new float[]{r, g, b, a});
+        ShaderUtil.useShader(OVERLAY_SHADER);
+        ShaderUtil.setUniform("gasColor", r, g, b, a);
         ShaderUtil.setUniform("iTime", (int) System.currentTimeMillis());
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();

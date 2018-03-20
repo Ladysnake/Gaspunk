@@ -51,7 +51,7 @@ public final class ModItems {
     @SubscribeEvent
     public static void addItems(RegistryEvent.Register<Item> event) {
         if (Loader.isModLoaded("baubles")) {
-            GasPunk.ladyLib.getRegistrar().getItemRegistrar().addItem(GRENADE_BELT.setRegistryName("grenade_belt"), true);
+            GasPunk.lib.getRegistrar().getItemRegistrar().addItem(GRENADE_BELT.setRegistryName("grenade_belt"), true);
             MinecraftForge.EVENT_BUS.register(GRENADE_BELT);
         }
         ladysnake.pathos.item.ModItems.EMPTY_SYRINGE.setCreativeTab(GasPunk.CREATIVE_TAB);
