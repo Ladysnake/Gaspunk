@@ -1,6 +1,5 @@
 package ladysnake.gaspunk.entity;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IProjectile;
@@ -9,7 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -54,7 +52,7 @@ public abstract class EntityNonRetardedThrowable extends Entity implements IProj
         this.setPosition(x, y, z);
     }
 
-    public EntityNonRetardedThrowable(World worldIn, EntityLivingBase throwerIn) {
+    public EntityNonRetardedThrowable(World worldIn, @Nonnull EntityLivingBase throwerIn) {
         this(worldIn, throwerIn.posX, throwerIn.posY + (double) throwerIn.getEyeHeight() - 0.10000000149011612D, throwerIn.posZ);
         this.thrower = throwerIn;
     }

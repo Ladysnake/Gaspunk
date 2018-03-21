@@ -6,10 +6,8 @@ import ladysnake.gaspunk.api.customization.IHasSkin;
 import ladysnake.gaspunk.entity.EntityGasCloud;
 import ladysnake.gaspunk.entity.EntityGrenade;
 import ladysnake.gaspunk.init.ModGases;
-import ladysnake.gaspunk.init.ModItems;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
@@ -69,22 +67,21 @@ public class ItemGrenade extends ItemGasTube implements IHasSkin {
     @Nonnull
     @Override
     public ItemStack onItemUseFinish(@Nonnull ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
-        if (entityLiving instanceof EntityPlayer)
-            if (!((EntityPlayer) entityLiving).isCreative())
+        if (!(entityLiving instanceof EntityPlayer && ((EntityPlayer) entityLiving).isCreative()))
                 stack.shrink(1);
-        if (!worldIn.isRemote)
-            explode((WorldServer) worldIn, entityLiving.getPositionVector(), stack);
+        if (!worldIn.isRemote) {
+            EntityGasCloud cloud = explode((WorldServer) worldIn, entityLiving.getPositionVector(), stack);
+            cloud.setEmitter(entityLiving);
+        }
         return stack;
     }
 
     public EntityGasCloud explode(WorldServer worldIn, Vec3d pos, ItemStack stack) {
-        EntityGasCloud cloud = super.explode(worldIn, pos, stack);
+        worldIn.spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.x, pos.y, pos.z, 20, 0.5, 0.5, 0.5, 0.2);
+        EntityGasCloud cloud = new EntityGasCloud(worldIn, getContainedGas(stack));
+        cloud.setPosition(pos.x, pos.y, pos.z);
         cloud.setMaxLifespan(600);
-        if (!worldIn.isRemote) {
-            ItemStack emptyGrenade = new ItemStack(ModItems.EMPTY_GRENADE);
-            ((SkinItem)ModItems.EMPTY_GRENADE).setSkin(emptyGrenade, getSkin(stack));
-            worldIn.spawnEntity(new EntityItem(worldIn, pos.x, pos.y, pos.z, emptyGrenade));
-        }
+        worldIn.spawnEntity(cloud);
         return cloud;
     }
 
