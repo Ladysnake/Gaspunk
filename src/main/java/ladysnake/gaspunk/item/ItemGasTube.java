@@ -2,7 +2,6 @@ package ladysnake.gaspunk.item;
 
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.api.IGas;
-import ladysnake.gaspunk.entity.EntityGasCloud;
 import ladysnake.gaspunk.init.ModGases;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -13,9 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.*;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -65,18 +62,16 @@ public class ItemGasTube extends Item {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        IGas containedGas = getContainedGas(stack);
-//        tooltip.add(I18n.format(containedGas.getUnlocalizedName()));
-        containedGas.addInformation(stack, worldIn, tooltip, flagIn);
+        getContainedGas(stack).addInformation(stack, worldIn, tooltip, flagIn);
     }
 
     @Nonnull
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand handIn) {
-        return new ActionResult<>(EnumActionResult.SUCCESS, this.turnBottleIntoItem(playerIn.getHeldItem(handIn), playerIn, new ItemStack(Items.GLASS_BOTTLE)));
+        return new ActionResult<>(EnumActionResult.SUCCESS, this.turnTubeIntoItem(playerIn.getHeldItem(handIn), playerIn, new ItemStack(Items.GLASS_BOTTLE)));
     }
 
-    protected ItemStack turnBottleIntoItem(ItemStack emptyTubes, EntityPlayer player, ItemStack stack) {
+    protected ItemStack turnTubeIntoItem(ItemStack emptyTubes, EntityPlayer player, ItemStack stack) {
         emptyTubes.shrink(1);
         player.addStat(Objects.requireNonNull(StatList.getObjectUseStats(this)));
 
@@ -89,30 +84,6 @@ public class ItemGasTube extends Item {
 
             return emptyTubes;
         }
-    }
-
-    // Tubes were supposed to be throwable, maybe one day we'll uncomment this code
-    /*@Nonnull
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
-        worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SPLASH_POTION_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-        if (!worldIn.isRemote) {
-            EntityGasTube tube = new EntityGasTube(worldIn, playerIn, stack);
-            tube.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
-            worldIn.spawnEntity(tube);
-            stack.shrink(1);
-        }
-        return new ActionResult<>(EnumActionResult.SUCCESS, stack);
-    }*/
-
-    public EntityGasCloud explode(WorldServer worldIn, Vec3d pos, ItemStack stack) {
-        worldIn.spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.x, pos.y, pos.z, 20, 0.5, 0.5, 0.5, 0.2);
-        EntityGasCloud cloud = new EntityGasCloud(worldIn, getContainedGas(stack));
-        cloud.setPosition(pos.x, pos.y, pos.z);
-        cloud.setMaxLifespan(100);
-        worldIn.spawnEntity(cloud);
-        return cloud;
     }
 
     @Override

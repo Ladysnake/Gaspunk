@@ -19,11 +19,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData {
 
@@ -32,7 +35,9 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
     private static final DataParameter<Integer> CLOUD_AGE = EntityDataManager.createKey(EntityGasCloud.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> MAX_LIFESPAN = EntityDataManager.createKey(EntityGasCloud.class, DataSerializers.VARINT);
 
-    private IGas gas = ModGases.AIR;
+    protected IGas gas = ModGases.AIR;
+    @Nullable
+    protected UUID emitterID;
 
     public EntityGasCloud(World worldIn) {
         super(worldIn);
@@ -43,6 +48,10 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
         this.gas = gas;
     }
 
+    public void setEmitter(@Nullable Entity emitter) {
+        this.emitterID = emitter == null ? null : emitter.getUniqueID();
+    }
+
     @Override
     public void onUpdate() {
         super.onUpdate();
@@ -50,10 +59,17 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
         float ageRatio = 1 - getCloudAge() / (float) getMaxLifeSpan();
         int particleAmount = gas.getParticleType().getParticleAmount();
         int color = gas.getColor();
-        if (this.getCloudAge() % 5 == 0)
+        if (this.getCloudAge() % 10 == 0)
             GasPunk.proxy.makeSmoke(world, posX, posY, posZ, color, particleAmount, MAX_PROPAGATION_DISTANCE-2, 2, gas.getParticleType());
 
         if (!world.isRemote) {
+            // sync the cloud's position with the emitter's
+            if (emitterID != null) {
+                Entity emitter = ((WorldServer)world).getEntityFromUuid(emitterID);
+                if (emitter != null) {
+                    this.setPosition(emitter.posX, emitter.posY, emitter.posZ);
+                }
+            }
             int age = getCloudAge();
             this.setCloudAge(age + 1);
             if (age > getMaxLifeSpan()) {
@@ -105,6 +121,9 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
         this.gas = ModGases.REGISTRY.getValue(new ResourceLocation(compound.getString("gas")));
         this.setMaxLifespan(compound.getInteger("max_lifespan"));
         this.setCloudAge(compound.getInteger("cloud_age"));
+        if (compound.hasKey("emitter_idLeast")) {
+            emitterID = compound.getUniqueId("emitter_id");
+        }
     }
 
     @Override
@@ -113,6 +132,8 @@ public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData
             compound.setString("gas", Objects.requireNonNull(gas.getRegistryName()).toString());
         compound.setInteger("max_lifespan", getMaxLifeSpan());
         compound.setInteger("cloud_age", getCloudAge());
+        if (emitterID != null)
+            compound.setUniqueId("emitter_id", emitterID);
     }
 
     @Override

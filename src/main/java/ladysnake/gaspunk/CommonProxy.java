@@ -49,7 +49,9 @@ public class CommonProxy {
             @Nonnull
             @Override
             protected IProjectile getProjectileEntity(@Nonnull World worldIn, @Nonnull IPosition position, @Nonnull ItemStack stackIn) {
-                return new EntityGrenade(worldIn, null, stackIn);
+                EntityGrenade grenade = new EntityGrenade(worldIn);
+                grenade.setItem(stackIn);
+                return grenade;
             }
         });
     }

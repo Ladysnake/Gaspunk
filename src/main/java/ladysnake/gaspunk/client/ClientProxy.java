@@ -2,10 +2,10 @@ package ladysnake.gaspunk.client;
 
 import ladysnake.gaspunk.CommonProxy;
 import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.GasPunkConfig;
 import ladysnake.gaspunk.api.IGasParticleType;
 import ladysnake.gaspunk.api.customization.GrenadeSkins;
 import ladysnake.gaspunk.client.particle.ParticleGasSmoke;
-import ladysnake.gaspunk.client.particle.ParticleManager;
 import ladysnake.gaspunk.client.render.entity.LayerBelt;
 import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.item.ItemGasTube;
@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -26,6 +27,12 @@ import java.util.UUID;
 public class ClientProxy extends CommonProxy {
     private int particleCount = 0;
     private Property selectedSkin;
+
+    @Override
+    public void preInit(FMLPreInitializationEvent event) {
+        super.preInit(event);
+        GasPunk.lib.getParticleManager().setMaxParticlesConfig(() -> GasPunkConfig.client.maxParticles);
+    }
 
     @Override
     public void postInit() {
@@ -55,7 +62,7 @@ public class ClientProxy extends CommonProxy {
                 double posZ = z + world.rand.nextGaussian() * radX % radX;
                 ParticleGasSmoke particle = new ParticleGasSmoke(world, posX, posY, posZ, r, g, b, a, (float) (55 + 20 * world.rand.nextGaussian()));
                 particle.setTexture(texture.getParticleTexture());
-                ParticleManager.INSTANCE.addParticle(particle);
+                GasPunk.lib.getParticleManager().addParticle(particle);
             }
         }
     }
