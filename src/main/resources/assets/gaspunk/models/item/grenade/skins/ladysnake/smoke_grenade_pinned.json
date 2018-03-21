@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "gaspunk:items/grenade_smoke_underlay",
+    "layer1": "gaspunk:items/nade_pinned_ladysnake"
+  }
+}

@@ -26,6 +26,9 @@
       },
       "model": "gaspunk:item/grenade/smoke_grenade_unpinned"
     },
+
+
+
     {
       "predicate": {
         "gaspunk:custom_skin": 1
@@ -34,9 +37,60 @@
     },
     {
       "predicate": {
+        "gaspunk:custom_skin": 1,
+        "gaspunk:unpinned": 1,
+        "gaspunk:gas_type": 0
+      },
+      "model": "gaspunk:item/grenade/skins/modoff/grenade_unpinned"
+    },
+    {
+      "predicate": {
+        "gaspunk:custom_skin": 1,
+        "gaspunk:unpinned": 0,
+        "gaspunk:gas_type": 1
+      },
+      "model": "gaspunk:item/grenade/skins/modoff/smoke_grenade_pinned"
+    },
+    {
+      "predicate": {
+        "gaspunk:custom_skin": 1,
+        "gaspunk:unpinned": 1,
+        "gaspunk:gas_type": 1
+      },
+      "model": "gaspunk:item/grenade/skins/modoff/smoke_grenade_unpinned"
+    },
+
+
+
+    {
+      "predicate": {
         "gaspunk:custom_skin": 2
       },
       "model": "gaspunk:item/grenade/skins/ladysnake/grenade"
+    },
+    {
+      "predicate": {
+        "gaspunk:custom_skin": 2,
+        "gaspunk:unpinned": 1,
+        "gaspunk:gas_type": 0
+      },
+      "model": "gaspunk:item/grenade/skins/ladysnake/grenade_unpinned"
+    },
+    {
+      "predicate": {
+        "gaspunk:custom_skin": 2,
+        "gaspunk:unpinned": 0,
+        "gaspunk:gas_type": 1
+      },
+      "model": "gaspunk:item/grenade/skins/ladysnake/smoke_grenade_pinned"
+    },
+    {
+      "predicate": {
+        "gaspunk:custom_skin": 2,
+        "gaspunk:unpinned": 1,
+        "gaspunk:gas_type": 1
+      },
+      "model": "gaspunk:item/grenade/skins/ladysnake/smoke_grenade_unpinned"
     }
   ]
 }

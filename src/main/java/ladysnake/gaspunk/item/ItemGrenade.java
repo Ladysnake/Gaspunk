@@ -26,7 +26,11 @@ public class ItemGrenade extends ItemGasTube implements IHasSkin {
     public ItemGrenade() {
         super();
         addPropertyOverride(new ResourceLocation(GasPunk.MOD_ID, "unpinned"),
-                ((stack, worldIn, entityIn) -> entityIn != null && entityIn.getActiveItemStack() == stack ? 1 : 0));
+                ((stack, worldIn, entityIn) ->
+                        entityIn != null && entityIn.getActiveItemStack() == stack
+                                || stack.getTagCompound() != null && stack.getTagCompound().getBoolean("isEntityGrenade")
+                                ? 1
+                                : 0));
         addPropertyOverride(SkinItem.CUSTOM_SKIN_PROPERTY, SkinItem.CUSTOM_SKIN_GETTER);
         this.setMaxStackSize(1);
     }
@@ -68,7 +72,7 @@ public class ItemGrenade extends ItemGasTube implements IHasSkin {
     @Override
     public ItemStack onItemUseFinish(@Nonnull ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
         if (!(entityLiving instanceof EntityPlayer && ((EntityPlayer) entityLiving).isCreative()))
-                stack.shrink(1);
+            stack.shrink(1);
         if (!worldIn.isRemote) {
             EntityGasCloud cloud = explode((WorldServer) worldIn, entityLiving.getPositionVector(), stack);
             cloud.setEmitter(entityLiving);
