@@ -1,6 +1,7 @@
 package ladysnake.gaspunk.init;
 
 import com.google.common.collect.ImmutableList;
+import ladylib.registration.AutoRegister;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.gas.Gas;
@@ -29,6 +30,7 @@ import net.minecraftforge.registries.RegistryBuilder;
 
 import javax.annotation.Nonnull;
 
+@AutoRegister(GasPunk.MOD_ID)
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
 @GameRegistry.ObjectHolder(GasPunk.MOD_ID)
 public class ModGases {
@@ -40,13 +42,14 @@ public class ModGases {
      * The default gas, does nothing. Is actually water vapor in game
      * Is initialized to null to replace null checks
      */
+    @AutoRegister.Ignore
     public static final Gas AIR = null;
     public static final Gas HEALING_VAPOR = GasFactories.createGasPotion(MobEffects.REGENERATION, 219, 1);
     public static final Gas SARIN_GAS = new SuspendableGas(GasTypes.GAS, 0x00FFFFFF, GasAgents.NERVE, 0.8F);
     public static final Gas SMOKE = new Gas(GasTypes.SMOKE, 0xFFFFFFFF);
     public static final Gas TEAR_GAS = new Gas(GasTypes.SMOKE, 0xAACCCCCC, GasAgents.LACHRYMATOR, 0.2F);
     // 0.1 potency for the damage agent means 1 heart per hit
-    public static final Gas TOXIC_SMOKE = new Gas(GasTypes.SMOKE, 0xFF000000, GasAgents.PULMONARY, 0.1F);
+    public static final Gas CHOKE_SMOKE = new Gas(GasTypes.SMOKE, 0xFF000000, GasAgents.PULMONARY, 0.1F);
     // TODO add chemical burning property
     public static final Gas MUSTARD_GAS = new Gas(GasTypes.GAS, 0xFFB4A000,
             new Gas.AgentEffect(GasAgents.PULMONARY, 0.2F),
@@ -64,15 +67,7 @@ public class ModGases {
 
     @SubscribeEvent
     public static void addGases(RegistryEvent.Register<IGas> event) {
-        event.getRegistry().registerAll(
-                new Gas(GasTypes.GAS, 0x99FFFFFF, 0xAA0033FF, ImmutableList.of()).setRegistryName("air"),
-                SMOKE.setRegistryName("smoke"),
-                HEALING_VAPOR.setRegistryName("healing_vapor"),
-                TOXIC_SMOKE.setRegistryName("choke_smoke"),
-                SARIN_GAS.setRegistryName("sarin_gas"),
-                TEAR_GAS.setRegistryName("tear_gas"),
-                MUSTARD_GAS.setRegistryName("mustard_gas")
-        );
+        event.getRegistry().register(new Gas(GasTypes.GAS, 0x99FFFFFF, 0xAA0033FF, ImmutableList.of()).setRegistryName("air"));
         for (EnumDyeColor color : EnumDyeColor.values()) {
             // this is probably illegal in 53 states but I didn't want to parse the value back from the table
             event.getRegistry().register(new Gas(GasTypes.SMOKE,  0xFF000000 | (int) ReflectionHelper.getPrivateValue(EnumDyeColor.class, color, "colorValue", "field_193351_w")).setRegistryName("colored_smoke_" + color.getName()));
@@ -88,7 +83,7 @@ public class ModGases {
         addRecipe(AIR, new ItemStack(ModItems.SMOKE_POWDER), SMOKE);
         addRecipe(AIR, new ItemStack(Items.GHAST_TEAR), HEALING_VAPOR);
         addRecipe(AIR, new ItemStack(Items.POISONOUS_POTATO), SARIN_GAS);
-        addRecipe(SMOKE, new ItemStack(ModItems.ASH), TOXIC_SMOKE);
+        addRecipe(SMOKE, new ItemStack(ModItems.ASH), CHOKE_SMOKE);
         addRecipe(SMOKE, new ItemStack(Items.FERMENTED_SPIDER_EYE), TEAR_GAS);
         addRecipe(AIR, new ItemStack(ModItems.SULFUR), MUSTARD_GAS);
         for (EnumDyeColor color : EnumDyeColor.values()) {

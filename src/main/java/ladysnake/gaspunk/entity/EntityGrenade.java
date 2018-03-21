@@ -1,25 +1,35 @@
 package ladysnake.gaspunk.entity;
 
+import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.init.ModItems;
+import ladysnake.gaspunk.item.ItemGrenade;
+import ladysnake.gaspunk.item.SkinItem;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import javax.annotation.Nonnull;
 
-public class EntityGrenade extends EntityGasTube {
+public class EntityGrenade extends EntityNonRetardedThrowable {
+    private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityGrenade.class, DataSerializers.ITEM_STACK);
     private static final DataParameter<Integer> COUNTDOWN = EntityDataManager.createKey(EntityGrenade.class, DataSerializers.VARINT);
+    protected int cloudMaxLifeSpan;
 
     public EntityGrenade(World worldIn) {
         super(worldIn);
     }
 
-    public EntityGrenade(World worldIn, EntityLivingBase throwerIn, ItemStack stack) {
-        super(worldIn, throwerIn, stack);
+    public EntityGrenade(World worldIn, @Nonnull EntityLivingBase throwerIn, ItemStack stack) {
+        super(worldIn, throwerIn);
+        setItem(stack);
     }
 
     @Override
@@ -30,6 +40,7 @@ public class EntityGrenade extends EntityGasTube {
     @Override
     protected void entityInit() {
         super.entityInit();
+        getDataManager().register(ITEM, new ItemStack(ModItems.GRENADE));
         getDataManager().register(COUNTDOWN, 60);
     }
 
@@ -44,11 +55,41 @@ public class EntityGrenade extends EntityGasTube {
     @Override
     public void onUpdate() {
         super.onUpdate();
+        if (world.isRemote) return;
         int countdown = getCountdown();
-        if (countdown < 1)
+        if (countdown == 0)
             explode();
-        else
-            setCountdown(getCountdown() - 1);
+        setCountdown(getCountdown() - 1);
+        // after exploding, the countdown is used to track the time before cloud expiration
+        if (countdown < -cloudMaxLifeSpan) {
+            ItemStack stack = getGrenade();
+            if (stack.getItem() instanceof ItemGrenade) {
+                ItemGrenade grenadeItem = (ItemGrenade) stack.getItem();
+                ItemStack emptyGrenade = new ItemStack(ModItems.EMPTY_GRENADE);
+                ((SkinItem)ModItems.EMPTY_GRENADE).setSkin(emptyGrenade, grenadeItem.getSkin(stack));
+                world.spawnEntity(new EntityItem(world, posX, posY, posZ, emptyGrenade));
+            }
+            setDead();
+        }
+    }
+
+    @Nonnull
+    public ItemStack getGrenade() {
+        ItemStack itemstack = this.getDataManager().get(ITEM);
+
+        if (!(itemstack.getItem() instanceof ItemGrenade)) {
+            if (this.world != null) {
+                GasPunk.LOGGER.error("{} {} has no item?!", this.getClass().getSimpleName(), this.getEntityId());
+            }
+
+            return new ItemStack(ModItems.GRENADE);
+        } else {
+            return itemstack;
+        }
+    }
+
+    public void setItem(ItemStack item) {
+        getDataManager().set(ITEM, item);
     }
 
     @Override
@@ -70,5 +111,25 @@ public class EntityGrenade extends EntityGasTube {
             this.rotationYaw += 180.0F;
             this.prevRotationYaw += 180.0F;
         }
+    }
+
+    protected void explode() {
+        if (this.world instanceof WorldServer) {
+            EntityGasCloud cloud = ((ItemGrenade) this.getGrenade().getItem()).explode((WorldServer) world, this.getPositionVector(), getGrenade());
+            cloud.setEmitter(this);
+            cloudMaxLifeSpan = cloud.getMaxLifeSpan();
+        }
+    }
+
+    @Override
+    public void writeEntityToNBT(@Nonnull NBTTagCompound compound) {
+        super.writeEntityToNBT(compound);
+        compound.setInteger("cloudMaxLifeSpan", cloudMaxLifeSpan);
+    }
+
+    @Override
+    public void readEntityFromNBT(@Nonnull NBTTagCompound compound) {
+        super.readEntityFromNBT(compound);
+        cloudMaxLifeSpan = compound.getInteger("cloudMaxLifeSpan");
     }
 }

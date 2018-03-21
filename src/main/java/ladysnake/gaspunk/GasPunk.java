@@ -1,5 +1,6 @@
 package ladysnake.gaspunk;
 
+import ladylib.LadyLib;
 import ladysnake.gaspunk.api.customization.IHasSkin;
 import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.util.SpecialRewardChecker;
@@ -46,6 +47,8 @@ public class GasPunk {
 
     public static Logger LOGGER;
 
+    public static LadyLib lib;
+
     public static final CreativeTabs CREATIVE_TAB = new GasPunkTabs();
 
     /**
@@ -55,6 +58,8 @@ public class GasPunk {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         LOGGER = event.getModLog();
+        lib = LadyLib.initLib(event);
+        lib.setCreativeTab(CREATIVE_TAB);
         proxy.preInit(event);
         Pathos.preInit(event);
     }

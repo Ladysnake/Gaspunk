@@ -10,10 +10,6 @@ import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.shader.Shader;
 import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.client.shader.ShaderUniform;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -26,36 +22,35 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.UUID;
 
 public class SicknessTearGas extends SicknessGas {
 
-    private static final UUID TEAR_SLOWNESS_ID = UUID.fromString("6372ad90-c462-4223-8638-898c1166f824");
-    private static final AttributeModifier TEAR_SLOWNESS = new AttributeModifier(TEAR_SLOWNESS_ID, "Tear gas slowness penalty", -0.1D, 2);
-
+//    private static final UUID TEAR_SLOWNESS_ID = UUID.fromString("6372ad90-c462-4223-8638-898c1166f824");
+//    private static final AttributeModifier TEAR_SLOWNESS = new AttributeModifier(TEAR_SLOWNESS_ID, "Tear gas slowness penalty", -0.1D, 2);
+//
     public SicknessTearGas() {
         super(0.001f);
     }
-
-    @Override
-    public boolean performEffect(EntityLivingBase carrier, SicknessEffect effect) {
-        if (effect.getTicksSinceBeginning() == 0) {
-            if (!carrier.world.isRemote) {
-                IAttributeInstance attribute = carrier.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-                if (attribute.getModifier(TEAR_SLOWNESS_ID) == null)
-                    attribute.applyModifier(TEAR_SLOWNESS);
-                return true;
-            }
-        }
-        return super.performEffect(carrier, effect);
-    }
-
-    @Override
-    public void onCured(SicknessEffect sicknessEffect, EntityLivingBase carrier) {
-        if (!carrier.world.isRemote) {
-            carrier.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(TEAR_SLOWNESS_ID);
-        }
-    }
+//
+//    @Override
+//    public boolean performEffect(EntityLivingBase carrier, SicknessEffect effect) {
+//        if (effect.getTicksSinceBeginning() == 0) {
+//            if (!carrier.world.isRemote) {
+//                IAttributeInstance attribute = carrier.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+//                if (attribute.getModifier(TEAR_SLOWNESS_ID) == null)
+//                    attribute.applyModifier(TEAR_SLOWNESS);
+//                return true;
+//            }
+//        }
+//        return super.performEffect(carrier, effect);
+//    }
+//
+//    @Override
+//    public void onCured(SicknessEffect sicknessEffect, EntityLivingBase carrier) {
+//        if (!carrier.world.isRemote) {
+//            carrier.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(TEAR_SLOWNESS_ID);
+//        }
+//    }
 
     @Override
     public boolean isSynchronized() {
@@ -71,7 +66,7 @@ public class SicknessTearGas extends SicknessGas {
      * @author tterag
      */
     @SideOnly(Side.CLIENT)
-    @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
+    @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID, value = Side.CLIENT)
     public static class ClientTearEffect {
 
         private static MethodHandle _listShaders;
