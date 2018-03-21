@@ -1,5 +1,6 @@
 package ladysnake.gaspunk.entity;
 
+import ladylib.misc.ItemUtil;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.item.ItemGrenade;
@@ -89,6 +90,7 @@ public class EntityGrenade extends EntityNonRetardedThrowable {
     }
 
     public void setItem(ItemStack item) {
+        ItemUtil.getOrCreateCompound(item).setBoolean("isEntityGrenade", true);
         getDataManager().set(ITEM, item);
     }
 

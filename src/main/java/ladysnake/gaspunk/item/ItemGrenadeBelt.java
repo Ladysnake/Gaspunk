@@ -4,6 +4,7 @@ import baubles.api.BaubleType;
 import baubles.api.BaublesApi;
 import baubles.api.IBauble;
 import baubles.common.Baubles;
+import ladylib.misc.ItemUtil;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.init.ModItems;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,7 +20,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -60,12 +60,7 @@ public class ItemGrenadeBelt extends Item implements IBauble {
         inventory.addAll(player.inventory.offHandInventory);
         for (ItemStack stack : inventory) {
             if (stack.getItem() instanceof ItemGrenade) {
-                NBTTagCompound nbt = stack.getTagCompound();
-                if (nbt == null) {
-                    nbt = new NBTTagCompound();
-                    stack.setTagCompound(nbt);
-                }
-                nbt.setBoolean(NBT_TAG_BELT_STACK, true);
+                ItemUtil.getOrCreateCompound(stack).setBoolean(NBT_TAG_BELT_STACK, true);
             }
         }
     }
