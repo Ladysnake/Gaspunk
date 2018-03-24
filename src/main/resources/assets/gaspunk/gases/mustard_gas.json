@@ -1,0 +1,14 @@
+{
+  "gasType": "GAS",
+  "color": "0xFFB4A000",
+  "agents": [
+    {
+      "agent": "gaspunk:toxic_smoke",
+      "potency": 0.2
+    },
+    {
+      "agent": "gaspunk:tear_gas",
+      "potency": 0.3
+    }
+  ]
+}

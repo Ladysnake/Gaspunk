@@ -14,8 +14,6 @@ import ladysnake.pathos.api.ISickness;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Supplier;
 
 public class GasAgents {
@@ -23,7 +21,7 @@ public class GasAgents {
      * Maps agents to their respective sickness
      */
     public static final BiMap<LingeringAgent, ISickness> LINGERING_EFFECTS = HashBiMap.create();
-    public static final Map<ResourceLocation, IGasAgent> AGENT_MAP = new HashMap<>();
+    public static final BiMap<ResourceLocation, IGasAgent> AGENT_MAP = HashBiMap.create();
 
     public static final IGasAgent LACHRYMATOR = createSicknessAgent("tear_gas", true, true, SicknessTearGas::new);
     public static final IGasAgent PULMONARY = createDamageAgent("toxic_smoke");
@@ -56,5 +54,13 @@ public class GasAgents {
     public static <T extends GasAgent> T name(T agent, String name) {
         agent.setUnlocalizedName("agent." + GasPunk.MOD_ID + "." + name);
         return agent;
+    }
+
+    public static ResourceLocation getId(IGasAgent agent) {
+        return AGENT_MAP.inverse().get(agent);
+    }
+
+    public static IGasAgent getAgent(ResourceLocation id) {
+        return AGENT_MAP.get(id);
     }
 }
