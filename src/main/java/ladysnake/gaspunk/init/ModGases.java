@@ -114,4 +114,12 @@ public class ModGases {
             return ItemStack.EMPTY;
         }
     }
+
+    @SubscribeEvent
+    public static void onRegistryMissingMappings(RegistryEvent.MissingMappings<IGas> event) {
+        for (RegistryEvent.MissingMappings.Mapping<IGas> mapping : event.getMappings()) {
+            if (mapping.key.equals(new ResourceLocation("gaspunk:toxic_smoke")))
+                mapping.remap(CHOKE_SMOKE);
+        }
+    }
 }

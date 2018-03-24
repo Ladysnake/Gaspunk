@@ -91,6 +91,40 @@
         "gaspunk:gas_type": 1
       },
       "model": "gaspunk:item/grenade/skins/ladysnake/smoke_grenade_unpinned"
+    },
+
+
+
+    {
+      "predicate": {
+        "gaspunk:custom_skin": 3
+      },
+      "model": "gaspunk:item/grenade/skins/ftbwiki/grenade"
+    },
+    {
+      "predicate": {
+        "gaspunk:custom_skin": 3,
+        "gaspunk:unpinned": 1,
+        "gaspunk:gas_type": 0
+      },
+      "model": "gaspunk:item/grenade/skins/ftbwiki/grenade_unpinned"
+    },
+    {
+      "predicate": {
+        "gaspunk:custom_skin": 3,
+        "gaspunk:unpinned": 0,
+        "gaspunk:gas_type": 1
+      },
+      "model": "gaspunk:item/grenade/skins/ftbwiki/smoke_grenade_pinned"
+    },
+    {
+      "predicate": {
+        "gaspunk:custom_skin": 3,
+        "gaspunk:unpinned": 1,
+        "gaspunk:gas_type": 1
+      },
+      "model": "gaspunk:item/grenade/skins/ftbwiki/smoke_grenade_unpinned"
     }
+
   ]
 }
