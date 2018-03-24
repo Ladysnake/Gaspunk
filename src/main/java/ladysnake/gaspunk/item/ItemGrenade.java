@@ -1,11 +1,13 @@
 package ladysnake.gaspunk.item;
 
+import ladylib.misc.ItemUtil;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.api.customization.IHasSkin;
 import ladysnake.gaspunk.entity.EntityGasCloud;
 import ladysnake.gaspunk.entity.EntityGrenade;
 import ladysnake.gaspunk.init.ModGases;
+import ladysnake.gaspunk.init.ModItems;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -71,13 +73,15 @@ public class ItemGrenade extends ItemGasTube implements IHasSkin {
     @Nonnull
     @Override
     public ItemStack onItemUseFinish(@Nonnull ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
-        if (!(entityLiving instanceof EntityPlayer && ((EntityPlayer) entityLiving).isCreative()))
-            stack.shrink(1);
         if (!worldIn.isRemote) {
             EntityGasCloud cloud = explode((WorldServer) worldIn, entityLiving.getPositionVector(), stack);
             cloud.setEmitter(entityLiving);
         }
-        return stack;
+
+        ItemGrenade grenadeItem = (ItemGrenade) stack.getItem();
+        ItemStack emptyGrenade = new ItemStack(ModItems.EMPTY_GRENADE);
+        ((SkinItem)ModItems.EMPTY_GRENADE).setSkin(emptyGrenade, grenadeItem.getSkin(stack));
+        return ItemUtil.turnItemIntoAnother(stack, entityLiving, emptyGrenade, false);
     }
 
     public EntityGasCloud explode(WorldServer worldIn, Vec3d pos, ItemStack stack) {

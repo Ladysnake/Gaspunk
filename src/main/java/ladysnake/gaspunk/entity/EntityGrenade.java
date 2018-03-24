@@ -7,6 +7,7 @@ import ladysnake.gaspunk.item.ItemGrenade;
 import ladysnake.gaspunk.item.SkinItem;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -22,7 +23,9 @@ import javax.annotation.Nonnull;
 public class EntityGrenade extends EntityNonRetardedThrowable {
     private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityGrenade.class, DataSerializers.ITEM_STACK);
     private static final DataParameter<Integer> COUNTDOWN = EntityDataManager.createKey(EntityGrenade.class, DataSerializers.VARINT);
+    /**The lifespan of the cloud emitted by this grenade. Avoids tracking the entity just to know when to pop off as an item.*/
     protected int cloudMaxLifeSpan;
+    protected boolean canPickup;
 
     public EntityGrenade(World worldIn) {
         super(worldIn);
@@ -31,6 +34,7 @@ public class EntityGrenade extends EntityNonRetardedThrowable {
     public EntityGrenade(World worldIn, @Nonnull EntityLivingBase throwerIn, ItemStack stack) {
         super(worldIn, throwerIn);
         setItem(stack);
+        canPickup = !(throwerIn instanceof EntityPlayer && ((EntityPlayer)throwerIn).isCreative());
     }
 
     @Override
@@ -58,13 +62,13 @@ public class EntityGrenade extends EntityNonRetardedThrowable {
         super.onUpdate();
         if (world.isRemote) return;
         int countdown = getCountdown();
-        if (countdown == 0)
+        if (countdown == 1)
             explode();
         setCountdown(getCountdown() - 1);
         // after exploding, the countdown is used to track the time before cloud expiration
-        if (countdown < -cloudMaxLifeSpan) {
-            ItemStack stack = getGrenade();
-            if (stack.getItem() instanceof ItemGrenade) {
+        if (countdown <= -cloudMaxLifeSpan) {
+            if (canPickup) {
+                ItemStack stack = getGrenade();
                 ItemGrenade grenadeItem = (ItemGrenade) stack.getItem();
                 ItemStack emptyGrenade = new ItemStack(ModItems.EMPTY_GRENADE);
                 ((SkinItem)ModItems.EMPTY_GRENADE).setSkin(emptyGrenade, grenadeItem.getSkin(stack));
@@ -126,12 +130,18 @@ public class EntityGrenade extends EntityNonRetardedThrowable {
     @Override
     public void writeEntityToNBT(@Nonnull NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
+        compound.setInteger("countdown", getCountdown());
         compound.setInteger("cloudMaxLifeSpan", cloudMaxLifeSpan);
+        compound.setTag("grenade", this.getGrenade().writeToNBT(new NBTTagCompound()));
+        compound.setBoolean("canPickup", canPickup);
     }
 
     @Override
     public void readEntityFromNBT(@Nonnull NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
+        setCountdown(compound.getInteger("countdown"));
         cloudMaxLifeSpan = compound.getInteger("cloudMaxLifeSpan");
+        this.setItem(new ItemStack(compound.getCompoundTag("grenade")));
+        canPickup = compound.getBoolean("canPickup");
     }
 }
