@@ -1,11 +1,13 @@
 package ladysnake.gaspunk.gas;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gson.annotations.JsonAdapter;
 import ladylib.client.ShaderRegistryEvent;
 import ladylib.client.ShaderUtil;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.GasPunkConfig;
 import ladysnake.gaspunk.api.*;
+import ladysnake.gaspunk.gas.core.GasDeserializer;
 import ladysnake.gaspunk.init.ModGases;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -33,6 +35,7 @@ import java.util.List;
  * An implementation of {@link IGas} that delegates its effect to one or more gas agents
  * @see IGasAgent
  */
+@JsonAdapter(GasDeserializer.class)
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
 public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
     public static final ResourceLocation GAS_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/vapor_overlay.png");
@@ -64,10 +67,10 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
     }
 
     public Gas(IGasType type, int color, AgentEffect... agents) {
-        this(type, color, color, ImmutableList.copyOf(agents));
+        this(type, type.getParticleType(), color, color, ImmutableList.copyOf(agents));
     }
 
-    public Gas(IGasType type, int color, int bottleColor, ImmutableList<AgentEffect> agents) {
+    public Gas(IGasType type, IGasParticleType particleType, int color, int bottleColor, ImmutableList<AgentEffect> agents) {
         this.type = type;
         this.color = color;
         this.bottleColor = bottleColor;
@@ -177,6 +180,52 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
 
         public float getPotency() {
             return potency;
+        }
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
+    public static final class Builder {
+        private IGasType type;
+        private IGasParticleType particleType;
+        private int color;
+        // nullable type so we know whether it was assigned or not
+        private Integer bottleColor;
+        private ImmutableList.Builder<AgentEffect> agents = ImmutableList.builder();
+
+        public Builder setType(IGasType type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder setParticleType(IGasParticleType type) {
+            this.particleType = type;
+            return this;
+        }
+
+        public Builder setColor(int color) {
+            this.color = color;
+            return this;
+        }
+
+        public Builder setBottleColor(int color) {
+            this.bottleColor = color;
+            return this;
+        }
+
+        public Builder addAgent(IGasAgent agent, float potency) {
+            agents.add(new AgentEffect(agent, potency));
+            return this;
+        }
+
+        public Gas build() {
+            if (type == null) throw new IllegalStateException("gas type not provided");
+            return new Gas(
+                    type,
+                    particleType == null ? type.getParticleType() : particleType,
+                    color,
+                    bottleColor == null ? color : bottleColor,
+                    agents.build()
+            );
         }
     }
 
