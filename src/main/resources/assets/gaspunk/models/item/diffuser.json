@@ -15,6 +15,12 @@
         "gaspunk:custom_skin": 2
       },
       "model": "gaspunk:item/grenade/skins/ladysnake/diffuser"
+    },
+    {
+      "predicate": {
+        "gaspunk:custom_skin": 3
+      },
+      "model": "gaspunk:item/grenade/skins/ftbwiki/diffuser"
     }
   ]
 }

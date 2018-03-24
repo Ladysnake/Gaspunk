@@ -5,7 +5,8 @@ import java.util.Arrays;
 public enum GrenadeSkins {
     NONE(0F, "Classic"),
     MODOFF(1F, "Steampunk"),
-    LADYSNAKE(2F, "Ladysnake");
+    LADYSNAKE(2F, "Ladysnake"),
+    FTBWIKI(3F, "FeedTheBeast");
 
     public static final GrenadeSkins[] VALUES = values();
 
