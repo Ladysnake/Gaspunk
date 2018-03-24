@@ -22,7 +22,7 @@ public class PotionAgent extends GasAgent {
 
     @Override
     public void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick, float potency) {
-        if (!entity.world.isRemote)
+        if (!entity.world.isRemote && entity.world.getWorldTime() % 20 == 0)
             entity.addPotionEffect(new PotionEffect(potion, potionDuration, potionAmplifier));
     }
 
