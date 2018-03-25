@@ -19,6 +19,7 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.brewing.BrewingOreRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.RegistryEvent;
@@ -28,8 +29,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
-
-import javax.annotation.Nonnull;
 
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
 @GameRegistry.ObjectHolder(GasPunk.MOD_ID)
@@ -84,34 +83,25 @@ public class ModGases {
         addRecipe(AIR, new ItemStack(Items.POISONOUS_POTATO), SARIN_GAS);
         addRecipe(SMOKE, new ItemStack(ModItems.ASH), CHOKE_SMOKE);
         addRecipe(SMOKE, new ItemStack(Items.FERMENTED_SPIDER_EYE), TEAR_GAS);
-        addRecipe(AIR, new ItemStack(ModItems.SULFUR), MUSTARD_GAS);
+        addOreRecipe(AIR, "dustSulfur", MUSTARD_GAS);
         for (EnumDyeColor color : EnumDyeColor.values()) {
             addRecipe(SMOKE, new ItemStack(Items.DYE, 1, color.getDyeDamage()), REGISTRY.getValue(new ResourceLocation(GasPunk.MOD_ID, "colored_smoke_" + color.getName())));
         }
     }
 
     public static void addRecipe(IGas prerequisite, ItemStack ingredient, IGas result) {
-        ItemStack bottle;
-        if (prerequisite == AIR)
-            bottle = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER);
-        else
-            bottle = ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(prerequisite);
-        BrewingRecipeRegistry.addRecipe(new GasBrewingRecipe(bottle, ingredient, result));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(getBottle(prerequisite), ingredient, ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(result)));
     }
 
-    public static class GasBrewingRecipe extends BrewingRecipe {
+    public static void addOreRecipe(IGas prerequisite, String ingredient, IGas result) {
+        BrewingRecipeRegistry.addRecipe(new BrewingOreRecipe(getBottle(prerequisite), ingredient, ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(result)));
+    }
 
-        public GasBrewingRecipe(ItemStack base, ItemStack reagent, IGas result) {
-            super(base, reagent, ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(result));
-        }
-
-        @Nonnull
-        @Override
-        public ItemStack getOutput(@Nonnull ItemStack input, @Nonnull ItemStack ingredient) {
-            if (isInput(input) && isIngredient(ingredient) && ItemGasTube.getContainedGas(input) == ItemGasTube.getContainedGas(getInput()))
-                return getOutput().copy();
-            return ItemStack.EMPTY;
-        }
+    private static ItemStack getBottle(IGas prerequisite) {
+        if (prerequisite == AIR)
+            return PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER);
+        else
+            return ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(prerequisite);
     }
 
     @SubscribeEvent

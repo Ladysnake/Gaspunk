@@ -37,6 +37,7 @@ public final class ModItems {
     @AutoRegister.Ignore    // needs to be registered conditionally
     public static final Item GRENADE_BELT = new ItemGrenadeBelt();
     public static final Item SMOKE_POWDER = new Item();
+    @AutoRegister.Ore("dustSulfur")
     public static final Item SULFUR = new Item();
 
     @SubscribeEvent
