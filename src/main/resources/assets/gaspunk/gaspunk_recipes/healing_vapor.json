@@ -1,0 +1,10 @@
+{
+  "result": "gaspunk:healing_vapor",
+  "input": {
+    "gas": "gaspunk:air"
+  },
+  "ingredient": {
+    "type": "minecraft:item",
+    "item": "minecraft:ghast_tear"
+  }
+}

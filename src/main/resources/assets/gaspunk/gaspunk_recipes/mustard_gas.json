@@ -1,0 +1,10 @@
+{
+  "result": "gaspunk:mustard_gas",
+  "input": {
+    "gas": "gaspunk:air"
+  },
+  "ingredient": {
+    "type": "forge:ore_dict",
+    "ore": "dustSulfur"
+  }
+}

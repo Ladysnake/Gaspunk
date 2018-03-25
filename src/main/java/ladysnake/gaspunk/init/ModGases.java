@@ -78,12 +78,10 @@ public class ModGases {
     }
 
     public static void initRecipes() {
-        addRecipe(AIR, new ItemStack(ModItems.SMOKE_POWDER), SMOKE);
-        addRecipe(AIR, new ItemStack(Items.GHAST_TEAR), HEALING_VAPOR);
         addRecipe(AIR, new ItemStack(Items.POISONOUS_POTATO), SARIN_GAS);
         addRecipe(SMOKE, new ItemStack(ModItems.ASH), CHOKE_SMOKE);
         addRecipe(SMOKE, new ItemStack(Items.FERMENTED_SPIDER_EYE), TEAR_GAS);
-        addOreRecipe(AIR, "dustSulfur", MUSTARD_GAS);
+//        addOreRecipe(AIR, "dustSulfur", MUSTARD_GAS);
         for (EnumDyeColor color : EnumDyeColor.values()) {
             addRecipe(SMOKE, new ItemStack(Items.DYE, 1, color.getDyeDamage()), REGISTRY.getValue(new ResourceLocation(GasPunk.MOD_ID, "colored_smoke_" + color.getName())));
         }
@@ -97,7 +95,7 @@ public class ModGases {
         BrewingRecipeRegistry.addRecipe(new BrewingOreRecipe(getBottle(prerequisite), ingredient, ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(result)));
     }
 
-    private static ItemStack getBottle(IGas prerequisite) {
+    public static ItemStack getBottle(IGas prerequisite) {
         if (prerequisite == AIR)
             return PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER);
         else
