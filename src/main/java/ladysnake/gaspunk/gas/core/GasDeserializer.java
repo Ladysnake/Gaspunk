@@ -11,6 +11,7 @@ import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.api.IGasAgent;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.gas.GasAgents;
+import ladysnake.gaspunk.init.ModGases;
 import net.minecraft.client.util.JsonException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -22,8 +23,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
 
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
@@ -33,26 +36,39 @@ public class GasDeserializer extends TypeAdapter<Gas> {
 
     @SubscribeEvent
     public static void loadGases(RegistryEvent.Register<IGas> event) {
-        ModContainer container = Loader.instance().activeModContainer();
-        if (container != null) {
-            CraftingHelper.findFiles(container, "assets/" + GasPunk.MOD_ID + "/gases", p -> true,
-                    (root, file) -> {
-                        String relative = root.relativize(file).toString();
-                        if (!"json".equals(FilenameUtils.getExtension(file.toString())) || relative.startsWith("_"))
-                            return true;
-
-                        String name = FilenameUtils.removeExtension(relative).replaceAll("\\\\", "/");
-                        ResourceLocation key = new ResourceLocation(GasPunk.MOD_ID, name);
-                        try (BufferedReader reader = Files.newBufferedReader(file)) {
-                            Gas gas = GSON.fromJson(reader, Gas.class);
-                            event.getRegistry().register(gas.setRegistryName(key));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        return true;
-                    }, true, true);
-
+        ModContainer gaspunkContainer = Loader.instance().activeModContainer();
+        Loader.instance().getActiveModList().forEach(GasDeserializer::loadGases);
+        Loader.instance().setActiveModContainer(gaspunkContainer);
+        File configFolder = new File(GasPunk.lib.getConfigFolder(), GasPunk.MOD_ID + "/custom_gases");
+        // if the config folder was just created or couldn't be created, no need to search it
+        if (!configFolder.mkdirs() && configFolder.exists()) {
+            try {
+                Files.walk(configFolder.toPath()).forEach(path -> loadGases(configFolder.toPath(), path));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    private static void loadGases(ModContainer container) {
+        Loader.instance().setActiveModContainer(container);
+        CraftingHelper.findFiles(container, "assets/" + container.getModId() + "/gaspunk_gases", p -> true,
+                GasDeserializer::loadGases, true, true);
+    }
+
+    private static boolean loadGases(Path root, Path file) {
+        String relative = root.relativize(file).toString();
+        if (!"json".equals(FilenameUtils.getExtension(file.toString())) || relative.startsWith("_"))
+            return true;
+
+        String name = FilenameUtils.removeExtension(relative).replaceAll("\\\\", "/");
+        try (BufferedReader reader = Files.newBufferedReader(file)) {
+            Gas gas = GSON.fromJson(reader, Gas.class);
+            ModGases.REGISTRY.register(gas.setRegistryName(name));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     @Override
@@ -112,7 +128,7 @@ public class GasDeserializer extends TypeAdapter<Gas> {
         return builder.build();
     }
 
-    private static int parseInt(JsonReader in, String memberName) throws IOException {
+    private int parseInt(JsonReader in, String memberName) throws IOException {
         String value = in.nextString();
         try {
             // decode as a long because ARGB color values tend to overflow
