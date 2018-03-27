@@ -8,7 +8,12 @@
       "item": "gaspunk:diffuser"
     },
     {
-      "item": "gaspunk:gas_tube"
+      "type": "minecraft:item_nbt",
+      "item": "minecraft:potion",
+      "data": 0,
+      "nbt": {
+        "Potion": "water"
+      }
     }
   ]
 }

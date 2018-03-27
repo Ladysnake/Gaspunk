@@ -1,0 +1,10 @@
+{
+  "result": "gaspunk:colored_smoke_yellow",
+  "input": {
+    "gas": "gaspunk:smoke"
+  },
+  "ingredient": {
+    "type": "forge:ore_dict",
+    "ore": "dyeYellow"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "result": "gaspunk:tear_gas",
+  "input": {
+    "gas": "gaspunk:smoke"
+  },
+  "ingredient": {
+    "type": "minecraft:item",
+    "item": "minecraft:fermented_spider_eye"
+  }
+}

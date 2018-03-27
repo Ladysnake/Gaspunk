@@ -60,10 +60,6 @@ public final class ModItems {
         ladysnake.pathos.item.ModItems.FILLED_SYRINGE.setCreativeTab(GasPunk.CREATIVE_TAB);
     }
 
-    public static void registerOres() {
-        OreDictionary.registerOre("dustSulfur", SULFUR);
-    }
-
     @SubscribeEvent
     public static void onRegistryMissingMappings(RegistryEvent.MissingMappings<Item> event) {
         for (RegistryEvent.MissingMappings.Mapping<Item> mapping : event.getMappings()) {

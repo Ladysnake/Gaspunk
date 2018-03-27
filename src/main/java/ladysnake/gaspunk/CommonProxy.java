@@ -40,8 +40,6 @@ public class CommonProxy {
             GameRegistry.addSmelting(Items.NETHER_WART, new ItemStack(ModItems.ASH), 0.8f);
         else
             GameRegistry.addSmelting(Items.ROTTEN_FLESH, new ItemStack(ModItems.ASH), 0.35f);
-        ModGases.initRecipes();
-        ModItems.registerOres();
         if (Loader.isModLoaded("baubles"))
             MinecraftForge.EVENT_BUS.register(new BaublesCompatHandler());
         new Thread(SpecialRewardChecker::retrieveSpecialRewards).start();

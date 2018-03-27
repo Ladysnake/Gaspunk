@@ -1,10 +1,10 @@
 {
-  "result": "gaspunk:healing_vapor",
+  "result": "gaspunk:sarin_gas",
   "input": {
     "item": "minecraft:potion"
   },
   "ingredient": {
     "type": "minecraft:item",
-    "item": "minecraft:ghast_tear"
+    "item": "minecraft:poisonous_potato"
   }
 }

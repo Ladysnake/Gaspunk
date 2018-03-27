@@ -8,8 +8,11 @@ import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.item.ItemGasTube;
+import net.minecraft.init.Items;
+import net.minecraft.init.PotionTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.brewing.BrewingOreRecipe;
@@ -18,7 +21,6 @@ import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModContainer;
@@ -70,31 +72,41 @@ public class GasRecipeDeserializer {
             JsonObject json = JsonUtils.fromJson(GSON, reader, JsonObject.class);
             deserializeRecipe(json, context);
         } catch (JsonParseException e) {
-            FMLLog.log.error("Parsing error loading recipe {}", key, e);
+            GasPunk.LOGGER.error("Parsing error loading recipe {}", key, e);
             return false;
         } catch (IOException e) {
-            FMLLog.log.error("Couldn't read recipe {} from {}", key, file, e);
+            GasPunk.LOGGER.error("Couldn't read recipe {} from {}", key, file, e);
             return false;
         }
         return true;
     }
 
     private static void deserializeRecipe(JsonObject json, JsonContext context) {
-        IGas result = ModGases.REGISTRY.getValue(new ResourceLocation(JsonUtils.getString(json, "result")));
-        JsonObject input = JsonUtils.getJsonObject(json, "input");
+        String resultName = JsonUtils.getString(json, "result");
+        IGas result = ModGases.REGISTRY.getValue(new ResourceLocation(resultName));
+        if (result == null)
+            throw new JsonParseException("Unrecognized gas: " + resultName);
+        JsonObject jsInput = JsonUtils.getJsonObject(json, "input");
         ItemStack in;
-        if (input.has("gas"))
-            in = ModGases.getBottle(ModGases.REGISTRY.getValue(new ResourceLocation(JsonUtils.getString(input, "gas"))));
+        if (jsInput.has("gas"))
+            in = getBottle(ModGases.REGISTRY.getValue(new ResourceLocation(JsonUtils.getString(jsInput, "gas"))));
         else
-            in = CraftingHelper.getItemStack(input, context);
-        JsonObject ingredient = JsonUtils.getJsonObject(json, "ingredient");
-        String type = JsonUtils.getString(ingredient, "type", "minecraft:item");
+            in = CraftingHelper.getItemStack(jsInput, context);
+        JsonObject jsIngredient = JsonUtils.getJsonObject(json, "ingredient");
+        String type = JsonUtils.getString(jsIngredient, "type", "minecraft:item");
         if ("forge:ore_dict".equals(type)) {
-            String ingr = JsonUtils.getString(ingredient, "ore");
-            BrewingRecipeRegistry.addRecipe(new BrewingOreRecipe(in, ingr, ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(result)));
+            String ingredient = JsonUtils.getString(jsIngredient, "ore");
+            BrewingRecipeRegistry.addRecipe(new BrewingOreRecipe(in, ingredient, ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(result)));
         } else if ("minecraft:item".equals(type)) {
-            ItemStack ingr = CraftingHelper.getItemStack(json, context);
-            BrewingRecipeRegistry.addRecipe(new BrewingRecipe(in, ingr, ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(result)));
+            ItemStack ingredient = CraftingHelper.getItemStack(jsIngredient, context);
+            BrewingRecipeRegistry.addRecipe(new BrewingRecipe(in, ingredient, ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(result)));
         }
+    }
+
+    public static ItemStack getBottle(IGas prerequisite) {
+        if (prerequisite == ModGases.AIR)
+            return PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER);
+        else
+            return ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(prerequisite);
     }
 }
