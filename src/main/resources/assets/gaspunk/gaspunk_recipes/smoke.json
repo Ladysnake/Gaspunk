@@ -1,7 +1,7 @@
 {
   "result": "gaspunk:smoke",
   "input": {
-    "gas": "gaspunk:air"
+    "item": "minecraft:potion"
   },
   "ingredient": {
     "type": "minecraft:item",

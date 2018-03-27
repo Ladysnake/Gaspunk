@@ -1,0 +1,10 @@
+{
+  "result": "gaspunk:choke_smoke",
+  "input": {
+    "gas": "gaspunk:smoke"
+  },
+  "ingredient": {
+    "type": "minecraft:item",
+    "item": "gaspunk:ash"
+  }
+}
