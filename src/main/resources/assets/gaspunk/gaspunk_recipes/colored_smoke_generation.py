@@ -7,5 +7,5 @@ for i in range(len(dyes)):
     smoke_name = "colored_smoke_" + stupid_dyes[i]
     file = open(smoke_name + ".json", 'w')
     file.write(
-        '{"result": "gaspunk:%(smoke_name)s", "input": {   "gas": "gaspunk:smoke" }, "ingredient": {   "type": "forge:ore_dict",   "ore": "dye%(dye)s" }}' % {
-            'dye': dye, 'smoke_name': smoke_name})
+        '{"result": "gaspunk:%(smoke_name)s", "input": {   "gas": "gaspunk:smoke" }, "ingredient": {   "type": "forge:ore_dict",   "ore": "dye%(dye)s" }}' %
+        {'dye': dye, 'smoke_name': smoke_name})
