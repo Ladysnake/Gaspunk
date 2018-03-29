@@ -27,6 +27,7 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.commons.io.FilenameUtils;
 
+import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -96,10 +97,10 @@ public class GasRecipeDeserializer {
         String type = JsonUtils.getString(jsIngredient, "type", "minecraft:item");
         if ("forge:ore_dict".equals(type)) {
             String ingredient = JsonUtils.getString(jsIngredient, "ore");
-            BrewingRecipeRegistry.addRecipe(new BrewingOreRecipe(in, ingredient, ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(result)));
+            BrewingRecipeRegistry.addRecipe(new GasBrewingOreRecipe(in, ingredient, ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(result)));
         } else if ("minecraft:item".equals(type)) {
             ItemStack ingredient = CraftingHelper.getItemStack(jsIngredient, context);
-            BrewingRecipeRegistry.addRecipe(new BrewingRecipe(in, ingredient, ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(result)));
+            BrewingRecipeRegistry.addRecipe(new GasBrewingRecipe(in, ingredient, ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(result)));
         }
     }
 
@@ -108,5 +109,31 @@ public class GasRecipeDeserializer {
             return PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER);
         else
             return ((ItemGasTube) ModItems.GAS_TUBE).getItemStackFor(prerequisite);
+    }
+
+    private static boolean isGasInput(@Nonnull ItemStack stack1, ItemStack stack2) {
+        return ItemGasTube.getContainedGas(stack1) == ItemGasTube.getContainedGas(stack2);
+    }
+
+    public static class GasBrewingRecipe extends BrewingRecipe {
+        public GasBrewingRecipe(@Nonnull ItemStack input, @Nonnull ItemStack ingredient, @Nonnull ItemStack output) {
+            super(input, ingredient, output);
+        }
+
+        @Override
+        public boolean isInput(@Nonnull ItemStack stack) {
+            return super.isInput(stack) && isGasInput(getInput(), stack);
+        }
+    }
+
+    public static class GasBrewingOreRecipe extends BrewingOreRecipe {
+        public GasBrewingOreRecipe(@Nonnull ItemStack input, @Nonnull String ingredient, @Nonnull ItemStack output) {
+            super(input, ingredient, output);
+        }
+
+        @Override
+        public boolean isInput(@Nonnull ItemStack stack) {
+            return super.isInput(stack) && isGasInput(getInput(), stack);
+        }
     }
 }
