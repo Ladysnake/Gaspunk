@@ -73,4 +73,6 @@ public class ItemGasMask extends ItemArmor implements IBauble {
     public BaubleType getBaubleType(ItemStack itemstack) {
         return BaubleType.HEAD;
     }
+
+
 }

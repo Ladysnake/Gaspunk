@@ -2,6 +2,7 @@ package ladysnake.gaspunk.client.model;
 
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 
 import javax.annotation.Nullable;
@@ -440,7 +441,12 @@ public class ModelGasMask extends ModelBiped {
     @Override
     public void render(@Nullable Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entityIn);
+        GlStateManager.pushMatrix();
+        if (entityIn != null && entityIn.isSneaking()) {
+            GlStateManager.translate(0.0F, 0.2F, 0.0F);
+        }
         this.bipedHead.render(scale);
+        GlStateManager.popMatrix();
     }
 
     /**
