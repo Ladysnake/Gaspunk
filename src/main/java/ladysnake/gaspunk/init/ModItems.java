@@ -20,7 +20,6 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.OreDictionary;
 
 @SuppressWarnings("unused")
 @AutoRegister(GasPunk.MOD_ID)
@@ -53,7 +52,7 @@ public final class ModItems {
     @SubscribeEvent
     public static void addItems(RegistryEvent.Register<Item> event) {
         if (Loader.isModLoaded("baubles")) {
-            GasPunk.lib.getRegistrar().getItemRegistrar().addItem(ItemRegistrar.name(GRENADE_BELT, "grenade_belt"), true);
+            GasPunk.lib.getItemRegistrar().addItem(ItemRegistrar.name(GRENADE_BELT, "grenade_belt"), true);
             MinecraftForge.EVENT_BUS.register(GRENADE_BELT);
         }
         ladysnake.pathos.item.ModItems.EMPTY_SYRINGE.setCreativeTab(GasPunk.CREATIVE_TAB);
