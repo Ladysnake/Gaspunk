@@ -31,7 +31,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
-        GasPunk.lib.getParticleManager().setMaxParticlesConfig(() -> GasPunkConfig.client.maxParticles);
+        GasPunk.lib.getClientHandler().getParticleManager().setMaxParticlesConfig(() -> GasPunkConfig.client.maxParticles);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class ClientProxy extends CommonProxy {
                 double posZ = z + world.rand.nextGaussian() * radX % radX;
                 ParticleGasSmoke particle = new ParticleGasSmoke(world, posX, posY, posZ, r, g, b, a, (float) (55 + 20 * world.rand.nextGaussian()));
                 particle.setTexture(texture.getParticleTexture());
-                GasPunk.lib.getParticleManager().addParticle(particle);
+                GasPunk.lib.getClientHandler().getParticleManager().addParticle(particle);
             }
         }
     }
