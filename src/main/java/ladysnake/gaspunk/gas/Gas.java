@@ -59,7 +59,9 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
     }
 
     protected final IGasType type;
-    protected int color, bottleColor;
+    protected final IGasParticleType particleType;
+    protected int color;
+    protected int bottleColor;
     protected ImmutableList<AgentEffect> agents;
 
     public Gas(IGasType type, int color, IGasAgent agent, float potency) {
@@ -72,6 +74,7 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
 
     public Gas(IGasType type, IGasParticleType particleType, int color, int bottleColor, ImmutableList<AgentEffect> agents) {
         this.type = type;
+        this.particleType = particleType;
         this.color = color;
         this.bottleColor = bottleColor;
         this.agents = agents;
@@ -80,6 +83,11 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
     @Override
     public IGasType getType() {
         return type;
+    }
+
+    @Override
+    public IGasParticleType getParticleType() {
+        return particleType;
     }
 
     @Override
