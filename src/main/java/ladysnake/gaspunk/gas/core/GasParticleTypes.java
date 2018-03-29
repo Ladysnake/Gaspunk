@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import java.util.Locale;
 
 public enum GasParticleTypes implements IGasParticleType {
-    SMOKE(5), GAS(1);
+    SMOKE(5), GAS(1), CANDYFLOSS(5);
 
     private final ResourceLocation particleTexture;
     private int particleAmount;

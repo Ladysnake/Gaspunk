@@ -120,6 +120,7 @@ public class GasDeserializer extends TypeAdapter<Gas> {
                     break;
                 case "bottleColor":
                     builder.setBottleColor(parseInt(in, "bottleColor"));
+                    break;
                 case "agents":
                     parseAgents(in, builder);
             }
