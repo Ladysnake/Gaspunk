@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -29,6 +30,7 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.awt.image.ColorModel;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,21 +65,23 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
     protected int color;
     protected int bottleColor;
     protected ImmutableList<AgentEffect> agents;
+    protected String[] tooltipLines;
 
     public Gas(IGasType type, int color, IGasAgent agent, float potency) {
         this(type, color, new AgentEffect(agent, potency));
     }
 
     public Gas(IGasType type, int color, AgentEffect... agents) {
-        this(type, type.getParticleType(), color, color, ImmutableList.copyOf(agents));
+        this(type, type.getParticleType(), color, color, ImmutableList.copyOf(agents), new String[0]);
     }
 
-    public Gas(IGasType type, IGasParticleType particleType, int color, int bottleColor, ImmutableList<AgentEffect> agents) {
+    public Gas(IGasType type, IGasParticleType particleType, int color, int bottleColor, ImmutableList<AgentEffect> agents, String[] tooltipLines) {
         this.type = type;
         this.particleType = particleType;
         this.color = color;
         this.bottleColor = bottleColor;
         this.agents = agents;
+        this.tooltipLines = tooltipLines;
     }
 
     @Override
@@ -130,10 +134,16 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         for (AgentEffect effect : agents)
             tooltip.add(effect.getAgent().getLocalizedName());
+        for (String line : tooltipLines)
+            tooltip.add(I18n.format(line));
     }
 
     public ImmutableList<AgentEffect> getAgents() {
         return agents;
+    }
+
+    public String[] getTooltipLines() {
+        return tooltipLines;
     }
 
     protected ResourceLocation getOverlayTexture() {
@@ -199,6 +209,7 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
         // nullable type so we know whether it was assigned or not
         private Integer bottleColor;
         private ImmutableList.Builder<AgentEffect> agents = ImmutableList.builder();
+        private List<String> tooltipLines = new ArrayList<>();
 
         public Builder setType(IGasType type) {
             this.type = type;
@@ -225,6 +236,11 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
             return this;
         }
 
+        public Builder addTooltipLine(String tooltipLine) {
+            tooltipLines.add(tooltipLine);
+            return this;
+        }
+
         public Gas build() {
             if (type == null) throw new IllegalStateException("gas type not provided");
             return new Gas(
@@ -232,7 +248,8 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
                     particleType == null ? type.getParticleType() : particleType,
                     color,
                     bottleColor == null ? color : bottleColor,
-                    agents.build()
+                    agents.build(),
+                    tooltipLines.toArray(new String[tooltipLines.size()])
             );
         }
     }

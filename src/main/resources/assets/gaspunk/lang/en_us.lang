@@ -26,6 +26,7 @@ gas.gaspunk.sarin_gas=Sarin
 gas.gaspunk.smoke=Smoke
 gas.gaspunk.tear_gas=Tear Gas
 gas.gaspunk.candyfloss=Cotton Candy Cloud
+gas.gaspunk.candyfloss.tooltip=3C agent, very dedly owo
 item.gaspunk.ash.name=Foul Ash
 item.gaspunk.diffuser.name=Diffuser
 item.gaspunk.empty_grenade.name=Empty Grenade

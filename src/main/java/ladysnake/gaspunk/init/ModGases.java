@@ -57,7 +57,7 @@ public class ModGases {
 
     @SubscribeEvent
     public static void addGases(RegistryEvent.Register<IGas> event) {
-        event.getRegistry().register(new Gas(GasTypes.GAS, GasParticleTypes.GAS, 0x99FFFFFF, 0xAA0033FF, ImmutableList.of()).setRegistryName("air"));
+        event.getRegistry().register(new Gas(GasTypes.GAS, GasParticleTypes.GAS, 0x99FFFFFF, 0xAA0033FF, ImmutableList.of(), new String[0]).setRegistryName("air"));
         for (EnumDyeColor color : EnumDyeColor.values()) {
             // this is probably illegal in 53 states but I didn't want to parse the value back from the table
             event.getRegistry().register(new Gas(GasTypes.SMOKE,  0xFF000000 | (int) ReflectionHelper.getPrivateValue(EnumDyeColor.class, color, "colorValue", "field_193351_w")).setRegistryName("colored_smoke_" + color.getName()));
