@@ -1,6 +1,6 @@
 {
   "gasType": "SMOKE",
-  "color": "0xFFFFFF",
+  "color": "0xFFFFFFFF",
   "bottleColor": "0xECCCCC",
   "particleType": "CANDYFLOSS"
 }

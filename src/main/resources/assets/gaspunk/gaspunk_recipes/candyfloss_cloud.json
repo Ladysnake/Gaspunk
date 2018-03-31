@@ -1,10 +1,10 @@
 {
-  "result": "gaspunk:healing_vapor",
+  "result": "gaspunk:candyfloss",
   "input": {
     "gas": "gaspunk:smoke"
   },
   "ingredient": {
     "type": "minecraft:item",
-    "item": "minecraft:ghast_tear"
+    "item": "minecraft:sugar"
   }
 }
