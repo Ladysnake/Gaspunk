@@ -71,6 +71,8 @@ public class GasRecipeDeserializer {
 
         try (BufferedReader reader = Files.newBufferedReader(file)) {
             JsonObject json = JsonUtils.fromJson(GSON, reader, JsonObject.class);
+            if (json == null || json.has("conditions") && !CraftingHelper.processConditions(JsonUtils.getJsonArray(json, "conditions"), context))
+                return true;
             deserializeRecipe(json, context);
         } catch (JsonParseException e) {
             GasPunk.LOGGER.error("Parsing error loading recipe {}", key, e);

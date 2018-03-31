@@ -1,0 +1,10 @@
+{
+  "result": "gaspunk:candyfloss",
+  "input": {
+    "gas": "gaspunk:smoke"
+  },
+  "ingredient": {
+    "type": "forge:ore_dict",
+    "ore": "foodCottonCandy"
+  }
+}

@@ -2,9 +2,11 @@
 package net.minecraft.entity;
 
 import ladysnake.gaspunk.api.IBreathingHandler;
+import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.gas.GasAgents;
 import ladysnake.gaspunk.gas.agent.LingeringAgent;
 import ladysnake.gaspunk.gas.core.CapabilityBreathing;
+import ladysnake.gaspunk.gas.core.GasTypes;
 import ladysnake.gaspunk.init.ModGases;
 import ladysnake.pathos.api.ISicknessHandler;
 import ladysnake.pathos.api.SicknessEffect;
@@ -79,10 +81,11 @@ public class SicknessTests {
     @Test
     public void testGasTick() {
         IBreathingHandler handler = CapabilityBreathing.getHandler(mockedCreeper).get();
-        handler.setConcentration(ModGases.SMOKE, 0.5f);
-        assertTrue(handler.getGasConcentrations().containsKey(ModGases.SMOKE));
+        Gas gas = new Gas(GasTypes.SMOKE, 0xFF);
+        handler.setConcentration(gas, 0.5f);
+        assertTrue(handler.getGasConcentrations().containsKey(gas));
         handler.tick();
-        assertFalse(handler.getGasConcentrations().containsKey(ModGases.SMOKE));
+        assertFalse(handler.getGasConcentrations().containsKey(gas));
     }
 
     @Test
@@ -122,11 +125,12 @@ public class SicknessTests {
         IBreathingHandler breathingHandler = CapabilityBreathing.getHandler(mockedCreeper).get();
         final float concentration = 1.0f;
         final float time = 5;
+        Gas gas = new Gas(GasTypes.GAS, 0xFF, GasAgents.NERVE, 1);
         for (int i = 0; i < time; i++) {
-            breathingHandler.setConcentration(ModGases.MUSTARD_GAS, concentration);
+            breathingHandler.setConcentration(gas, concentration);
             breathingHandler.tick();
         }
-        float potency = ModGases.MUSTARD_GAS.getAgents().get(0).getPotency();
+        float potency = gas.getAgents().get(0).getPotency();
         float oracle = potency * time;
         // TODO make a test for evolution in gas concentration
 //        assertEquals(oracle, breathingHandler.getGasConcentrations().get(ModGases.MUSTARD_GAS), 1E-8f);

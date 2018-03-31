@@ -1,9 +1,6 @@
 package ladysnake.gaspunk.gas.core;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.TypeAdapter;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import ladysnake.gaspunk.GasPunk;
@@ -27,12 +24,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Objects;
 
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
 public class GasDeserializer extends TypeAdapter<Gas> {
 
-    private static final Gson GSON = new Gson();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @SubscribeEvent
     public static void loadGases(RegistryEvent.Register<IGas> event) {
@@ -41,12 +39,16 @@ public class GasDeserializer extends TypeAdapter<Gas> {
         Loader.instance().setActiveModContainer(gaspunkContainer);
         File configFolder = new File(GasPunk.lib.getConfigFolder(), GasPunk.MOD_ID + "/custom_gases");
         // if the config folder was just created or couldn't be created, no need to search it
-        if (!configFolder.mkdirs() && configFolder.exists()) {
-            try {
+        try {
+            if (!configFolder.mkdirs() && configFolder.exists()) {
                 Files.walk(configFolder.toPath()).forEach(path -> loadGases(configFolder.toPath(), path));
-            } catch (IOException e) {
-                e.printStackTrace();
+            } else if (configFolder.exists()) {
+                // generate an example gas file
+                IGas exampleGas = new Gas.Builder().addAgent(GasAgents.LACHRYMATOR, 0.5f).addAgent(GasAgents.NERVE, 0.375f).setColor(0x55CAFE66).setBottleColor(0x95DADD10).setType(GasTypes.GAS).build();
+                Files.write(configFolder.toPath().resolve("_example.json"), GSON.toJson(exampleGas).getBytes(), StandardOpenOption.CREATE_NEW);
             }
+        } catch (IOException e) {
+            GasPunk.LOGGER.error("Error while loading gases from config", e);
         }
     }
 
@@ -85,12 +87,12 @@ public class GasDeserializer extends TypeAdapter<Gas> {
             out.value(type.name());
         } else throw new JsonException("Cannot serialize unknown type " + value.getParticleType());
         out.name("color");
-        out.value(value.getColor());
+        out.value(Long.toString(value.getColor(), 16));
         out.name("bottleColor");
-        out.value(value.getBottleColor());
+        out.value(Long.toString(value.getBottleColor(), 16));
         out.name("agents");
         out.beginArray();
-        for (Gas.AgentEffect effect: value.getAgents()) {
+        for (Gas.AgentEffect effect : value.getAgents()) {
             out.beginObject();
             out.name("agent");
             out.value(GasAgents.getId(effect.getAgent()).toString());
@@ -99,6 +101,14 @@ public class GasDeserializer extends TypeAdapter<Gas> {
             out.endObject();
         }
         out.endArray();
+        String[] tooltipLines = value.getTooltipLines();
+        if (tooltipLines.length > 0) {
+            out.name("tooltipLines");
+            out.beginArray();
+            for (String s : value.getTooltipLines())
+                out.value(s);
+            out.endArray();
+        }
         out.endObject();
     }
 
@@ -123,10 +133,21 @@ public class GasDeserializer extends TypeAdapter<Gas> {
                     break;
                 case "agents":
                     parseAgents(in, builder);
+                    break;
+                case "tooltipLines":
+                    parseTooltip(in, builder);
+                    break;
             }
         }
         in.endObject();
         return builder.build();
+    }
+
+    private void parseTooltip(JsonReader in, Gas.Builder builder) throws IOException {
+        in.beginArray();
+        while (in.hasNext())
+            builder.addTooltipLine(in.nextString());
+        in.endArray();
     }
 
     private int parseInt(JsonReader in, String memberName) throws IOException {

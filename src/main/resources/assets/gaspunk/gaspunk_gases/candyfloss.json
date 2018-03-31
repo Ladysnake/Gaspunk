@@ -2,5 +2,8 @@
   "gasType": "SMOKE",
   "color": "0xFFFFFFFF",
   "bottleColor": "0xECCCCC",
-  "particleType": "CANDYFLOSS"
+  "particleType": "CANDYFLOSS",
+  "tooltipLines": [
+    "gas.gaspunk.candyfloss.tooltip"
+  ]
 }
