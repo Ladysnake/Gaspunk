@@ -20,6 +20,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -132,10 +133,13 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        for (AgentEffect effect : agents)
+        for (AgentEffect effect : agents) {
             tooltip.add(effect.getAgent().getLocalizedName());
+        }
         for (String line : tooltipLines)
             tooltip.add(I18n.format(line));
+        if (flagIn.isAdvanced())
+            tooltip.add(TextFormatting.DARK_GRAY + "" + this.getRegistryName());
     }
 
     public ImmutableList<AgentEffect> getAgents() {

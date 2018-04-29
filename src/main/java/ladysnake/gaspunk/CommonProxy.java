@@ -5,7 +5,6 @@ import ladysnake.gaspunk.api.customization.GrenadeSkins;
 import ladysnake.gaspunk.compat.BaublesCompatHandler;
 import ladysnake.gaspunk.entity.EntityGrenade;
 import ladysnake.gaspunk.gas.core.CapabilityBreathing;
-import ladysnake.gaspunk.init.ModGases;
 import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.network.PacketHandler;
 import ladysnake.gaspunk.util.SpecialRewardChecker;
@@ -47,9 +46,7 @@ public class CommonProxy {
             @Nonnull
             @Override
             protected IProjectile getProjectileEntity(@Nonnull World worldIn, @Nonnull IPosition position, @Nonnull ItemStack stackIn) {
-                EntityGrenade grenade = new EntityGrenade(worldIn);
-                grenade.setItem(stackIn);
-                return grenade;
+                return new EntityGrenade(worldIn, stackIn.copy(), position.getX(), position.getY(), position.getZ());
             }
         });
     }
