@@ -23,12 +23,18 @@ import javax.annotation.Nonnull;
 public class EntityGrenade extends EntityNonRetardedThrowable {
     private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityGrenade.class, DataSerializers.ITEM_STACK);
     private static final DataParameter<Integer> COUNTDOWN = EntityDataManager.createKey(EntityGrenade.class, DataSerializers.VARINT);
-    /**The lifespan of the cloud emitted by this grenade. Avoids tracking the entity just to know when to pop off as an item.*/
+    /**The lifespan of the cloud emitted by this grenade. Avoids tracking the cloud entity just to know when to pop off as an item.*/
     protected int cloudMaxLifeSpan;
     protected boolean canPickup;
 
     public EntityGrenade(World worldIn) {
         super(worldIn);
+    }
+
+    public EntityGrenade(World worldIn, ItemStack stack, double x, double y, double z) {
+        super(worldIn, x, y, z);
+        setItem(stack);
+        canPickup = true;
     }
 
     public EntityGrenade(World worldIn, @Nonnull EntityLivingBase throwerIn, ItemStack stack) {
