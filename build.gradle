@@ -40,8 +40,7 @@ reobfJar {
 task initSubmodules(type: Exec) {
     if (new File('LadyLib').exists()) {
         commandLine 'git', 'submodule', 'init'
-    }
-    else {
+    } else {
         commandLine 'git', 'submodule', 'add', 'https://github.com/Pyrofab/LadyLib.git', 'LadyLib'
     }
 }
@@ -79,8 +78,10 @@ minecraft {
     // Use non-default mappings at your own risk. they may not always work.
     // simply re-run your setup task after changing the mappings to update your workspace.
     mappings = project.mcpVersion
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     replace '@VERSION@', modVersion
+    // use findProperty instead of a direct reference to prevent gradle failure when the property does not exist
+    replace '@FINGERPRINT@', project.findProperty('signSHA1')
 
     if (project.hasProperty('mc_username')) {
         clientRunArgs += ['--username', "${project.mc_username}"]
@@ -156,4 +157,30 @@ jar {
     from sourceSets.api.output
     from sourceSets.main.output
     from sourceSets.pathos.output
+
+    manifest {
+        attributes([
+//                'ContainedDeps' : coreJar.archivePath.name,
+                'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}",
+                'Timestamp'     : System.currentTimeMillis()
+        ])
+    }
 }
+
+task signJar(type: SignJar, dependsOn: reobfJar) {
+    if (canJarBeSigned()) {
+        keyStore = project.keyStore
+        alias = project.keyStoreAlias
+        storePass = project.keyStorePass
+        keyPass = project.keyStoreKeyPass
+        inputFile = jar.archivePath
+        outputFile = jar.archivePath
+    }
+}
+
+boolean canJarBeSigned() {
+    return project.hasProperty('keyStore')
+}
+
+// Runs this task automatically when build is ran.
+build.dependsOn signJar
