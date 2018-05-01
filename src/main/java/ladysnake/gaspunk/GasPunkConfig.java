@@ -16,6 +16,13 @@ public class GasPunkConfig {
     @Config.Comment("Makes ash require smelting nether wart instead of rotten flesh")
     public static boolean alternativeAshRecipe = false;
 
+    @Config.Comment({
+            "The items which ID's are added here will be considered as gas masks when breathing gas",
+            "You can specify entire armor sets by separating items with \"&\" in a single entry. Using \"*\" instead of an item id will match anything.",
+            "Examples: \"minecraft:diamond_helmet\", \"minecraft:golden_helmet&*&minecraft:chainmail_leggings\""
+    })
+    public static String[] otherGasMasks = new String[0];
+
     public static Client client = new Client();
 
     public static class Client {

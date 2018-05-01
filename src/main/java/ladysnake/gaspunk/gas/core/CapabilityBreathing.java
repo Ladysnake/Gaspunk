@@ -1,6 +1,7 @@
 package ladysnake.gaspunk.gas.core;
 
 import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.GasPunkConfig;
 import ladysnake.gaspunk.api.IBreathingHandler;
 import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.api.event.GasEvent;
@@ -13,6 +14,7 @@ import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -168,7 +170,19 @@ public class CapabilityBreathing {
 
         @Override
         public boolean isImmune(IGas gas, float concentration) {
-            boolean immune = owner.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof ItemGasMask;
+            Item helmet = owner.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem();
+            boolean immune = helmet instanceof ItemGasMask;
+            for (String alt : GasPunkConfig.otherGasMasks) {
+                String[] suit = alt.split("&");
+                boolean fullSuit = true;
+                switch (suit.length) {
+                    case 4: fullSuit =  suit[3].equals("*") || suit[3].equals(String.valueOf(owner.getItemStackFromSlot(EntityEquipmentSlot.FEET).getItem().getRegistryName()));
+                    case 3: fullSuit &= suit[2].equals("*") || suit[2].equals(String.valueOf(owner.getItemStackFromSlot(EntityEquipmentSlot.LEGS).getItem().getRegistryName()));
+                    case 2: fullSuit &= suit[1].equals("*") || suit[1].equals(String.valueOf(owner.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem().getRegistryName()));
+                    case 1: fullSuit &= suit[0].equals("*") || suit[0].equals(String.valueOf(owner.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem().getRegistryName()));
+                }
+                immune |= fullSuit;
+            }
             GasEvent.GasImmunityEvent event = new GasEvent.GasImmunityEvent(owner, this, gas, concentration, immune);
             MinecraftForge.EVENT_BUS.post(event);
             return event.isImmune();
