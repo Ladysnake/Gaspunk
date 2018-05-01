@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -25,7 +26,8 @@ import javax.annotation.Nonnull;
         name = GasPunk.MOD_NAME,
         version = GasPunk.VERSION,
         dependencies = GasPunk.DEPENDENCIES,
-        guiFactory = "ladysnake.gaspunk.client.config.GasPunkConfigFactory"
+        guiFactory = "ladysnake.gaspunk.client.config.GasPunkConfigFactory",
+        certificateFingerprint = "@FINGERPRINT@"
 )
 public class GasPunk {
 
@@ -79,6 +81,11 @@ public class GasPunk {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit();
+    }
+
+    @Mod.EventHandler
+    public void onFingerprintViolation(FMLFingerprintViolationEvent event) {
+        LOGGER.warn("Invalid fingerprint detected! The file " + event.getSource().getName() + " may have been tampered with. This version will NOT be supported by the author!");
     }
 
     public static class GasPunkTabs extends CreativeTabs {
