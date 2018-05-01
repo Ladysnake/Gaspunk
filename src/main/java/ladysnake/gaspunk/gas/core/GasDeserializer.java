@@ -9,7 +9,6 @@ import ladysnake.gaspunk.api.IGasAgent;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.gas.GasAgents;
 import ladysnake.gaspunk.init.ModGases;
-import net.minecraft.client.util.JsonException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
@@ -44,7 +43,7 @@ public class GasDeserializer extends TypeAdapter<Gas> {
                 Files.walk(configFolder.toPath()).forEach(path -> loadGases(configFolder.toPath(), path));
             } else if (configFolder.exists()) {
                 // generate an example gas file
-                IGas exampleGas = new Gas.Builder().addAgent(GasAgents.LACHRYMATOR, 0.5f).addAgent(GasAgents.NERVE, 0.375f).setColor(0x55CAFE66).setBottleColor(0x95DADD10).setType(GasTypes.GAS).build();
+                IGas exampleGas = new Gas.Builder().addAgent(GasAgents.LACHRYMATOR, 0.5f).addAgent(GasAgents.NERVE, 0.375f).setColor(0x55CAFE66).setBottleColor(0x75DADD10).setType(GasTypes.GAS).build();
                 Files.write(configFolder.toPath().resolve("_example.json"), GSON.toJson(exampleGas).getBytes(), StandardOpenOption.CREATE_NEW);
             }
         } catch (IOException e) {
@@ -80,12 +79,12 @@ public class GasDeserializer extends TypeAdapter<Gas> {
             GasTypes type = (GasTypes) value.getType();
             out.name("gasType");
             out.value(type.name());
-        } else throw new JsonException("Cannot serialize unknown type " + value.getType());
+        } else throw new RuntimeException("Cannot serialize unknown type " + value.getType());
         if (value.getParticleType() instanceof GasParticleTypes) {
             GasParticleTypes type = (GasParticleTypes) value.getParticleType();
             out.name("particleType");
             out.value(type.name());
-        } else throw new JsonException("Cannot serialize unknown type " + value.getParticleType());
+        } else throw new RuntimeException("Cannot serialize unknown type " + value.getParticleType());
         out.name("color");
         out.value(Long.toString(value.getColor(), 16));
         out.name("bottleColor");

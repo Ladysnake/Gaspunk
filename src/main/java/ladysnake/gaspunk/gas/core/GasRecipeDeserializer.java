@@ -1,6 +1,7 @@
 package ladysnake.gaspunk.gas.core;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import ladysnake.gaspunk.GasPunk;
@@ -33,10 +34,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
 public class GasRecipeDeserializer {
-    private static final Gson GSON = new Gson();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @SubscribeEvent
     public static void loadRecipes(RegistryEvent.Register<IRecipe> event) {
@@ -45,13 +47,29 @@ public class GasRecipeDeserializer {
         Loader.instance().setActiveModContainer(gaspunkContainer);
         File configFolder = new File(GasPunk.lib.getConfigFolder(), GasPunk.MOD_ID + "/custom_recipes");
         // if the config folder was just created or couldn't be created, no need to search it
-        if (!configFolder.mkdirs() && configFolder.exists()) {
-            JsonContext context = new JsonContext(GasPunk.MOD_ID);
-            try {
-                Files.walk(configFolder.toPath()).forEach(path -> loadRecipes(configFolder.toPath(), path, context));
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            if (!configFolder.mkdirs() && configFolder.exists()) {
+                JsonContext context = new JsonContext(GasPunk.MOD_ID);
+                try {
+                    Files.walk(configFolder.toPath()).forEach(path -> loadRecipes(configFolder.toPath(), path, context));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (configFolder.exists()) {
+                JsonObject recipe = new JsonObject();
+                recipe.addProperty("result", "gaspunk:colored_smoke_red");
+                JsonObject input = new JsonObject();
+                input.addProperty("item", "minecraft:water_bucket");
+                recipe.add("input", input);
+                JsonObject ingredient = new JsonObject();
+                ingredient.addProperty("type", "forge:ore_dict");
+                ingredient.addProperty("ore", "dustRedstone");
+                recipe.add("ingredient", ingredient);
+                recipe.addProperty("result", "gaspunk:colored_smoke_red");
+                Files.write(configFolder.toPath().resolve("_example.json"), GSON.toJson(recipe).getBytes(), StandardOpenOption.CREATE_NEW);
             }
+        } catch (IOException e) {
+            GasPunk.LOGGER.error("Error while loading gas recipes from config", e);
         }
     }
 
