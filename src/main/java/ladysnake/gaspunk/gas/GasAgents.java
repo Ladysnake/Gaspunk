@@ -8,8 +8,6 @@ import ladysnake.gaspunk.gas.agent.DamageAgent;
 import ladysnake.gaspunk.gas.agent.GasAgent;
 import ladysnake.gaspunk.gas.agent.LingeringAgent;
 import ladysnake.gaspunk.gas.agent.PotionAgent;
-import ladysnake.gaspunk.sickness.SicknessSarin;
-import ladysnake.gaspunk.sickness.SicknessTearGas;
 import ladysnake.pathos.api.ISickness;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
@@ -17,42 +15,29 @@ import net.minecraft.util.ResourceLocation;
 import java.util.function.Supplier;
 
 public class GasAgents {
-    /**
-     * Maps agents to their respective sickness
-     */
-    public static final BiMap<LingeringAgent, ISickness> LINGERING_EFFECTS = HashBiMap.create();
+
+    // not a registry to avoid adding too much network load, and because gases are already synchronized
     public static final BiMap<ResourceLocation, IGasAgent> AGENT_MAP = HashBiMap.create();
 
-    public static final IGasAgent LACHRYMATOR;
-    public static final IGasAgent PULMONARY;
-    public static final IGasAgent NERVE;
-
-    static {
-        LACHRYMATOR = createSicknessAgent("tear_gas", true, true, SicknessTearGas::new);
-        PULMONARY = createDamageAgent("toxic_smoke");
-        NERVE = createSicknessAgent("sarin_gas", true, true, SicknessSarin::new);
-    }
-
-    public static IGasAgent createDamageAgent(String name) {
-        IGasAgent ret = name(new DamageAgent(20), name);
+    public static IGasAgent createDamageAgent(String name, int maxDamage) {
+        IGasAgent ret = name(new DamageAgent(maxDamage), name);
         AGENT_MAP.put(new ResourceLocation(GasPunk.MOD_ID, name), ret);
         return ret;
     }
 
-    public static IGasAgent createPotionAgent(Potion potion, int potionDuration, int potionAmplifier) {
-        return name(new PotionAgent(potion, potionDuration, potionAmplifier), "potion");
+    public static IGasAgent createPotionAgent(String name, int potionDuration, int potionAmplifier, Potion potion) {
+        IGasAgent ret = name(new PotionAgent(potion, potionDuration, potionAmplifier), "potion");
+        AGENT_MAP.put(new ResourceLocation(GasPunk.MOD_ID, name), ret);
+        return ret;
     }
 
-    public static IGasAgent createSicknessAgent(String name, boolean toxic, boolean ignoreBreath, Supplier<ISickness> sicknessSupplier) {
-        return createSicknessAgent(name, () -> new LingeringAgent(toxic, ignoreBreath), sicknessSupplier);
+    public static IGasAgent createSicknessAgent(String name, boolean toxic, boolean ignoreBreath, ISickness sickness) {
+        return createSicknessAgent(name, () -> new LingeringAgent(toxic, ignoreBreath, sickness), sickness);
     }
 
-    public static IGasAgent createSicknessAgent(String name, Supplier<LingeringAgent> agentSupplier, Supplier<ISickness> sicknessSupplier) {
+    public static IGasAgent createSicknessAgent(String name, Supplier<LingeringAgent> agentSupplier, ISickness sickness) {
         LingeringAgent agent = name(agentSupplier.get(), name);
-        ISickness sickness = sicknessSupplier.get();
         ResourceLocation id = new ResourceLocation(GasPunk.MOD_ID, name);
-        sickness.setRegistryName(id);
-        LINGERING_EFFECTS.put(agent, sickness);
         AGENT_MAP.put(id, agent);
         return agent;
     }

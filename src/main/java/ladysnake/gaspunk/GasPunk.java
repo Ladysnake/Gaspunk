@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
@@ -47,7 +48,7 @@ public class GasPunk {
     )
     public static CommonProxy proxy;
 
-    public static Logger LOGGER;
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
     public static LadyLib lib;
 
@@ -59,7 +60,6 @@ public class GasPunk {
      */
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        LOGGER = event.getModLog();
         lib = LadyLib.initLib(event);
         lib.setCreativeTab(CREATIVE_TAB);
         proxy.preInit(event);
@@ -85,7 +85,10 @@ public class GasPunk {
 
     @Mod.EventHandler
     public void onFingerprintViolation(FMLFingerprintViolationEvent event) {
-        LOGGER.warn("Invalid fingerprint detected! The file " + event.getSource().getName() + " may have been tampered with. This version will NOT be supported by the author!");
+        if (LadyLib.isDevEnv())
+            LOGGER.info("Ignoring invalid fingerprint as we are in a development environment");
+        else
+            LOGGER.warn("Invalid fingerprint detected! The file " + event.getSource().getName() + " may have been tampered with. This version will NOT be supported by the author!");
     }
 
     public static class GasPunkTabs extends CreativeTabs {

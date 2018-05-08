@@ -1,0 +1,6 @@
+{
+  "factory": "sickness",
+  "toxic": "true",
+  "ignoreBreath": "true",
+  "sickness": "gaspunk:eye_irritation"
+}

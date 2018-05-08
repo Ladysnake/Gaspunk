@@ -94,7 +94,7 @@ public class SicknessTearGas extends SicknessGas {
             if (_listShaders != null && event.phase == TickEvent.Phase.END && Minecraft.getMinecraft().entityRenderer.isShaderActive()) {
                 // check that the player has an active eye irritation effect
                 float progress = CapabilitySickness.getHandler(Minecraft.getMinecraft().player)
-                        .map(h -> h.getActiveEffect(ModSicknesses.TEAR_GAS))
+                        .map(h -> h.getActiveEffect(ModSicknesses.EYE_IRRITATION))
                         .map(ClientTearEffect::getProgress).orElse(0F);
                 ShaderGroup sg = Minecraft.getMinecraft().entityRenderer.getShaderGroup();
                 try {

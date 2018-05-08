@@ -9,6 +9,7 @@ import ladysnake.gaspunk.api.IGasAgent;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.gas.GasAgents;
 import ladysnake.gaspunk.init.ModGases;
+import net.minecraft.potion.PotionType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
@@ -31,8 +32,9 @@ public class GasDeserializer extends TypeAdapter<Gas> {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
+    // needs to register after gas agents, so use PotionType register event as well
     @SubscribeEvent
-    public static void loadGases(RegistryEvent.Register<IGas> event) {
+    public static void loadGases(RegistryEvent.Register<PotionType> event) {
         ModContainer gaspunkContainer = Loader.instance().activeModContainer();
         Loader.instance().getActiveModList().forEach(GasDeserializer::loadGases);
         Loader.instance().setActiveModContainer(gaspunkContainer);
@@ -43,7 +45,7 @@ public class GasDeserializer extends TypeAdapter<Gas> {
                 Files.walk(configFolder.toPath()).forEach(path -> loadGases(configFolder.toPath(), path));
             } else if (configFolder.exists()) {
                 // generate an example gas file
-                IGas exampleGas = new Gas.Builder().addAgent(GasAgents.LACHRYMATOR, 0.5f).addAgent(GasAgents.NERVE, 0.375f).setColor(0x55CAFE66).setBottleColor(0x75DADD10).setType(GasTypes.GAS).build();
+                IGas exampleGas = new Gas.Builder().addAgent(GasAgents.getAgent(new ResourceLocation(GasPunk.MOD_ID, "lachrymator")), 0.5f).addAgent(GasAgents.getAgent(new ResourceLocation(GasPunk.MOD_ID, "nerve")), 0.375f).setColor(0x55CAFE66).setBottleColor(0x75DADD10).setType(GasTypes.GAS).build();
                 Files.write(configFolder.toPath().resolve("_example.json"), GSON.toJson(exampleGas).getBytes(), StandardOpenOption.CREATE_NEW);
             }
         } catch (IOException e) {

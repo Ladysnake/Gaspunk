@@ -2,12 +2,14 @@
 package net.minecraft.entity;
 
 import ladysnake.gaspunk.api.IBreathingHandler;
+import ladysnake.gaspunk.api.IGasAgent;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.gas.GasAgents;
+import ladysnake.gaspunk.gas.SuspendableGas;
 import ladysnake.gaspunk.gas.agent.LingeringAgent;
 import ladysnake.gaspunk.gas.core.CapabilityBreathing;
 import ladysnake.gaspunk.gas.core.GasTypes;
-import ladysnake.gaspunk.init.ModGases;
+import ladysnake.gaspunk.init.ModSicknesses;
 import ladysnake.pathos.api.ISicknessHandler;
 import ladysnake.pathos.api.SicknessEffect;
 import ladysnake.pathos.capability.CapabilitySickness;
@@ -31,6 +33,8 @@ import static org.mockito.Mockito.*;
 @SuppressWarnings("ConstantConditions")
 public class SicknessTests {
 
+    private static final IGasAgent NERVE = GasAgents.createSicknessAgent("sarin_gas", true, true, ModSicknesses.LUNG_CONTROL_LOSS);
+    public static final Gas SARIN_GAS = new SuspendableGas(GasTypes.GAS, 0x00FFFFFF, NERVE, 0.8F);
     private EntityCreeper mockedCreeper;
 
     static {
@@ -74,8 +78,8 @@ public class SicknessTests {
 
     @Test
     public void testGasAdd() {
-        CapabilityBreathing.getHandler(mockedCreeper).ifPresent(h -> h.setConcentration(ModGases.SARIN_GAS, 0.5f));
-        assertTrue(CapabilityBreathing.getHandler(mockedCreeper).map(IBreathingHandler::getGasConcentrations).map(h -> h.get(ModGases.SARIN_GAS)).isPresent());
+        CapabilityBreathing.getHandler(mockedCreeper).ifPresent(h -> h.setConcentration(SARIN_GAS, 0.5f));
+        assertTrue(CapabilityBreathing.getHandler(mockedCreeper).map(IBreathingHandler::getGasConcentrations).map(h -> h.get(SARIN_GAS)).isPresent());
     }
 
     @Test
@@ -90,16 +94,16 @@ public class SicknessTests {
 
     @Test
     public void testLingeringAssociation() {
-        assertNotNull(GasAgents.LINGERING_EFFECTS.get(GasAgents.NERVE));
+        assertNotNull(((LingeringAgent) NERVE).getSickness());
     }
 
     @Test
     public void testSarinTick() {
         IBreathingHandler handler = CapabilityBreathing.getHandler(mockedCreeper).get();
-        handler.setConcentration(ModGases.SARIN_GAS, 0.5f);
+        handler.setConcentration(SARIN_GAS, 0.5f);
         handler.tick();
         ISicknessHandler sicknessHandler = CapabilitySickness.getHandler(mockedCreeper).get();
-        assertNotNull(sicknessHandler.getActiveEffect(GasAgents.LINGERING_EFFECTS.get(GasAgents.NERVE)));
+        assertNotNull(sicknessHandler.getActiveEffect(((LingeringAgent) NERVE).getSickness()));
     }
 
     @Test
@@ -108,13 +112,13 @@ public class SicknessTests {
         final float concentration = 0.5f;
         final float time = 5;
         for (int i = 0; i < time; i++) {
-            breathingHandler.setConcentration(ModGases.SARIN_GAS, concentration);
+            breathingHandler.setConcentration(SARIN_GAS, concentration);
             breathingHandler.tick();
         }
         ISicknessHandler sicknessHandler = CapabilitySickness.getHandler(mockedCreeper).get();
-        LingeringAgent sarinAgent = (LingeringAgent) GasAgents.NERVE;
-        SicknessEffect effect = sicknessHandler.getActiveEffect(GasAgents.LINGERING_EFFECTS.get(sarinAgent));
-        float potency = ModGases.SARIN_GAS.getAgents().get(0).getPotency();
+        LingeringAgent sarinAgent = (LingeringAgent) NERVE;
+        SicknessEffect effect = sicknessHandler.getActiveEffect(sarinAgent.getSickness());
+        float potency = SARIN_GAS.getAgents().get(0).getPotency();
         float toxicityPerTick = potency * concentration / 20;
         float oracle = toxicityPerTick * time;
         assertEquals(oracle, effect.getSeverity(), 1E-8f);
@@ -125,7 +129,7 @@ public class SicknessTests {
         IBreathingHandler breathingHandler = CapabilityBreathing.getHandler(mockedCreeper).get();
         final float concentration = 1.0f;
         final float time = 5;
-        Gas gas = new Gas(GasTypes.GAS, 0xFF, GasAgents.NERVE, 1);
+        Gas gas = new Gas(GasTypes.GAS, 0xFF, NERVE, 1);
         for (int i = 0; i < time; i++) {
             breathingHandler.setConcentration(gas, concentration);
             breathingHandler.tick();

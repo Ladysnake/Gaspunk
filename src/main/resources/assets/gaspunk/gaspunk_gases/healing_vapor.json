@@ -1,0 +1,10 @@
+{
+  "gasType": "GAS",
+  "color": "0xFFCD5CAB",
+  "agents": [
+    {
+      "agent": "gaspunk:heal",
+      "potency": 1.0
+    }
+  ]
+}

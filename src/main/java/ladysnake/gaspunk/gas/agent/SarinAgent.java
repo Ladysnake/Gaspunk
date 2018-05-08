@@ -1,11 +1,12 @@
 package ladysnake.gaspunk.gas.agent;
 
 import ladysnake.gaspunk.api.IBreathingHandler;
+import ladysnake.pathos.api.ISickness;
 import net.minecraft.entity.EntityLivingBase;
 
 public class SarinAgent extends LingeringAgent {
-    public SarinAgent() {
-        super(true, true);
+    public SarinAgent(ISickness sickness) {
+        super(true, true, sickness);
     }
 
     @Override

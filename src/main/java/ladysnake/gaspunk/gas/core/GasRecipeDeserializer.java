@@ -12,7 +12,7 @@ import ladysnake.gaspunk.item.ItemGasTube;
 import net.minecraft.init.Items;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.potion.PotionType;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
@@ -25,6 +25,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.commons.io.FilenameUtils;
 
@@ -40,8 +41,9 @@ import java.nio.file.StandardOpenOption;
 public class GasRecipeDeserializer {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    @SubscribeEvent
-    public static void loadRecipes(RegistryEvent.Register<IRecipe> event) {
+    // needs to register after gases, so use PotionType register event as well
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void loadRecipes(RegistryEvent.Register<PotionType> event) {
         ModContainer gaspunkContainer = Loader.instance().activeModContainer();
         Loader.instance().getActiveModList().forEach(GasRecipeDeserializer::loadRecipes);
         Loader.instance().setActiveModContainer(gaspunkContainer);
