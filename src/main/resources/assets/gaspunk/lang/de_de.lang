@@ -30,5 +30,5 @@ item.gaspunk.grenade_belt.name=Granatengürtel
 item.gaspunk.smoke_powder.name=Rauchpulver
 item.gaspunk.sulfur.name=Schwefel
 itemGroup.gaspunk=Gaspunk
-sickness.gaspunk.sarin_gas=Atembeschwerden
-sickness.gaspunk.tear_gas=Augenirritationen
+sickness.gaspunk.lung_control_loss=Atembeschwerden
+sickness.gaspunk.eye_irritation=Augenirritationen

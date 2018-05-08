@@ -1,10 +1,12 @@
 package ladysnake.gaspunk.init;
 
 import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.sickness.SicknessSarin;
+import ladysnake.gaspunk.sickness.SicknessTearGas;
 import ladysnake.pathos.Pathos;
 import ladysnake.pathos.api.ISickness;
-import ladysnake.pathos.sickness.Sickness;
 import ladysnake.pathos.api.SicknessEffect;
+import ladysnake.pathos.sickness.Sickness;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
@@ -18,7 +20,8 @@ import net.minecraftforge.registries.RegistryBuilder;
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
 public class ModSicknesses {
 
-    public static final ISickness TEAR_GAS = null;
+    public static final ISickness EYE_IRRITATION = null;
+    public static final ISickness LUNG_CONTROL_LOSS = null;
 
     @SubscribeEvent
     public static void addRegistries(RegistryEvent.NewRegistry event) {
@@ -39,5 +42,7 @@ public class ModSicknesses {
                 return true;
             }
         }.setRegistryName("none"));
+        event.getRegistry().register(new SicknessTearGas().setRegistryName("eye_irritation"));
+        event.getRegistry().register(new SicknessSarin().setRegistryName("lung_control_loss"));
     }
 }

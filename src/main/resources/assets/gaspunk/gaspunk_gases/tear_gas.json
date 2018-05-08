@@ -3,7 +3,7 @@
   "color": "0xAACCCCCC",
   "agents": [
     {
-      "agent": "gaspunk:tear_gas",
+      "agent": "gaspunk:lachrymator",
       "potency": 0.2
     }
   ]

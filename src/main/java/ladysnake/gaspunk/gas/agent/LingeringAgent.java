@@ -1,7 +1,7 @@
 package ladysnake.gaspunk.gas.agent;
 
 import ladysnake.gaspunk.api.IBreathingHandler;
-import ladysnake.gaspunk.gas.GasAgents;
+import ladysnake.pathos.api.ISickness;
 import ladysnake.pathos.api.SicknessEffect;
 import ladysnake.pathos.capability.CapabilitySickness;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,10 +12,12 @@ import net.minecraft.entity.EntityLivingBase;
 public class LingeringAgent extends GasAgent {
 
     protected boolean ignoreBreath;
+    protected ISickness sickness;
 
-    public LingeringAgent(boolean toxic, boolean ignoreBreath) {
+    public LingeringAgent(boolean toxic, boolean ignoreBreath, ISickness sickness) {
         super(toxic);
         this.ignoreBreath = ignoreBreath;
+        this.sickness = sickness;
     }
 
     /**
@@ -30,7 +32,7 @@ public class LingeringAgent extends GasAgent {
      * @param potency       the potency of the gas carrying this agent
      */
     public void addEffectToEntity(EntityLivingBase entity, float concentration, float potency) {
-        CapabilitySickness.getHandler(entity).ifPresent(h -> h.addSickness(new SicknessEffect(GasAgents.LINGERING_EFFECTS.get(this), (potency * concentration) / 20)));
+        CapabilitySickness.getHandler(entity).ifPresent(h -> h.addSickness(new SicknessEffect(this.sickness, (potency * concentration) / 20)));
     }
 
     @Override
@@ -39,4 +41,7 @@ public class LingeringAgent extends GasAgent {
             addEffectToEntity(entity, concentration, potency);
     }
 
+    public ISickness getSickness() {
+        return sickness;
+    }
 }

@@ -1,18 +1,15 @@
 package ladysnake.gaspunk.init;
 
 import com.google.common.collect.ImmutableList;
-import ladylib.registration.AutoRegister;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.gas.GasAgents;
 import ladysnake.gaspunk.gas.SuspendableGas;
-import ladysnake.gaspunk.gas.core.GasFactories;
 import ladysnake.gaspunk.gas.core.GasParticleTypes;
 import ladysnake.gaspunk.gas.core.GasTypes;
-import ladysnake.pathos.api.ISickness;
-import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumDyeColor;
+import net.minecraft.potion.PotionType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -34,10 +31,6 @@ public class ModGases {
      * Is initialized to null to replace null checks
      */
     public static final Gas AIR = null;
-    @AutoRegister(GasPunk.MOD_ID)
-    public static final Gas HEALING_VAPOR = GasFactories.createGasPotion(MobEffects.REGENERATION, 230, 1);
-    @AutoRegister(GasPunk.MOD_ID)
-    public static final Gas SARIN_GAS = new SuspendableGas(GasTypes.GAS, 0x00FFFFFF, GasAgents.NERVE, 0.8F);
 
     /* The gases below are generated in json files */
     public static final Gas SMOKE = AIR;
@@ -56,17 +49,13 @@ public class ModGases {
     }
 
     @SubscribeEvent
-    public static void addGases(RegistryEvent.Register<IGas> event) {
-        event.getRegistry().register(new Gas(GasTypes.GAS, GasParticleTypes.GAS, 0x99FFFFFF, 0xAA0033FF, ImmutableList.of(), new String[0]).setRegistryName("air"));
+    public static void addGases(RegistryEvent.Register<PotionType> event) {
+        REGISTRY.register(new SuspendableGas(GasTypes.GAS, 0x00FFFFFF, GasAgents.getAgent(new ResourceLocation(GasPunk.MOD_ID, "nerve")), 0.8F).setRegistryName("sarin_gas"));
+        REGISTRY.register(new Gas(GasTypes.GAS, GasParticleTypes.GAS, 0x99FFFFFF, 0xAA0033FF, ImmutableList.of(), new String[0]).setRegistryName("air"));
         for (EnumDyeColor color : EnumDyeColor.values()) {
             // this is probably illegal in 53 states but I didn't want to parse the value back from the table
-            event.getRegistry().register(new Gas(GasTypes.SMOKE,  0xFF000000 | (int) ReflectionHelper.getPrivateValue(EnumDyeColor.class, color, "colorValue", "field_193351_w")).setRegistryName("colored_smoke_" + color.getName()));
+            REGISTRY.register(new Gas(GasTypes.SMOKE,  0xFF000000 | (int) ReflectionHelper.getPrivateValue(EnumDyeColor.class, color, "colorValue", "field_193351_w")).setRegistryName("colored_smoke_" + color.getName()));
         }
-    }
-
-    @SubscribeEvent
-    public static void addPotions(RegistryEvent.Register<ISickness> event) {
-        GasAgents.LINGERING_EFFECTS.values().forEach(event.getRegistry()::register);
     }
 
     @SubscribeEvent

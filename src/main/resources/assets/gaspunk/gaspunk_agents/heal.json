@@ -1,0 +1,6 @@
+{
+  "factory": "potion",
+  "duration": 230,
+  "amplifier": 1,
+  "potion": "minecraft:regeneration"
+}

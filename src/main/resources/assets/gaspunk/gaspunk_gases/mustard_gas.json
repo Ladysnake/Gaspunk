@@ -3,11 +3,11 @@
   "color": "0xFFB4A000",
   "agents": [
     {
-      "agent": "gaspunk:toxic_smoke",
+      "agent": "gaspunk:pulmonary",
       "potency": 0.2
     },
     {
-      "agent": "gaspunk:tear_gas",
+      "agent": "gaspunk:lachrymator",
       "potency": 0.3
     }
   ]
