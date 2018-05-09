@@ -20,7 +20,7 @@ public class GasUtil {
             .build(CacheLoader.from(GasUtil::computeDistance));
 
     /**
-     * Gets the minimum distance in air blocks between start and goal <br/>
+     * Gets the minimum distance in air blocks between start and goal <br>
      * Information may be outdated by up to a second but gases don't update instantly irl either
      *
      * @param world                  the world in which the gas is

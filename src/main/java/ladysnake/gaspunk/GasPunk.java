@@ -40,7 +40,7 @@ public class GasPunk {
     public static final String VERSION = "@VERSION@";
 
     public static final String DEPENDENCIES =
-            "after:jei;after:baubles;after:thaumcraft";
+            "required-after:forge@[14.23.3.2669,);after:jei;after:baubles;after:thaumcraft";
 
     @SidedProxy(
             modId = GasPunk.MOD_ID,

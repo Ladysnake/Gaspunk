@@ -42,7 +42,7 @@ minecraft {
     // Use non-default mappings at your own risk. they may not always work.
     // simply re-run your setup task after changing the mappings to update your workspace.
     mappings = project.mcpVersion
-    makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+//    makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     replace '@VERSION@', modVersion
     // use findProperty instead of a direct reference to prevent gradle failure when the property does not exist
     replace '@FINGERPRINT@', project.findProperty('signSHA1')
@@ -106,7 +106,6 @@ dependencies {
     testCompile "org.mockito:mockito-core:2.+"
     deobfCompile "com.azanor.baubles:Baubles:1.12-1.5.2"
     deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}:api"
-    runtime "mezz.jei:jei_${mc_version}:${jei_version}"
     deobfCompile "thaumcraft:Thaumcraft:${mc_version}:${tc_version}"
     deobfCompile 'com.github.Pyrofab:Ladylib:cf9b9f425f'
     contained 'com.github.Pyrofab:Ladylib:cf9b9f425f'
@@ -130,6 +129,27 @@ processResources {
         exclude "mcmod.info"
     }
 }
+
+task apiJar(type: Jar) {
+    from sourceSets.api.output
+    from sourceSets.api.allJava
+    classifier 'api'
+}
+
+javadoc {
+    source sourceSets.main.allJava
+    source sourceSets.api.allJava
+    source sourceSets.pathos.allJava
+}
+
+// Javadoc jar
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from javadoc.destinationDir
+    classifier = 'javadoc'
+}
+
+build.dependsOn(apiJar)
+build.dependsOn(javadocJar)
 
 jar {
     archiveName = "${archivesBaseName}-${mc_version}-${modVersion}.jar"

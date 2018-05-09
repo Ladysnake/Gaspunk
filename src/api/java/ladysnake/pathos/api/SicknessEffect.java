@@ -26,7 +26,7 @@ public class SicknessEffect {
     }
 
     /**
-     * Creates a new sickness effect with the provided properties. <br/>
+     * Creates a new sickness effect with the provided properties. <br>
      * This constructor is intended to be used for deserialization purposes
      *
      * @param sickness the sickness proxied by this effect
@@ -88,7 +88,7 @@ public class SicknessEffect {
     }
 
     /**
-     * Affects the passed in entity with the disease. <br/>
+     * Affects the passed in entity with the disease. <br>
      * Also resets <code>ticksSinceLastPerform</code> if the effect was performed correctly by the proxied sickness
      *
      * @param carrier the entity being affected
@@ -125,11 +125,12 @@ public class SicknessEffect {
     }
 
     /**
-     * Called when this effect is about to be removed from the entity's list of active sicknesses <br/>
+     * Called when this effect is about to be removed from the entity's list of active sicknesses <br>
      * This method is generally called when the effect's <code>severity</code> falls to 0
      *
      * @param carrier the entity afflicted by this effect
-     * @see ladysnake.pathos.api.event.SicknessEvent.SicknessCureEvent*
+     *                
+     * @see ladysnake.pathos.api.event.SicknessEvent.SicknessCureEvent
      */
     public void onCured(EntityLivingBase carrier) {
         this.sickness.onCured(this, carrier);

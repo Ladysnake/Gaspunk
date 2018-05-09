@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 public interface IGasParticleType {
 
     /**
-     * Returns the texture used by particles emanating from gas clouds of this type. <br/>
+     * Returns the texture used by particles emanating from gas clouds of this type. <br>
      * The texture will be automatically registered in the sprite map
      */
     @Nonnull

@@ -108,7 +108,7 @@ public class Gas extends AbstractGas {
     }
 
     @Override
-    public void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick) {
+    public void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick, boolean forced) {
         agents.forEach(agent -> agent.getAgent().applyEffect(entity, handler, concentration, firstTick, agent.getPotency()));
     }
 

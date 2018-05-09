@@ -32,7 +32,7 @@ public class SicknessEvent extends LivingEvent {
     }
 
     /**
-     * Fired when an entity gets afflicted by a new sickness effect <br/>
+     * Fired when an entity gets afflicted by a new sickness effect <br>
      *
      * The merge function is used if another effect of the same type already afflicts the entity
      * <p>This event is {@link Cancelable}. If it is cancelled, the sickness effect will not be added</p>

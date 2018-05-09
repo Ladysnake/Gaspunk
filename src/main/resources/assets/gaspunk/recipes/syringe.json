@@ -6,7 +6,7 @@
   ],
   "key": {
     "B": {
-      "item": "glass_bottle"
+      "item": "minecraft:glass_bottle"
     },
     "I": {
       "type": "forge:ore_dict",

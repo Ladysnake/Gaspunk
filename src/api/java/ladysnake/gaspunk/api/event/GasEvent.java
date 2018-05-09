@@ -43,7 +43,7 @@ public class GasEvent extends LivingEvent {
     }
 
     /**
-     * Fired when an entity starts breathing a gas that it wasn't breathing the previous tick <br/>
+     * Fired when an entity starts breathing a gas that it wasn't breathing the previous tick <br>
      * This event is fired in addition to {@link GasTickEvent}. It will always be fired before the latter.
      */
     public static class GasEnterEvent extends GasEvent {
@@ -53,8 +53,8 @@ public class GasEvent extends LivingEvent {
     }
 
     /**
-     * Fired when an entity gets affected by a gas <br/>
-     * This event is {@link Cancelable}. If it is cancelled, the gas effect will not be applied this tick <br/>
+     * Fired when an entity gets affected by a gas <br>
+     * This event is {@link Cancelable}. If it is cancelled, the gas effect will not be applied this tick <br>
      */
     @Cancelable
     public static class GasTickEvent extends GasEvent {
@@ -64,8 +64,8 @@ public class GasEvent extends LivingEvent {
     }
 
     /**
-     * Fired when an entity is no longer affected by a gas <br/>
-     * This event is {@link Cancelable]. If it is cancelled, the gas effect will persist for one more tick
+     * Fired when an entity is no longer affected by a gas <br>
+     * This event is {@link Cancelable}. If it is cancelled, the gas effect will persist for one more tick
      */
     @Cancelable
     public static class ExitGasCloudEvent extends GasEvent {
@@ -76,7 +76,7 @@ public class GasEvent extends LivingEvent {
 
     /**
      * GasImmunityEvent is fired whenever an entity checks whether they're affected by surrounding gases
-     * in {@link IBreathingHandler#isImmune(IGas, float)}. <br/>
+     * in {@link IBreathingHandler#isImmune(IGas, float)}. <br>
      */
     public static class GasImmunityEvent extends GasEvent {
         private boolean immune;

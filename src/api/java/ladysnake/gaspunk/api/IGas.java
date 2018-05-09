@@ -18,9 +18,9 @@ import java.util.List;
 
 /**
  * A gas that can be used in a gas grenade and affect entities that breath it.
- * <p>A gas has a {@link IGasType} which defines graphical properties for the tube and the cloud,<br/>
+ * <p>A gas has a {@link IGasType} which defines graphical properties for the tube and the cloud,<br>
  * a {@link IGasParticleType} which defines particle texture and density used by the cloud</p>
- * <p>Implementations should extend {@link IForgeRegistryEntry.Impl}. <br/>
+ * <p>Implementations should extend {@link IForgeRegistryEntry.Impl}. <br>
  * For an existing implementation you can extend, see <code>ladysnake.gaspunk.Gas</code>.
  */
 public interface IGas extends IForgeRegistryEntry<IGas> {
@@ -33,7 +33,8 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
     boolean isToxic();
 
     /**
-     * Called each tick to affect entities inside a gas cloud
+     * Called each tick to affect entities inside a gas cloud.
+     * Delegates to {@link #applyEffect(EntityLivingBase, IBreathingHandler, float, boolean, boolean)}.
      *
      * @param entity        the entity breathing this gas
      * @param handler       the entity's breathing handler
@@ -41,6 +42,19 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
      * @param firstTick     true if this entity was not affected by this gas during the previous tick
      */
     default void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick) {
+        applyEffect(entity, handler, concentration, firstTick, false);
+    }
+
+    /**
+     * Called each tick to affect entities inside a gas cloud
+     *
+     * @param entity        the entity breathing this gas
+     * @param handler       the entity's breathing handler
+     * @param concentration the concentration of this gas in the air breathed by the entity
+     * @param firstTick     true if this entity was not affected by this gas during the previous tick
+     * @param forced        true if this gas should apply its effect without checking any prerequisite
+     */
+    default void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick, boolean forced) {
         // NO-OP
     }
 
