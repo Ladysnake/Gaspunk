@@ -2,6 +2,7 @@ package ladysnake.gaspunk;
 
 import ladylib.LadyLib;
 import ladysnake.gaspunk.api.customization.IHasSkin;
+import ladysnake.gaspunk.compat.ThaumcraftCompat;
 import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.util.SpecialRewardChecker;
 import ladysnake.pathos.Pathos;
@@ -9,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
@@ -38,8 +40,7 @@ public class GasPunk {
     public static final String VERSION = "@VERSION@";
 
     public static final String DEPENDENCIES =
-            "after:jei;" +
-                    "after:baubles;";
+            "after:jei;after:baubles;after:thaumcraft";
 
     @SidedProxy(
             modId = GasPunk.MOD_ID,
@@ -81,6 +82,8 @@ public class GasPunk {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit();
+        if (Loader.isModLoaded("thaumcraft"))
+            ThaumcraftCompat.registerAspects();
     }
 
     @Mod.EventHandler

@@ -93,11 +93,6 @@ public class SicknessTests {
     }
 
     @Test
-    public void testLingeringAssociation() {
-        assertNotNull(((LingeringAgent) NERVE).getSickness());
-    }
-
-    @Test
     public void testSarinTick() {
         IBreathingHandler handler = CapabilityBreathing.getHandler(mockedCreeper).get();
         handler.setConcentration(SARIN_GAS, 0.5f);
