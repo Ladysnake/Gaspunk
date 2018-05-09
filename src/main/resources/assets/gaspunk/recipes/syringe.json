@@ -1,0 +1,19 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "B",
+    "I"
+  ],
+  "key": {
+    "B": {
+      "item": "glass_bottle"
+    },
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "nuggetIron"
+    }
+  },
+  "result": {
+    "item": "gaspunk:empty_syringe"
+  }
+}
