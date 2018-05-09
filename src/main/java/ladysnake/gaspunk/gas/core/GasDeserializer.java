@@ -4,8 +4,11 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.api.AbstractGas;
 import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.api.IGasAgent;
+import ladysnake.gaspunk.api.basetype.GasParticleTypes;
+import ladysnake.gaspunk.api.basetype.GasTypes;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.gas.GasAgents;
 import ladysnake.gaspunk.init.ModGases;
@@ -28,7 +31,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Objects;
 
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
-public class GasDeserializer extends TypeAdapter<Gas> {
+public class GasDeserializer extends TypeAdapter<AbstractGas> {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -75,7 +78,7 @@ public class GasDeserializer extends TypeAdapter<Gas> {
     }
 
     @Override
-    public void write(JsonWriter out, Gas value) throws IOException {
+    public void write(JsonWriter out, AbstractGas value) throws IOException {
         out.beginObject();
         if (value.getType() instanceof GasTypes) {
             GasTypes type = (GasTypes) value.getType();
@@ -114,8 +117,8 @@ public class GasDeserializer extends TypeAdapter<Gas> {
     }
 
     @Override
-    public Gas read(JsonReader in) throws IOException {
-        Gas.Builder builder = new Gas.Builder();
+    public AbstractGas read(JsonReader in) throws IOException {
+        AbstractGas.Builder builder = AbstractGas.builder();
         in.beginObject();
         while (in.hasNext()) {
             String name = in.nextName();
@@ -144,7 +147,7 @@ public class GasDeserializer extends TypeAdapter<Gas> {
         return builder.build();
     }
 
-    private void parseTooltip(JsonReader in, Gas.Builder builder) throws IOException {
+    private void parseTooltip(JsonReader in, AbstractGas.Builder builder) throws IOException {
         in.beginArray();
         while (in.hasNext())
             builder.addTooltipLine(in.nextString());
@@ -161,7 +164,7 @@ public class GasDeserializer extends TypeAdapter<Gas> {
         }
     }
 
-    private void parseAgents(JsonReader in, Gas.Builder builder) throws IOException {
+    private void parseAgents(JsonReader in, AbstractGas.Builder builder) throws IOException {
         in.beginArray();
         while (in.hasNext()) {
             IGasAgent agent = null;

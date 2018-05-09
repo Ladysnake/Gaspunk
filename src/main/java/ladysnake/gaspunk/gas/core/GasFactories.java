@@ -1,5 +1,6 @@
 package ladysnake.gaspunk.gas.core;
 
+import ladysnake.gaspunk.api.basetype.GasTypes;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.gas.GasAgents;
 import net.minecraft.potion.Potion;

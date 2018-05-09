@@ -17,42 +17,6 @@ version = modVersion
 group = modGroup
 archivesBaseName = modBaseName
 
-/* * * * LadyLib-specific integration * * * */
-ext.ladylibJava = "./Ladylib/java"
-ext.ladylibResources = "./Ladylib/resources"
-
-sourceSets {
-    main {
-        java {
-            srcDir project.ladylibJava
-        }
-        resources {
-            srcDir project.ladylibResources
-        }
-    }
-}
-
-reobfJar {
-    // prevents classloading issues when multiple mods shade ladylib
-    addExtraSrgLine "PK: ladylib ladysnake/${modBaseName}/ladylib"
-}
-
-task initSubmodules(type: Exec) {
-    if (new File('LadyLib').exists()) {
-        commandLine 'git', 'submodule', 'init'
-    } else {
-        commandLine 'git', 'submodule', 'add', 'https://github.com/Pyrofab/LadyLib.git', 'LadyLib'
-    }
-}
-
-task updateSubmodules(type: Exec) {
-    commandLine 'git', 'submodule', 'update'
-}
-
-updateSubmodules.dependsOn(initSubmodules)
-setupDecompWorkspace.dependsOn(updateSubmodules)
-/* * * * * * * * * * * * * * * * * * * * * * */
-
 sourceSets {
     pathos {
         compileClasspath = main.compileClasspath
@@ -110,6 +74,9 @@ repositories {
     mavenCentral()
     jcenter()
     maven {
+        url 'https://jitpack.io'
+    }
+    maven {
         // location of the maven that hosts JEI files
         name = "Progwml6 maven"
         url = "http://dvs1.progwml6.com/files/maven"
@@ -129,13 +96,20 @@ repositories {
     }
 }
 
+configurations {
+    contained
+    contained.transitive = false
+}
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile "org.mockito:mockito-core:2.+"
     deobfCompile "com.azanor.baubles:Baubles:1.12-1.5.2"
     deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}:api"
-    deobfCompile "thaumcraft:Thaumcraft:${mc_version}:${tc_version}"
     runtime "mezz.jei:jei_${mc_version}:${jei_version}"
+    deobfCompile "thaumcraft:Thaumcraft:${mc_version}:${tc_version}"
+    deobfCompile 'com.github.Pyrofab:Ladylib:cf9b9f425f'
+    contained 'com.github.Pyrofab:Ladylib:cf9b9f425f'
 }
 
 processResources {
@@ -163,9 +137,14 @@ jar {
     from sourceSets.main.output
     from sourceSets.pathos.output
 
+    from(configurations.contained.files) {
+        include '*'
+        into 'META-INF/libraries'
+    }
+
     manifest {
         attributes([
-//                'ContainedDeps' : coreJar.archivePath.name,
+                'ContainedDeps': configurations.contained.files.collect { it.name }.join(" "),
                 'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}",
                 'Timestamp'     : System.currentTimeMillis()
         ])

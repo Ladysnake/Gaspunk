@@ -1,7 +1,7 @@
 package ladysnake.gaspunk.client.particle;
 
 import ladylib.client.particle.SpecialParticle;
-import ladysnake.gaspunk.gas.core.GasParticleTypes;
+import ladysnake.gaspunk.api.basetype.GasParticleTypes;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 

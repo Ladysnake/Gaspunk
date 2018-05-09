@@ -3,12 +3,12 @@ package net.minecraft.entity;
 
 import ladysnake.gaspunk.api.IBreathingHandler;
 import ladysnake.gaspunk.api.IGasAgent;
+import ladysnake.gaspunk.api.basetype.GasTypes;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.gas.GasAgents;
 import ladysnake.gaspunk.gas.SuspendableGas;
 import ladysnake.gaspunk.gas.agent.LingeringAgent;
 import ladysnake.gaspunk.gas.core.CapabilityBreathing;
-import ladysnake.gaspunk.gas.core.GasTypes;
 import ladysnake.gaspunk.init.ModSicknesses;
 import ladysnake.pathos.api.ISicknessHandler;
 import ladysnake.pathos.api.SicknessEffect;

@@ -27,12 +27,13 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.awt.image.ColorModel;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * An implementation of {@link IGas} that delegates its effect to one or more gas agents
@@ -40,10 +41,20 @@ import java.util.List;
  */
 @JsonAdapter(GasDeserializer.class)
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
-public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
+public class Gas extends AbstractGas {
     public static final ResourceLocation GAS_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/vapor_overlay.png");
     public static final ResourceLocation NOISE_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/noise.png");
     public static final ResourceLocation OVERLAY_SHADER = new ResourceLocation(GasPunk.MOD_ID, "gas_overlay");
+
+    static {
+        try {
+            Field f = AbstractGas.class.getDeclaredField("builderSupplier");
+            f.setAccessible(true);
+            f.set(null, (Supplier) Builder::new);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            GasPunk.LOGGER.error("Error while setting the builderSupplier in the api", e);
+        }
+    }
 
     @SubscribeEvent
     public static void onShaderRegistry(ShaderRegistryEvent event) {
@@ -60,6 +71,7 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
                 .distinct()
                 .forEach(event.getMap()::registerSprite);
     }
+
 
     protected final IGasType type;
     protected final IGasParticleType particleType;
@@ -142,10 +154,12 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
             tooltip.add(TextFormatting.DARK_GRAY + "" + this.getRegistryName());
     }
 
+    @Override
     public ImmutableList<AgentEffect> getAgents() {
         return agents;
     }
 
+    @Override
     public String[] getTooltipLines() {
         return tooltipLines;
     }
@@ -187,26 +201,7 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
-    public static class AgentEffect {
-        private final IGasAgent agent;
-        private final float potency;
-
-        public AgentEffect(IGasAgent agent, float potency) {
-            this.agent = agent;
-            this.potency = potency;
-        }
-
-        public IGasAgent getAgent() {
-            return agent;
-        }
-
-        public float getPotency() {
-            return potency;
-        }
-    }
-
-    @SuppressWarnings("UnusedReturnValue")
-    public static final class Builder {
+    public static final class Builder implements AbstractGas.Builder {
         private IGasType type;
         private IGasParticleType particleType;
         private int color;
@@ -215,36 +210,43 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
         private ImmutableList.Builder<AgentEffect> agents = ImmutableList.builder();
         private List<String> tooltipLines = new ArrayList<>();
 
+        @Override
         public Builder setType(IGasType type) {
             this.type = type;
             return this;
         }
 
+        @Override
         public Builder setParticleType(IGasParticleType type) {
             this.particleType = type;
             return this;
         }
 
+        @Override
         public Builder setColor(int color) {
             this.color = color;
             return this;
         }
 
+        @Override
         public Builder setBottleColor(int color) {
             this.bottleColor = color;
             return this;
         }
 
+        @Override
         public Builder addAgent(IGasAgent agent, float potency) {
             agents.add(new AgentEffect(agent, potency));
             return this;
         }
 
+        @Override
         public Builder addTooltipLine(String tooltipLine) {
             tooltipLines.add(tooltipLine);
             return this;
         }
 
+        @Override
         public Gas build() {
             if (type == null) throw new IllegalStateException("gas type not provided");
             return new Gas(
@@ -253,7 +255,7 @@ public class Gas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
                     color,
                     bottleColor == null ? color : bottleColor,
                     agents.build(),
-                    tooltipLines.toArray(new String[tooltipLines.size()])
+                    tooltipLines.toArray(new String[0])
             );
         }
     }
