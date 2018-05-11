@@ -5,5 +5,11 @@
   "particleType": "CANDYFLOSS",
   "tooltipLines": [
     "gas.gaspunk.candyfloss.tooltip"
+  ],
+  "agents": [
+    {
+      "agent": "gaspunk:candyfloss",
+      "potency": 1.0
+    }
   ]
 }

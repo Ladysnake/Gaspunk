@@ -5,9 +5,11 @@ import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.api.basetype.GasParticleTypes;
 import ladysnake.gaspunk.api.basetype.GasTypes;
+import ladysnake.gaspunk.api.event.AgentRegistryEvent;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.gas.GasAgents;
 import ladysnake.gaspunk.gas.SuspendableGas;
+import ladysnake.gaspunk.gas.agent.CandyflossAgent;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.potion.PotionType;
 import net.minecraft.util.ResourceLocation;
@@ -46,6 +48,11 @@ public class ModGases {
                 .setName(new ResourceLocation(GasPunk.MOD_ID, "gases"))
                 .setDefaultKey(new ResourceLocation("air"))
                 .create();
+    }
+
+    @SubscribeEvent
+    public static void addAgents(AgentRegistryEvent event) {
+        event.register("candyfloss", new CandyflossAgent());
     }
 
     @SubscribeEvent

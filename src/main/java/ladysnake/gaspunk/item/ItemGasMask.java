@@ -2,6 +2,7 @@ package ladysnake.gaspunk.item;
 
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
+import baubles.common.Baubles;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.client.model.ModelGasMask;
 import mcjty.needtobreathe.NeedToBreathe;
@@ -27,7 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-@Optional.Interface(iface = "baubles.api.IBauble", modid = "baubles", striprefs = true)
+@Optional.Interface(iface = "baubles.api.IBauble", modid = Baubles.MODID, striprefs = true)
 @Optional.Interface(iface = "mcjty.needtobreathe.api", modid = NeedToBreathe.MODID, striprefs = true)
 public class ItemGasMask extends ItemArmor implements IBauble, IProtectiveHelmet {
 
