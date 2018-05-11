@@ -14,8 +14,8 @@ public class DamageAgent extends GasAgent {
     }
 
     @Override
-    public void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick, float potency) {
-        if (handler.getAirSupply() <= 0)
+    public void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick, float potency, boolean forced) {
+        if (forced || handler.getAirSupply() <= 0)
             entity.attackEntityFrom(DamageSource.DROWN, potency * maxDamage);
     }
 }

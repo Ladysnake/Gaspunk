@@ -25,6 +25,19 @@ public interface IGasAgent {
      * @param potency       the potency of the agent in the gas
      */
     default void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick, float potency) {
+        applyEffect(entity, handler, concentration, firstTick, potency, false);
+    }
+
+    /**
+     * Called each tick to affect entities inside a gas cloud
+     *  @param entity        the entity breathing this gas
+     * @param handler       the entity's breathing handler
+     * @param concentration the concentration of this gas in the air breathed by the entity
+     * @param firstTick     true if this entity was not affected by this gas during the previous tick
+     * @param potency       the potency of the agent in the gas
+     * @param forced        true if this agent should apply its effect without checking any prerequisite
+     */
+    default void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick, float potency, boolean forced) {
         // NO-OP
     }
 

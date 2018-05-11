@@ -107,6 +107,8 @@ dependencies {
     deobfCompile "com.azanor.baubles:Baubles:1.12-1.5.2"
     deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}:api"
     deobfCompile "thaumcraft:Thaumcraft:${mc_version}:${tc_version}"
+    deobfCompile "need-to-breathe:needtobreathe:1.12:0.1.4beta"
+    deobfCompile "mcjtylib:mcjtylib:1.12:2.6.7"
     deobfCompile 'com.github.Pyrofab:Ladylib:cf9b9f425f'
     contained 'com.github.Pyrofab:Ladylib:cf9b9f425f'
 }

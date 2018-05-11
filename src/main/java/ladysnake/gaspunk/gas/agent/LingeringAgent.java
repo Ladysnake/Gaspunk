@@ -36,8 +36,8 @@ public class LingeringAgent extends GasAgent {
     }
 
     @Override
-    public void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick, float potency) {
-        if (ignoreBreath || handler.getAirSupply() <= 0)
+    public void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick, float potency, boolean forced) {
+        if (forced || ignoreBreath || handler.getAirSupply() <= 0)
             addEffectToEntity(entity, concentration, potency);
     }
 
