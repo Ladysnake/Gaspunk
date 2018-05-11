@@ -4,6 +4,9 @@ import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.client.model.ModelGasMask;
+import mcjty.needtobreathe.NeedToBreathe;
+import mcjty.needtobreathe.api.IProtectiveHelmet;
+import mcjty.needtobreathe.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.model.ModelBiped;
@@ -25,7 +28,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 
 @Optional.Interface(iface = "baubles.api.IBauble", modid = "baubles", striprefs = true)
-public class ItemGasMask extends ItemArmor implements IBauble {
+@Optional.Interface(iface = "mcjty.needtobreathe.api", modid = NeedToBreathe.MODID, striprefs = true)
+public class ItemGasMask extends ItemArmor implements IBauble, IProtectiveHelmet {
 
     private static final ResourceLocation GAS_MASK_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/gas_mask_overlay.png");
 
@@ -75,4 +79,13 @@ public class ItemGasMask extends ItemArmor implements IBauble {
     }
 
 
+    @Override
+    public boolean isActive(EntityPlayer entityPlayer) {
+        return true;
+    }
+
+    @Override
+    public int getReducedPoison(EntityPlayer entityPlayer, int poison) {
+        return (int)((float)poison * Config.PROTECTIVE_HELMET_FACTOR);
+    }
 }
