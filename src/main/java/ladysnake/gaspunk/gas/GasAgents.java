@@ -35,7 +35,7 @@ public class GasAgents {
         MinecraftForge.EVENT_BUS.post(new AgentRegistryEvent(registry));
         registry.forEach((rl, ag) -> {
             if (ag instanceof GasAgent && ag.getUnlocalizedName() == null) {
-                ((GasAgent) ag).setUnlocalizedName(rl.toString().replace(':', '.'));
+                ((GasAgent) ag).setUnlocalizedName("agent." + rl.toString().replace(':', '.'));
             }
             AGENT_MAP.put(rl, ag);
         });
