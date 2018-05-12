@@ -48,7 +48,15 @@ public class GasDeserializer extends TypeAdapter<AbstractGas> {
                 Files.walk(configFolder.toPath()).forEach(path -> loadGases(configFolder.toPath(), path));
             } else if (configFolder.exists()) {
                 // generate an example gas file
-                IGas exampleGas = new Gas.Builder().addAgent(GasAgents.getAgent(new ResourceLocation(GasPunk.MOD_ID, "lachrymator")), 0.5f).addAgent(GasAgents.getAgent(new ResourceLocation(GasPunk.MOD_ID, "nerve")), 0.375f).setColor(0x55CAFE66).setBottleColor(0x75DADD10).setType(GasTypes.GAS).build();
+                IGas exampleGas = new Gas.Builder()
+                        .addAgent(GasAgents.getAgent(new ResourceLocation(GasPunk.MOD_ID, "lachrymator")), 0.5f)
+                        .addAgent(GasAgents.getAgent(new ResourceLocation(GasPunk.MOD_ID, "nerve")), 0.375f)
+                        .setColor(0x55CAFE66)
+                        .setBottleColor(0x75DADD10)
+                        .setType(GasTypes.GAS)
+                        .addTooltipLine("For more examples, check the technical wiki:")
+                        .addTooltipLine("https://github.com/Ladysnake/Gaspunk/wiki")
+                        .build();
                 Files.write(configFolder.toPath().resolve("_example.json"), GSON.toJson(exampleGas).getBytes(), StandardOpenOption.CREATE_NEW);
             }
         } catch (IOException e) {
