@@ -29,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 
 @Optional.Interface(iface = "baubles.api.IBauble", modid = Baubles.MODID, striprefs = true)
-@Optional.Interface(iface = "mcjty.needtobreathe.api", modid = NeedToBreathe.MODID, striprefs = true)
+@Optional.Interface(iface = "mcjty.needtobreathe.api.IProtectiveHelmet", modid = NeedToBreathe.MODID, striprefs = true)
 public class ItemGasMask extends ItemArmor implements IBauble, IProtectiveHelmet {
 
     private static final ResourceLocation GAS_MASK_TEX_PATH = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/gas_mask_overlay.png");
