@@ -10,15 +10,18 @@ import ladysnake.gaspunk.gas.SuspendableGas;
 import ladysnake.gaspunk.gas.agent.LingeringAgent;
 import ladysnake.gaspunk.gas.core.CapabilityBreathing;
 import ladysnake.gaspunk.init.ModSicknesses;
+import ladysnake.gaspunk.sickness.SicknessSarin;
 import ladysnake.pathos.api.ISicknessHandler;
 import ladysnake.pathos.api.SicknessEffect;
 import ladysnake.pathos.capability.CapabilitySickness;
+import ladysnake.pathos.sickness.Sickness;
 import net.minecraft.entity.ai.attributes.AbstractAttributeMap;
 import net.minecraft.entity.ai.attributes.AttributeMap;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.init.Bootstrap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import org.junit.Before;
@@ -33,9 +36,8 @@ import static org.mockito.Mockito.*;
 @SuppressWarnings("ConstantConditions")
 public class SicknessTests {
 
-    private static final IGasAgent NERVE = GasAgents.createSicknessAgent("sarin_gas", true, true, ModSicknesses.LUNG_CONTROL_LOSS);
-    public static final Gas SARIN_GAS = new SuspendableGas(GasTypes.GAS, 0x00FFFFFF, NERVE, 0.8F);
-    private EntityCreeper mockedCreeper;
+    private static final IGasAgent NERVE = GasAgents.createSicknessAgent("sarin_gas", true, true, new ResourceLocation("lung_control_loss"));
+    private static final Gas SARIN_GAS = new SuspendableGas(GasTypes.GAS, 0x00FFFFFF, NERVE, 0.8F);
 
     static {
         Launch.blackboard = new HashMap<>();
@@ -47,7 +49,11 @@ public class SicknessTests {
         CapabilityBreathing.CAPABILITY_BREATHING = (Capability<IBreathingHandler>) mock(Capability.class);
         //noinspection unchecked
         CapabilitySickness.CAPABILITY_SICKNESS = (Capability<ISicknessHandler>) mock(Capability.class);
+        ModSicknesses.addRegistries(null);
+        Sickness.REGISTRY.register(new SicknessSarin().setRegistryName("lung_control_loss"));
     }
+
+    private EntityCreeper mockedCreeper;
 
     @Before
     public void setUp() {

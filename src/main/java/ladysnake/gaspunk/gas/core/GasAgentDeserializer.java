@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import ladysnake.gaspunk.GasPunk;
-import net.minecraft.potion.PotionType;
+import ladysnake.gaspunk.api.IGas;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Loader;
@@ -27,9 +27,9 @@ public class GasAgentDeserializer {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    // register with potion types as potions need to already be registered
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void loadGasAgents(RegistryEvent.Register<PotionType> event) {
+    // need to register those before gases
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void loadGasAgents(RegistryEvent.Register<IGas> event) {
         ModContainer gaspunkContainer = Loader.instance().activeModContainer();
         Loader.instance().getActiveModList().forEach(GasAgentDeserializer::loadGasAgents);
         Loader.instance().setActiveModContainer(gaspunkContainer);

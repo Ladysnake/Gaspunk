@@ -1,17 +1,20 @@
 package ladysnake.gaspunk.gas.agent;
 
 import ladysnake.gaspunk.api.IGasAgent;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import ladysnake.gaspunk.gas.GasAgents;
+import net.minecraft.util.ResourceLocation;
 
 public class GasAgent implements IGasAgent {
-    private boolean toxic;
+    protected boolean toxic;
     private String unlocalizedName;
 
     public GasAgent(boolean toxic) {
         this.toxic = toxic;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isToxic() {
         return toxic;
@@ -22,11 +25,18 @@ public class GasAgent implements IGasAgent {
     }
 
     /**
-     * @return the unlocalized name for this gas agent
-     * @see Item#getUnlocalizedName()
-     * @see Block#getUnlocalizedName()
+     * {@inheritDoc}
      */
     public String getUnlocalizedName() {
         return unlocalizedName;
+    }
+
+    public ResourceLocation getRegistryName() {
+        return GasAgents.getId(this);
+    }
+
+    @Override
+    public String toString() {
+        return getLocalizedName();
     }
 }

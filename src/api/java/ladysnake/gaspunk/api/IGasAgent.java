@@ -1,7 +1,9 @@
 package ladysnake.gaspunk.api;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -57,5 +59,10 @@ public interface IGasAgent {
         return I18n.format(getUnlocalizedName());
     }
 
+    /**
+     * @return the unlocalized name for this gas agent
+     * @see Item#getUnlocalizedName()
+     * @see Block#getUnlocalizedName()
+     */
     String getUnlocalizedName();
 }

@@ -10,8 +10,6 @@ import ladysnake.gaspunk.gas.agent.DamageAgent;
 import ladysnake.gaspunk.gas.agent.GasAgent;
 import ladysnake.gaspunk.gas.agent.LingeringAgent;
 import ladysnake.gaspunk.gas.agent.PotionAgent;
-import ladysnake.pathos.api.ISickness;
-import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -21,13 +19,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
 public class GasAgents {
 
     // not a registry to avoid adding too much network load, and because gases are already synchronized
-    public static final BiMap<ResourceLocation, IGasAgent> AGENT_MAP = HashBiMap.create();
+    private static final BiMap<ResourceLocation, IGasAgent> AGENT_MAP = HashBiMap.create();
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onRegistryRegister(RegistryEvent.Register<IGas> event) {
@@ -47,18 +44,18 @@ public class GasAgents {
         return ret;
     }
 
-    public static IGasAgent createPotionAgent(String name, int potionDuration, int potionAmplifier, Potion potion) {
+    public static IGasAgent createPotionAgent(String name, int potionDuration, int potionAmplifier, ResourceLocation potion) {
         IGasAgent ret = name(new PotionAgent(potion, potionDuration, potionAmplifier), "potion");
         AGENT_MAP.put(new ResourceLocation(GasPunk.MOD_ID, name), ret);
         return ret;
     }
 
-    public static IGasAgent createSicknessAgent(String name, boolean toxic, boolean ignoreBreath, ISickness sickness) {
-        return createSicknessAgent(name, () -> new LingeringAgent(toxic, ignoreBreath, sickness), sickness);
+    public static IGasAgent createSicknessAgent(String name, boolean toxic, boolean ignoreBreath, ResourceLocation sickness) {
+        return createSicknessAgent(name, new LingeringAgent(toxic, ignoreBreath, sickness));
     }
 
-    public static IGasAgent createSicknessAgent(String name, Supplier<LingeringAgent> agentSupplier, ISickness sickness) {
-        LingeringAgent agent = name(agentSupplier.get(), name);
+    private static IGasAgent createSicknessAgent(String name, LingeringAgent agent) {
+        name(agent, name);
         ResourceLocation id = new ResourceLocation(GasPunk.MOD_ID, name);
         AGENT_MAP.put(id, agent);
         return agent;

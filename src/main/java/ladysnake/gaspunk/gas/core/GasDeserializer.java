@@ -12,7 +12,6 @@ import ladysnake.gaspunk.api.basetype.GasTypes;
 import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.gas.GasAgents;
 import ladysnake.gaspunk.init.ModGases;
-import net.minecraft.potion.PotionType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
@@ -35,9 +34,8 @@ public class GasDeserializer extends TypeAdapter<AbstractGas> {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    // needs to register after gas agents, so use PotionType register event as well
     @SubscribeEvent
-    public static void loadGases(RegistryEvent.Register<PotionType> event) {
+    public static void loadGases(RegistryEvent.Register<IGas> event) {
         ModContainer gaspunkContainer = Loader.instance().activeModContainer();
         Loader.instance().getActiveModList().forEach(GasDeserializer::loadGases);
         Loader.instance().setActiveModContainer(gaspunkContainer);

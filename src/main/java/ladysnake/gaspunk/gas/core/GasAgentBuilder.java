@@ -1,9 +1,7 @@
 package ladysnake.gaspunk.gas.core;
 
 import ladysnake.gaspunk.gas.GasAgents;
-import ladysnake.pathos.sickness.Sickness;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +26,7 @@ public class GasAgentBuilder {
                         name,
                         Boolean.valueOf(params.get("toxic")),
                         Boolean.valueOf(params.get("ignoreBreath")),
-                        Sickness.REGISTRY.getValue(new ResourceLocation(params.get("sickness")))
+                        new ResourceLocation(params.get("sickness"))
                 );
                 break;
             case "damage":
@@ -39,7 +37,7 @@ public class GasAgentBuilder {
                         name,
                         Integer.valueOf(params.get("duration")),
                         Integer.valueOf(params.get("amplifier")),
-                        ForgeRegistries.POTIONS.getValue(new ResourceLocation(params.get("potion")))
+                        new ResourceLocation(params.get("potion"))
                 );
                 break;
             default:

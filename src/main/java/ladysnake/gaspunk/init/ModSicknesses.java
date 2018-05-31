@@ -21,7 +21,6 @@ import net.minecraftforge.registries.RegistryBuilder;
 public class ModSicknesses {
 
     public static final ISickness EYE_IRRITATION = null;
-    public static final ISickness LUNG_CONTROL_LOSS = null;
 
     @SubscribeEvent
     public static void addRegistries(RegistryEvent.NewRegistry event) {
