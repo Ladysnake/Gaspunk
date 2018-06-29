@@ -18,6 +18,7 @@ public abstract class AbstractGas extends IForgeRegistryEntry.Impl<IGas> impleme
     /**
      * Returns a new builder. The generated builder is an implementation of {@link Builder} using references
      * to internal classes.
+     * @return a new gas builder
      */
     @Nonnull
     public static Builder builder() {

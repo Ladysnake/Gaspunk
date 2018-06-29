@@ -14,6 +14,7 @@ public interface IGasAgent {
 
     /**
      * Whether this gas type suffocates entities by default (can be overridden by individual gases)
+     * @return true if this gas is toxic
      */
     boolean isToxic();
 

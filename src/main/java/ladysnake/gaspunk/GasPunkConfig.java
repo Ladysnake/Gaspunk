@@ -32,8 +32,6 @@ public class GasPunkConfig {
         @Config.Comment({"Display a custom overlay when inside a gas cloud", "combine with useShaders for a dynamically generated overlay"})
         public boolean renderGasOverlays = false;
 
-        @Config.Comment("The maximum amount of particles that should be displayed on the screen at the same time")
-        public int maxParticles = 500;
     }
 
     @SubscribeEvent

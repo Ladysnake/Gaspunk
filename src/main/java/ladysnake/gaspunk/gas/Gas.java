@@ -2,8 +2,8 @@ package ladysnake.gaspunk.gas;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.JsonAdapter;
-import ladylib.client.ShaderRegistryEvent;
-import ladylib.client.ShaderUtil;
+import ladylib.client.shader.ShaderRegistryEvent;
+import ladylib.client.shader.ShaderUtil;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.GasPunkConfig;
 import ladysnake.gaspunk.api.*;
@@ -65,7 +65,7 @@ public class Gas extends AbstractGas {
     @SideOnly(Side.CLIENT)
     public static void onTextureStitch(TextureStitchEvent.Pre event) {
         // gets every possible particle texture from registered gases and register them as sprites
-        ModGases.REGISTRY.getValues().stream()
+        ModGases.REGISTRY.getValuesCollection().stream()
                 .map(IGas::getParticleType)
                 .map(IGasParticleType::getParticleTexture)
                 .distinct()

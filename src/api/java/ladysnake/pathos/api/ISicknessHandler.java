@@ -7,6 +7,7 @@ import java.util.function.BiFunction;
 public interface ISicknessHandler {
 
     /**
+     * @param sickness a registered sickness
      * @return true if this handler is afflicted with an effect of the same type as passed in argument
      */
     boolean isSicknessActive(ISickness sickness);

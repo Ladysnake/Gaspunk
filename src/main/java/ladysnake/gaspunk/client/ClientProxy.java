@@ -1,8 +1,8 @@
 package ladysnake.gaspunk.client;
 
+import ladylib.LadyLib;
 import ladysnake.gaspunk.CommonProxy;
 import ladysnake.gaspunk.GasPunk;
-import ladysnake.gaspunk.GasPunkConfig;
 import ladysnake.gaspunk.api.IGasParticleType;
 import ladysnake.gaspunk.api.customization.GrenadeSkins;
 import ladysnake.gaspunk.client.particle.ParticleGasSmoke;
@@ -31,7 +31,6 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
-        GasPunk.lib.getClientHandler().getParticleManager().setMaxParticlesConfig(() -> GasPunkConfig.client.maxParticles);
     }
 
     @Override
@@ -62,7 +61,7 @@ public class ClientProxy extends CommonProxy {
                 double posZ = z + world.rand.nextGaussian() * radX % radX;
                 ParticleGasSmoke particle = new ParticleGasSmoke(world, posX, posY, posZ, r, g, b, a, (float) (55 + 20 * world.rand.nextGaussian()));
                 particle.setTexture(texture.getParticleTexture());
-                GasPunk.lib.getClientHandler().getParticleManager().addParticle(particle);
+                LadyLib.getParticleManager().addParticle(particle);
             }
         }
     }

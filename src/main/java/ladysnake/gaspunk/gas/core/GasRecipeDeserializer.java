@@ -45,7 +45,7 @@ public class GasRecipeDeserializer {
         ModContainer gaspunkContainer = Loader.instance().activeModContainer();
         Loader.instance().getActiveModList().forEach(GasRecipeDeserializer::loadRecipes);
         Loader.instance().setActiveModContainer(gaspunkContainer);
-        File configFolder = new File(GasPunk.lib.getConfigFolder(), GasPunk.MOD_ID + "/custom_recipes");
+        File configFolder = new File(Loader.instance().getConfigDir(), GasPunk.MOD_ID + "/custom_recipes");
         // if the config folder was just created or couldn't be created, no need to search it
         try {
             if (!configFolder.mkdirs() && configFolder.exists()) {

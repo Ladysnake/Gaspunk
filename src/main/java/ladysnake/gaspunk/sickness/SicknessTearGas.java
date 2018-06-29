@@ -59,8 +59,7 @@ public class SicknessTearGas extends SicknessGas {
 
     /**
      * This class has been adapted from Blur's source code under MIT License
-     * https://github.com/tterrag1098/Blur/blob/master/src/main/java/com/tterrag/blur/Blur.java
-     * <p>
+     * https://github.com/tterrag1098/Blur/blob/master/src/main/java/com/tterrag/blur/Blur.java<br>
      * <p>See <em>notice.md</em> in assets/minecraft/shaders</p>
      *
      * @author tterag

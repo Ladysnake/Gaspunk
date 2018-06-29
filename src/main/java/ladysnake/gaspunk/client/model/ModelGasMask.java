@@ -451,6 +451,10 @@ public class ModelGasMask extends ModelBiped {
 
     /**
      * This is a helper function from Tabula to set the rotation of model parts
+     * @param modelRenderer the model renderer being used
+     * @param x a rotation angle
+     * @param y a rotation angle
+     * @param z a rotation angle
      */
     public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
         modelRenderer.rotateAngleX = x;

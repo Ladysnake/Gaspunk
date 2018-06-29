@@ -29,6 +29,8 @@ public class SpecialRewardChecker {
 
     /**
      * Checks if the given uuid is known to LadySnake's special rewards page
+     * @param uuid a player's uuid
+     * @return true if the player has rewards
      */
     public static boolean isSpecialPerson(UUID uuid) {
         return specialPersons.containsKey(uuid);
@@ -45,6 +47,8 @@ public class SpecialRewardChecker {
 
     /**
      * Sets the skin choice for the player associated with the given connection
+     * @param playerHandler a player connection
+     * @param skin a grenade skin unlocked by the player
      */
     public static void setSelectedGrenadeSkin(NetHandlerPlayServer playerHandler, GrenadeSkins skin) {
         // check that the player does have the selected reward
@@ -57,6 +61,7 @@ public class SpecialRewardChecker {
      * If the player has multiple grenade skin available, gets the one he selected in his config.
      * Defaults to <code>GrenadeSkins.NONE</code> if the player does not have special skins or has selected an invalid one somehow
      *
+     * @param player an in-game player
      * @return the grenade skin selected by this player
      */
     public static GrenadeSkins getSelectedSkin(EntityPlayer player) {

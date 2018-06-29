@@ -39,7 +39,7 @@ public class GasDeserializer extends TypeAdapter<AbstractGas> {
         ModContainer gaspunkContainer = Loader.instance().activeModContainer();
         Loader.instance().getActiveModList().forEach(GasDeserializer::loadGases);
         Loader.instance().setActiveModContainer(gaspunkContainer);
-        File configFolder = new File(GasPunk.lib.getConfigFolder(), GasPunk.MOD_ID + "/custom_gases");
+        File configFolder = new File(Loader.instance().getConfigDir(), GasPunk.MOD_ID + "/custom_gases");
         // if the config folder was just created or couldn't be created, no need to search it
         try {
             if (!configFolder.mkdirs() && configFolder.exists()) {

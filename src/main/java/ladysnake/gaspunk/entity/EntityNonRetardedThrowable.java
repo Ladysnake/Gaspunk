@@ -92,7 +92,7 @@ public abstract class EntityNonRetardedThrowable extends Entity implements IProj
     }
 
     /**
-     * Similar to setArrowHeading, it's point the throwable entity to a x, y, z direction.
+     * Similar to setArrowHeading, it points the throwable entity to a x, y, z direction.
      */
     public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
         float f = MathHelper.sqrt(x * x + y * y + z * z);

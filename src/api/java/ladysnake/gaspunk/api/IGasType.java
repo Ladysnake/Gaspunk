@@ -8,6 +8,7 @@ public interface IGasType {
      * This id is used by the item model for gas tubes and grenades.
      * If a value that does not exist in the default <code>GasTypes</code> is given, the model file will need to be overridden.
      * </p>
+     * @return the gas type identifier
      */
     int getId();
 

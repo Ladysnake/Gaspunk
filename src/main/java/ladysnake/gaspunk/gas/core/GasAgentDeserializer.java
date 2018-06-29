@@ -33,7 +33,7 @@ public class GasAgentDeserializer {
         ModContainer gaspunkContainer = Loader.instance().activeModContainer();
         Loader.instance().getActiveModList().forEach(GasAgentDeserializer::loadGasAgents);
         Loader.instance().setActiveModContainer(gaspunkContainer);
-        File configFolder = new File(GasPunk.lib.getConfigFolder(), GasPunk.MOD_ID + "/custom_agents");
+        File configFolder = new File(Loader.instance().getConfigDir(), GasPunk.MOD_ID + "/custom_agents");
         // if the config folder was just created or couldn't be created, no need to search it
         try {
             if (!configFolder.mkdirs() && configFolder.exists()) {

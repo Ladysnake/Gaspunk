@@ -1,10 +1,8 @@
 package ladysnake.gaspunk.client.model;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.entity.Entity;
 
 import javax.annotation.Nullable;
@@ -219,6 +217,10 @@ public class ModelBandoulier extends ModelBiped {
 
     /**
      * This is a helper function from Tabula to set the rotation of model parts
+     * @param modelRenderer the model renderer being used
+     * @param x a rotation angle
+     * @param y a rotation angle
+     * @param z a rotation angle
      */
     public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
         modelRenderer.rotateAngleX = x;

@@ -37,6 +37,7 @@ public class GasEvent extends LivingEvent {
 
     /**
      * Gets the concentration of the gas in the air breathed by the entity
+     * @return a gas concentration normally between 0 and 1
      */
     public float getConcentration() {
         return concentration;

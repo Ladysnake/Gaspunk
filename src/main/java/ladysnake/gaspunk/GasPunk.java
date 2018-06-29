@@ -1,5 +1,6 @@
 package ladysnake.gaspunk;
 
+import ladylib.LLibContainer;
 import ladylib.LadyLib;
 import ladysnake.gaspunk.api.customization.IHasSkin;
 import ladysnake.gaspunk.compat.ThaumcraftCompat;
@@ -51,17 +52,18 @@ public class GasPunk {
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-    public static LadyLib lib;
+    @LadyLib.LLInstance
+    public static LLibContainer lib;
 
     public static final CreativeTabs CREATIVE_TAB = new GasPunkTabs();
 
     /**
      * This is the first initialization event. Register tile entities here.
      * The registry events below will have fired prior to entry to this method.
+     * @param event the event signaling pre-initialization
      */
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        lib = LadyLib.initLib(event);
         lib.setCreativeTab(CREATIVE_TAB);
         proxy.preInit(event);
         Pathos.preInit(event);
@@ -69,6 +71,7 @@ public class GasPunk {
 
     /**
      * This is the second initialization event. Register custom recipes
+     * @param event the event signaling initialization
      */
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
@@ -78,6 +81,7 @@ public class GasPunk {
 
     /**
      * This is the final initialization event. Register actions from other mods here
+     * @param event the event signaling post-initialization
      */
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {

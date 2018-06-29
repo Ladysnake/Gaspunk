@@ -102,6 +102,9 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
     /**
      * Called during {@link net.minecraftforge.client.event.RenderGameOverlayEvent.Pre} if the <tt>renderGasOverlay</tt>
      * configuration option is set to true
+     * @param concentration the gas concentration in the surrounding area
+     * @param partialTicks client's partial ticks
+     * @param resolution the screen's current resolution
      */
     @SideOnly(Side.CLIENT)
     void renderOverlay(float concentration, float partialTicks, ScaledResolution resolution);
@@ -118,6 +121,10 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
 
     /**
      * Can be used to control tooltips on item stacks containing this gas
+     * @param stack the container item
+     * @param worldIn the world in which is the tooltip is rendered
+     * @param tooltip the list of tooltip lines
+     * @param flagIn tooltip rendering properties
      *
      * @see Item#addInformation(ItemStack, World, List, ITooltipFlag)
      */
