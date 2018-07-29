@@ -112,7 +112,9 @@ dependencies {
     deobfProvided "thaumcraft:Thaumcraft:${mc_version}:${tc_version}"
     deobfProvided "com.github.BluSunrize:ImmersiveEngineering:0.12-84"
     compileOnly "need-to-breathe:needtobreathe:1.12:0.1.4beta"
+    testRuntime "need-to-breathe:needtobreathe:1.12:0.1.4beta"
     compileOnly "mcjtylib:mcjtylib:1.12:2.6.7"
+    testRuntime "mcjtylib:mcjtylib:1.12:2.6.7"
     deobfCompile 'com.github.Pyrofab:Ladylib:2.1'
     contained 'com.github.Pyrofab:Ladylib:2.1'
 }
