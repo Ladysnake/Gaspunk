@@ -1,5 +1,11 @@
 {
   "result": "gaspunk:candyfloss",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "candymod"
+    }
+  ],
   "input": {
     "gas": "gaspunk:smoke"
   },
