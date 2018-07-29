@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.logging.log4j.message.FormattedMessage;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -77,8 +78,8 @@ public class GasDeserializer extends TypeAdapter<AbstractGas> {
         try (BufferedReader reader = Files.newBufferedReader(file)) {
             Gas gas = GSON.fromJson(reader, Gas.class);
             ModGases.REGISTRY.register(gas.setRegistryName(name));
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            GasPunk.LOGGER.error(new FormattedMessage("Error trying to load a gas from file {}", file), e);
         }
         return true;
     }
