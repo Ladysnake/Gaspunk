@@ -56,6 +56,11 @@ public class Gas extends AbstractGas {
         }
     }
 
+    /**
+     * Called during {@link net.minecraftforge.fml.common.event.FMLPreInitializationEvent} to make sure the class is loaded
+     */
+    public static void classInit() { }
+
     @SubscribeEvent
     public static void onShaderRegistry(ShaderRegistryEvent event) {
         event.registerShader(OVERLAY_SHADER);

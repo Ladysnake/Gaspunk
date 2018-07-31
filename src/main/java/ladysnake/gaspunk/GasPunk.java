@@ -4,6 +4,7 @@ import ladylib.LLibContainer;
 import ladylib.LadyLib;
 import ladysnake.gaspunk.api.customization.IHasSkin;
 import ladysnake.gaspunk.compat.ThaumcraftCompat;
+import ladysnake.gaspunk.gas.Gas;
 import ladysnake.gaspunk.init.ModItems;
 import ladysnake.gaspunk.util.SpecialRewardChecker;
 import ladysnake.pathos.Pathos;
@@ -67,6 +68,7 @@ public class GasPunk {
         lib.setCreativeTab(CREATIVE_TAB);
         proxy.preInit(event);
         Pathos.preInit(event);
+        Gas.classInit();
     }
 
     /**

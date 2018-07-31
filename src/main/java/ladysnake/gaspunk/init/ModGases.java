@@ -30,7 +30,6 @@ public class ModGases {
 
     /**
      * The default gas, does nothing. Is actually water vapor in game
-     * Is initialized to null to replace null checks
      */
     public static final Gas AIR = null;
 
