@@ -53,8 +53,10 @@ public class GasPunk {
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-    @LadyLib.LLInstance
-    public static LLibContainer lib;
+    @LadyLib.LLInstance(GasPunk.MOD_ID)
+    private static LLibContainer gaspunkLib;
+    @LadyLib.LLInstance(Pathos.MOD_ID)
+    private static LLibContainer pathosLib;
 
     public static final CreativeTabs CREATIVE_TAB = new GasPunkTabs();
 
@@ -65,9 +67,9 @@ public class GasPunk {
      */
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        lib.setCreativeTab(CREATIVE_TAB);
+        gaspunkLib.setCreativeTab(CREATIVE_TAB);
+        pathosLib.setCreativeTab(CREATIVE_TAB);
         proxy.preInit(event);
-        Pathos.preInit(event);
         Gas.classInit();
     }
 
@@ -78,7 +80,7 @@ public class GasPunk {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         proxy.init();
-        Pathos.init(event);
+//        Pathos.init(event);
     }
 
     /**
@@ -107,7 +109,7 @@ public class GasPunk {
 
         @Nonnull
         @SideOnly(Side.CLIENT)
-        public ItemStack getTabIconItem() {
+        public ItemStack createIcon() {
             return new ItemStack(ModItems.GRENADE);
         }
 

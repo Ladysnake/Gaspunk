@@ -110,9 +110,10 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
     void renderOverlay(float concentration, float partialTicks, ScaledResolution resolution);
 
     /**
+     * TODO 1.13 change to <code>getTranslationKey</code>
      * @return the unlocalized name for this gas
-     * @see Item#getUnlocalizedName()
-     * @see Block#getUnlocalizedName()
+     * @see Item#getTranslationKey()
+     * @see Block#getTranslationKey()
      */
     default String getUnlocalizedName() {
         // pattern : gas.<modid>.<name>

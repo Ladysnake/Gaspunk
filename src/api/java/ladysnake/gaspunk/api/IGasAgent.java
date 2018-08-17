@@ -61,9 +61,10 @@ public interface IGasAgent {
     }
 
     /**
+     * TODO 1.13 change to <code>getUnlocalizedName</code>
      * @return the unlocalized name for this gas agent
-     * @see Item#getUnlocalizedName()
-     * @see Block#getUnlocalizedName()
+     * @see Item#getTranslationKey() ()
+     * @see Block#getTranslationKey()
      */
     String getUnlocalizedName();
 }

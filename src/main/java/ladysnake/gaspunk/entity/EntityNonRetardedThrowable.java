@@ -77,6 +77,12 @@ public abstract class EntityNonRetardedThrowable extends Entity implements IProj
 
     /**
      * Sets throwable heading based on an entity that's throwing it
+     * @param entityThrower the thrower
+     * @param rotationPitchIn projectile's rotation pitch
+     * @param rotationYawIn projectile's rotation yaw
+     * @param pitchOffset projectile's pitch offset
+     * @param velocity the shooting velocity
+     * @param inaccuracy the inaccuracy of the aim
      */
     public void shoot(Entity entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity, float inaccuracy) {
         float f = -MathHelper.sin(rotationYawIn * 0.017453292F) * MathHelper.cos(rotationPitchIn * 0.017453292F);
@@ -93,6 +99,11 @@ public abstract class EntityNonRetardedThrowable extends Entity implements IProj
 
     /**
      * Similar to setArrowHeading, it points the throwable entity to a x, y, z direction.
+     * @param x shooting vector x component
+     * @param y shooting vector y component
+     * @param z shooting vector z component
+     * @param velocity the shooting velocity
+     * @param inaccuracy the inaccuracy of the aim
      */
     public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
         float f = MathHelper.sqrt(x * x + y * y + z * z);
@@ -117,6 +128,9 @@ public abstract class EntityNonRetardedThrowable extends Entity implements IProj
 
     /**
      * Updates the entity motion clientside, called by packets from the server
+     * @param x x velocity
+     * @param y y velocity
+     * @param z z velocity
      */
     @SideOnly(Side.CLIENT)
     public void setVelocity(double x, double y, double z) {
@@ -254,6 +268,7 @@ public abstract class EntityNonRetardedThrowable extends Entity implements IProj
 
     /**
      * Gets the amount of gravity to apply to the thrown entity with each tick.
+     * @return velocity imparted by gravity
      */
     protected float getGravityVelocity() {
         return 0.03F;
@@ -261,11 +276,13 @@ public abstract class EntityNonRetardedThrowable extends Entity implements IProj
 
     /**
      * Called when this EntityThrowable hits a block or entity.
+     * @param result what the entity hit
      */
     protected abstract void onImpact(RayTraceResult result);
 
     /**
      * (abstract) Protected helper method to write subclass entity data to NBT.
+     * @param compound a nbt compound to write to
      */
     public void writeEntityToNBT(@Nonnull NBTTagCompound compound) {
         compound.setInteger("xTile", this.xTile);
@@ -283,6 +300,7 @@ public abstract class EntityNonRetardedThrowable extends Entity implements IProj
 
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
+     * @param compound a nbt compound to read from
      */
     public void readEntityFromNBT(@Nonnull NBTTagCompound compound) {
         this.xTile = compound.getInteger("xTile");

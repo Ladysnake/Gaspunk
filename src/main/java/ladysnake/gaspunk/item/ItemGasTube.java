@@ -54,7 +54,7 @@ public class ItemGasTube extends Item {
     public String getItemStackDisplayName(@Nonnull ItemStack stack) {
         // use the deprecated I18n as the method can be called on both sides
         return net.minecraft.util.text.translation.I18n.translateToLocalFormatted(
-                getUnlocalizedName() + ".name",
+                getTranslationKey() + ".name",
                 net.minecraft.util.text.translation.I18n.translateToLocalFormatted(getContainedGas(stack).getUnlocalizedName())
         );
     }

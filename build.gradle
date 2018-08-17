@@ -12,6 +12,8 @@ buildscript {
 }
 
 apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: "signing"
+apply plugin: "maven"
 
 version = modVersion
 group = modGroup
@@ -110,11 +112,11 @@ dependencies {
     deobfProvided "com.azanor.baubles:Baubles:1.12-1.5.2"
     deobfProvided "mezz.jei:jei_${mc_version}:${jei_version}:api"
     deobfProvided "thaumcraft:Thaumcraft:${mc_version}:${tc_version}"
-    deobfProvided "com.github.BluSunrize:ImmersiveEngineering:0.12-84"
+//    deobfProvided "com.github.BluSunrize:ImmersiveEngineering:0.12-84"
     deobfCompile "need-to-breathe:needtobreathe:1.12:0.1.4beta"
     deobfCompile "mcjtylib:mcjtylib:1.12:2.6.7"
-    deobfCompile 'com.github.Pyrofab:Ladylib:2.1'
-    contained 'com.github.Pyrofab:Ladylib:2.1'
+    deobfCompile 'com.github.Ladysnake:Ladylib:cf50ce0f4e'
+    contained 'com.github.Ladysnake:Ladylib:2.1'
 }
 
 processResources {
@@ -142,6 +144,12 @@ task apiJar(type: Jar) {
     classifier 'api'
 }
 
+task pathosJar(type: Jar) {
+    from sourceSets.pathos.output
+    from sourceSets.pathos.allJava
+    classifier 'pathos'
+}
+
 javadoc {
     source sourceSets.main.allJava
     source sourceSets.api.allJava
@@ -161,7 +169,10 @@ jar {
     archiveName = "${archivesBaseName}-${mc_version}-${modVersion}.jar"
     from sourceSets.api.output
     from sourceSets.main.output
-    from sourceSets.pathos.output
+    from(sourceSets.pathos.output) {
+        exclude "mcmod.info"
+        exclude "pack.mcmeta"
+    }
 
     from(configurations.contained.files) {
         include '*'
@@ -192,5 +203,14 @@ boolean canJarBeSigned() {
     return project.hasProperty('keyStore')
 }
 
+artifacts {
+    archives apiJar
+    archives sourceJar
+    archives pathosJar
+}
+
 // Runs this task automatically when build is ran.
 build.dependsOn signJar
+
+apply from: 'update_json.gradle'
+build.finalizedBy updateJson

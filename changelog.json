@@ -1,0 +1,16 @@
+{
+    "homepage": null,
+    "promos": {
+        "1.12.2-latest": "1.4.7",
+        "1.12.2-recommended": "1.4.7"
+    },
+    "1.12.2": {
+        "1.4.1": "Now requires forge 1.12.2-14.23.3.2669 or later\nAdded a few API features\n- added a way for add-ons to bypass a gas' checks when running its effect\n- exposed a few classes\nAlso now packages Ladylib as a contained dependency instead of shading the code like a caveman",
+        "1.4.2": "Additions / Changes:\n- Candyfloss clouds now are a lot more nutritious ! They aren't as easily breathable though.\n- Made the gas mask work as a Need to Breathe protective helmet\nApi changes:\n- Made the gas bypass bypass agents checks as well\nAlso check out UpcraftLP's new add-on, Gaspunk Inhaler !",
+        "1.4.3": "Fix a crash when Need to Breathe is not installed",
+        "1.4.4": "Removed an unlocalized tooltip line on candyfloss grenades and tubes.",
+        "1.4.5": "Update the contained library",
+        "1.4.6": "- Disabled candyfloss ore recipe when candyworld is not installed, fixes loading crash with Immersive Engineering\n- Gas loading errors are now more descriptive and don't crash. Check your logs if you make custom gases !",
+        "1.4.7": "- Fixed a startup crash on dedicated servers"
+    }
+}

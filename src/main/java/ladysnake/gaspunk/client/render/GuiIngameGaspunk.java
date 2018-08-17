@@ -17,7 +17,7 @@ public class GuiIngameGaspunk extends GuiIngameForge {
     }
 
     protected void renderAir(int width, int height) {
-        mc.mcProfiler.startSection("air");
+        mc.profiler.startSection("air");
         EntityPlayer player = (EntityPlayer) this.mc.getRenderViewEntity();
         if (player == null || player.isCreative()) return;
         float air = CapabilityBreathing.getHandler(player).orElseThrow(IllegalStateException::new).getAirSupply();
@@ -36,7 +36,7 @@ public class GuiIngameGaspunk extends GuiIngameForge {
         right_height += 10;
 
         GlStateManager.disableBlend();
-        mc.mcProfiler.endSection();
+        mc.profiler.endSection();
     }
 
 }
