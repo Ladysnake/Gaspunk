@@ -1,22 +1,21 @@
 package ladysnake.gaspunk.client.render;
 
-import ladysnake.gaspunk.entity.EntityGrenade;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.RenderSnowball;
-import net.minecraft.item.Item;
+import ladysnake.gaspunk.common.entity.GrenadeEntity;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class RenderGrenade extends RenderSnowball<EntityGrenade> {
-    public RenderGrenade(RenderManager renderManagerIn, Item itemIn, RenderItem itemRendererIn) {
-        super(renderManagerIn, itemIn, itemRendererIn);
+public class RenderGrenade extends FlyingItemEntityRenderer<GrenadeEntity> {
+    public RenderGrenade(EntityRenderDispatcher dispatcher, ItemRenderer itemRendererIn) {
+        super(dispatcher, itemRendererIn);
     }
 
     @Nonnull
     @Override
-    public ItemStack getStackToRender(EntityGrenade entityIn) {
-        return entityIn.getGrenade();
+    public ItemStack getStack(GrenadeEntity entityIn) {
+        return entityIn.getStack();
     }
 }

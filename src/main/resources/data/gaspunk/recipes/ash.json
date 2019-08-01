@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "minecraft:nether_wart"
+  },
+  "result": "gaspunk:ash",
+  "experience": 0.8,
+  "cookingtime": 200
+}

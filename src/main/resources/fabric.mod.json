@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "gaspunk",
+  "name": "${mod_name}",
+  "description": "Primitive chemical warfare",
+  "icon": "assets/gaspunk/textures/logo.png",
+  "version": "${version}",
+  "license": "${license}",
+
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "ladysnake.gaspunk.client.GaspunkClient"
+    ],
+    "main": [
+      "ladysnake.gaspunk.Gaspunk::INSTANCE"
+    ],
+    "modmenu": [
+      "ladysnake.gaspunk.common.compat.ModMenuCompat"
+    ]
+  },
+  "mixins": [
+    {
+      "environment": "client",
+      "config": "mixins.gaspunk.client.json"
+    },
+    {
+      "environment": "*",
+      "config": "mixins.gaspunk.common.json"
+    }
+  ],
+
+  "depends": {
+    "fabric": "*",
+    "autoconfig1": "*",
+    "cardinal-components-api": ">=2.0.0",
+    "cloth-config": "<=2.0.0",
+    "satin": "*"
+  }
+}

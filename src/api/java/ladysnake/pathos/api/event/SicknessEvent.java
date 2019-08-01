@@ -2,7 +2,7 @@ package ladysnake.pathos.api.event;
 
 import ladysnake.pathos.api.ISicknessHandler;
 import ladysnake.pathos.api.SicknessEffect;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
@@ -21,7 +21,7 @@ public class SicknessEvent extends LivingEvent {
     protected final ISicknessHandler sicknessHandler;
     protected final SicknessEffect effect;
 
-    public SicknessEvent(ISicknessHandler sicknessHandler, EntityLivingBase entity, SicknessEffect effect) {
+    public SicknessEvent(ISicknessHandler sicknessHandler, LivingEntity entity, SicknessEffect effect) {
         super(entity);
         this.sicknessHandler = sicknessHandler;
         this.effect = effect;
@@ -44,7 +44,7 @@ public class SicknessEvent extends LivingEvent {
 
         private BiFunction<SicknessEffect, SicknessEffect, SicknessEffect> mergeFunction;
 
-        public SicknessAddEvent(ISicknessHandler sicknessHandler, EntityLivingBase entity, SicknessEffect effect, BiFunction<SicknessEffect, SicknessEffect, SicknessEffect> mergeFunction) {
+        public SicknessAddEvent(ISicknessHandler sicknessHandler, LivingEntity entity, SicknessEffect effect, BiFunction<SicknessEffect, SicknessEffect, SicknessEffect> mergeFunction) {
             super(sicknessHandler, entity, effect);
             this.mergeFunction = mergeFunction;
         }
@@ -63,11 +63,11 @@ public class SicknessEvent extends LivingEvent {
      *
      * <p> This event is {@link Cancelable}. If it is cancelled, the sickness effect will not be performed for this tick</p>
      *
-     * @see SicknessEffect#performEffect(EntityLivingBase)
+     * @see SicknessEffect#performEffect(LivingEntity)
      */
     public static class SicknessTickEvent extends SicknessEvent {
 
-        public SicknessTickEvent(ISicknessHandler sicknessHandler, EntityLivingBase entity, SicknessEffect effect) {
+        public SicknessTickEvent(ISicknessHandler sicknessHandler, LivingEntity entity, SicknessEffect effect) {
             super(sicknessHandler, entity, effect);
         }
     }
@@ -80,7 +80,7 @@ public class SicknessEvent extends LivingEvent {
     @Cancelable
     public static class SicknessCureEvent extends SicknessEvent {
 
-        public SicknessCureEvent(ISicknessHandler sicknessHandler, EntityLivingBase entity, SicknessEffect effect) {
+        public SicknessCureEvent(ISicknessHandler sicknessHandler, LivingEntity entity, SicknessEffect effect) {
             super(sicknessHandler, entity, effect);
         }
     }

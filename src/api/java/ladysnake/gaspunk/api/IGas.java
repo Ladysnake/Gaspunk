@@ -2,13 +2,13 @@ package ladysnake.gaspunk.api;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nullable;
@@ -23,7 +23,7 @@ import java.util.List;
  * <p>Implementations should extend {@link IForgeRegistryEntry.Impl}. <br>
  * For an existing implementation you can extend, see <code>ladysnake.gaspunk.Gas</code>.
  */
-public interface IGas extends IForgeRegistryEntry<IGas> {
+public interface IGas {
 
     IGasType getType();
 
@@ -34,14 +34,14 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
 
     /**
      * Called each tick to affect entities inside a gas cloud.
-     * Delegates to {@link #applyEffect(EntityLivingBase, IBreathingHandler, float, boolean, boolean)}.
+     * Delegates to {@link #applyEffect(LivingEntity, IBreathingHandler, float, boolean, boolean)}.
      *
      * @param entity        the entity breathing this gas
      * @param handler       the entity's breathing handler
      * @param concentration the concentration of this gas in the air breathed by the entity
      * @param firstTick     true if this entity was not affected by this gas during the previous tick
      */
-    default void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick) {
+    default void applyEffect(LivingEntity entity, IBreathingHandler handler, float concentration, boolean firstTick) {
         applyEffect(entity, handler, concentration, firstTick, false);
     }
 
@@ -54,7 +54,7 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
      * @param firstTick     true if this entity was not affected by this gas during the previous tick
      * @param forced        true if this gas should apply its effect without checking any prerequisite
      */
-    default void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick, boolean forced) {
+    default void applyEffect(LivingEntity entity, IBreathingHandler handler, float concentration, boolean firstTick, boolean forced) {
         // NO-OP
     }
 
@@ -65,7 +65,7 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
      * @param entity  the entity that has stopped breathing this gas
      * @param handler the entity's breathing handler
      */
-    default void onExitCloud(EntityLivingBase entity, IBreathingHandler handler) {
+    default void onExitCloud(LivingEntity entity, IBreathingHandler handler) {
         // NO-OP
     }
 
@@ -106,7 +106,7 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
      * @param partialTicks client's partial ticks
      * @param resolution the screen's current resolution
      */
-    @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     void renderOverlay(float concentration, float partialTicks, ScaledResolution resolution);
 
     /**
@@ -127,10 +127,10 @@ public interface IGas extends IForgeRegistryEntry<IGas> {
      * @param tooltip the list of tooltip lines
      * @param flagIn tooltip rendering properties
      *
-     * @see Item#addInformation(ItemStack, World, List, ITooltipFlag)
+     * @see Item#appendTooltip(ItemStack, World, List, TooltipContext)
      */
-    @SideOnly(Side.CLIENT)
-    default void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+    @Environment(EnvType.CLIENT)
+    default void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, TooltipContext flagIn) {
         // NO-OP
     }
 

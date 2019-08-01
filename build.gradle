@@ -1,216 +1,162 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven {
-            name = "forge"
-            url = "https://files.minecraftforge.net/maven"
-        }
-    }
-    dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
-    }
+import net.fabricmc.loom.task.RemapJarTask
+
+import java.time.Year
+
+plugins {
+    id "fabric-loom" version "0.2.4-SNAPSHOT"
+    id "com.matthewprenger.cursegradle" version "1.1.2"
+    id "net.minecrell.licenser" version "0.2.1"
+    id "maven-publish"
 }
 
-apply plugin: "net.minecraftforge.gradle.forge"
-apply plugin: "signing"
-apply plugin: "maven"
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 
-version = modVersion
-group = modGroup
-archivesBaseName = modBaseName
+group = project.maven_group
+archivesBaseName = project.name.toLowerCase(Locale.ROOT)
+version = System.getenv("TRAVIS_TAG") ?: project.mod_version
+println("Setting version: " + version)
+
+apply from: "https://raw.githubusercontent.com/NerdHubMC/Gradle-Scripts/master/scripts/fabric/basic_project.gradle"
 
 sourceSets {
-    pathos {
-        compileClasspath = main.compileClasspath
-        runtimeClasspath = main.runtimeClasspath
-    }
-    main {
-        compileClasspath += pathos.output
-        runtimeClasspath += pathos.output
-    }
-    test {
-        compileClasspath += pathos.output
-        runtimeClasspath += pathos.output
-    }
-}
-
-minecraft {
-    version = "${project.forgeVersion}"
-    runDir = "run"
-
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not always work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = project.mcpVersion
-//    makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-    replace '@VERSION@', modVersion
-    // use findProperty instead of a direct reference to prevent gradle failure when the property does not exist
-    replace '@FINGERPRINT@', project.findProperty('signSHA1')
-
-    if (project.hasProperty('mc_username')) {
-        clientRunArgs += ['--username', "${project.mc_username}"]
-        if (project.hasProperty('mc_password')) {
-            clientRunArgs += ['--password=', "${project.mc_password}"]
-        }
-    }
-    if (project.hasProperty('mc_uuid')) {
-        clientRunArgs += ['--uuid', "${project.mc_uuid}"]
-    }
-    serverRunArgs += "nogui"
-
-    if (project.hasProperty('client_args')) {
-        clientJvmArgs += "${project.client_args}"
-    }
-    if (project.hasProperty('server_args')) {
-        serverJvmArgs += "${project.server_args}"
-    }
-
-    clientJvmArgs += "-Dlog4j.skipJansi=true"
-    serverJvmArgs += "-Dlog4j.skipJansi=true"
-
-}
-
-repositories {
-    mavenCentral()
-    jcenter()
-    maven {
-        url 'https://jitpack.io'
-    }
-    maven {
-        // location of the maven that hosts JEI files
-        name = "Progwml6 maven"
-        url = "http://dvs1.progwml6.com/files/maven"
-    }
-    maven {
-        // location of a maven mirror for JEI files, as a fallback
-        name = "ModMaven"
-        url = "modmaven.k-4u.nl"
-    }
-    maven {
-        name = "thiakil"    // Baubles
-        url = "http://maven.thiakil.com"
-    }
-    maven {
-        name 'Curseforge Maven' // Thaumcraft + IE
-        url 'https://minecraft.curseforge.com/api/maven/'
-    }
-    maven { // Albedo Lights (IE dep)
-        url 'https://repo.elytradev.com/'
-    }
-}
-
-configurations {
-    contained
-    contained.transitive = false
-}
-
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile "org.mockito:mockito-core:2.+"
-    deobfProvided "com.azanor.baubles:Baubles:1.12-1.5.2"
-    deobfProvided "mezz.jei:jei_${mc_version}:${jei_version}:api"
-    deobfProvided "thaumcraft:Thaumcraft:${mc_version}:${tc_version}"
-//    deobfProvided "com.github.BluSunrize:ImmersiveEngineering:0.12-84"
-    deobfCompile "need-to-breathe:needtobreathe:1.12:0.1.4beta"
-    deobfCompile "mcjtylib:mcjtylib:1.12:2.6.7"
-    deobfCompile 'com.github.Ladysnake:Ladylib:cf50ce0f4e'
-    contained 'com.github.Ladysnake:Ladylib:2.1'
+    pathos
+    api
 }
 
 processResources {
-    // this will ensure that this task is redone when the versions change.
+    // this will ensure that this task is redone when there"s a change
     inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
+    // replace stuff in fabric.mod.json, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include "mcmod.info"
+        include "fabric.mod.json"
 
-        // replace version and mcversion
-        expand "version": project.version, "mcversion": project.minecraft.version
+        // add mod metadata
+        expand "version": project.version , //"changelog_url": project.changelog_url,
+                "curseforge_id": project.curseforge_id, "license": project.license_header,
+                "mod_name": project.mod_name
+
     }
 
-    // copy everything else, thats not the mcmod.info
+    // copy everything else, that"s not the fabric.mod.json
     from(sourceSets.main.resources.srcDirs) {
-        exclude "mcmod.info"
+        exclude "fabric.mod.json"
     }
 }
 
-task apiJar(type: Jar) {
-    from sourceSets.api.output
-    from sourceSets.api.allJava
+task apiJar(type: Jar, dependsOn: classes) {
     classifier 'api'
+    from sourceSets.api.allJava
+    from (sourceSets.api.output) {
+        include "fabric.mod.json"
+        expand "version": project.version
+    }
+    from (sourceSets.api.output) {
+        exclude "fabric.mod.json"
+    }
 }
 
-task pathosJar(type: Jar) {
-    from sourceSets.pathos.output
-    from sourceSets.pathos.allJava
+task remapApiJar(type: RemapJarTask, dependsOn: project.apiJar) {
+    input = apiJar.archivePath
+    output = apiJar.archivePath
+    addNestedDependencies = false
+}
+
+task pathosJar(type: Jar, dependsOn: classes) {
     classifier 'pathos'
-}
-
-javadoc {
-    source sourceSets.main.allJava
-    source sourceSets.api.allJava
-    source sourceSets.pathos.allJava
-}
-
-// Javadoc jar
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    from javadoc.destinationDir
-    classifier = 'javadoc'
-}
-
-build.dependsOn(apiJar)
-build.dependsOn(javadocJar)
-
-jar {
-    archiveName = "${archivesBaseName}-${mc_version}-${modVersion}.jar"
-    from sourceSets.api.output
-    from sourceSets.main.output
-    from(sourceSets.pathos.output) {
-        exclude "mcmod.info"
-        exclude "pack.mcmeta"
+    from sourceSets.pathos.allJava
+    from (sourceSets.pathos.output) {
+        include "fabric.mod.json"
+        expand "version": project.version
     }
-
-    from(configurations.contained.files) {
-        include '*'
-        into 'META-INF/libraries'
-    }
-
-    manifest {
-        attributes([
-                'ContainedDeps': configurations.contained.files.collect { it.name }.join(" "),
-                'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}",
-                'Timestamp'     : System.currentTimeMillis()
-        ])
+    from (sourceSets.pathos.output) {
+        exclude "fabric.mod.json"
     }
 }
 
-task signJar(type: SignJar, dependsOn: reobfJar) {
-    if (canJarBeSigned()) {
-        keyStore = project.keyStore
-        alias = project.keyStoreAlias
-        storePass = project.keyStorePass
-        keyPass = project.keyStoreKeyPass
-        inputFile = jar.archivePath
-        outputFile = jar.archivePath
+task remapPathosJar(type: RemapJarTask, dependsOn: project.pathosJar) {
+    input = pathosJar.archivePath
+    output = pathosJar.archivePath
+    addNestedDependencies = false
+}
+
+repositories {
+    jcenter()
+    maven {
+        name = "NerdHubMC"
+        url = "https://maven.abusedmaster.xyz"
+    }
+    maven {
+        name = "FabricMC"
+        url = "https://maven.fabricmc.net"
+    }
+    maven { 
+        name = "Wearables"
+        url = "http://server.bbkr.space:8081/artifactory/libs-release/" 
+    }
+    maven { 
+        name = "Sargunv"
+        url = 'http://maven.sargunv.s3-website-us-west-2.amazonaws.com/' 
+    }
+    maven {
+        name = "JitPack"
+        url = "https://jitpack.io"
     }
 }
 
-boolean canJarBeSigned() {
-    return project.hasProperty('keyStore')
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings "net.fabricmc:yarn:${yarn_mappings}"
+    modCompile "net.fabricmc:fabric-loader:${loader_version}"
+
+    //optional dependency!
+    modCompile "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+
+    // Lazily evaluated callable returning a non-live (unlike a FileCollection) list of files
+    sourceSets.api.compileClasspath += files({sourceSets.main.compileClasspath.toList()})
+
+    pathosCompile sourceSets.api.output
+    compile sourceSets.api.output
+    compile sourceSets.pathos.output
+    include files(remapApiJar.output)
+    include files(remapPathosJar.output)
+
+    modImplementation "com.github.Pyrofab:Cardinal-Components-API:${cca_version}"
+    modImplementation "com.github.Ladysnake:Satin:${satin_version}"
+    modImplementation "net.mcft.copy:Wearables:${wearables_version}"
+
+    // Config API
+    modImplementation "me.shedaniel.cloth:config-2:${project.clothconfig_version}"
+    include "me.shedaniel.cloth:config-2:${project.clothconfig_version}"
+
+    modImplementation "io.github.prospector.modmenu:ModMenu:${modmenu_version}"
+    apiCompileOnly "com.google.code.findbugs:jsr305:3.0.2"
+    pathosCompileOnly "com.google.code.findbugs:jsr305:3.0.2"
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile "org.mockito:mockito-core:2.+"
 }
 
-artifacts {
-    archives apiJar
-    archives sourceJar
-    archives pathosJar
+license {
+    header = rootProject.file("code_quality/${project.license_header}_HEADER.txt")
+
+    // Apply licenses only to main source set
+    sourceSets = [project.sourceSets.main]
+    include "**/*.java"
+
+    newLine = false // Disables the empty line between the header and package name
+    //ignoreFailures = true //Ignore failures and only print a warning on license violations
+
+    //export variables
+    ext {
+        year = Year.now()
+        projectDisplayName = project.name
+        projectOwners = rootProject.owners
+        if (project.license_header.contains('GPL')) {
+            if (!project.hasProperty("gpl_version")) {
+                throw new RuntimeException("GPL version needs to be specified through the 'gpl_version' property")
+            }
+            gplVersion = project.gpl_version
+        }
+    }
 }
-
-// Runs this task automatically when build is ran.
-build.dependsOn signJar
-
-apply from: 'update_json.gradle'
-build.finalizedBy updateJson

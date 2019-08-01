@@ -1,14 +1,14 @@
 package ladysnake.pathos.api;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Identifier;
 import net.minecraftforge.registries.RegistryManager;
 
 import java.util.Objects;
 
 /**
- * @see net.minecraft.potion.PotionEffect
+ * @see net.minecraft.entity.effect.StatusEffect
  */
 public class SicknessEffect {
     private ISickness sickness;
@@ -45,11 +45,11 @@ public class SicknessEffect {
      * Recreates a sickness effect from its NBT representation
      * @param nbt the serialized effect
      */
-    public SicknessEffect(NBTTagCompound nbt) {
-        this.sickness = RegistryManager.ACTIVE.getRegistry(ISickness.class).getValue(new ResourceLocation(nbt.getString("effect")));
+    public SicknessEffect(CompoundTag nbt) {
+        this.sickness = RegistryManager.ACTIVE.getRegistry(ISickness.class).getValue(new Identifier(nbt.getString("effect")));
         this.severity = nbt.getFloat("severity");
-        this.ticksSinceLastPerform = nbt.getInteger("ticksSinceLastPerform");
-        this.ticksSinceBeginning = nbt.getInteger("ticksSinceBeginning");
+        this.ticksSinceLastPerform = nbt.getInt("ticksSinceLastPerform");
+        this.ticksSinceBeginning = nbt.getInt("ticksSinceBeginning");
     }
 
     public ISickness getSickness() {
@@ -61,7 +61,7 @@ public class SicknessEffect {
      * If the severity is 0 at any given tick, this effect will get cleared.
      *
      * @param severity the new severity for this sickness effect
-     * @see #onCured(EntityLivingBase)
+     * @see #onCured(LivingEntity)
      */
     public void setSeverity(float severity) {
         this.severity = severity;
@@ -94,7 +94,7 @@ public class SicknessEffect {
      * @param carrier the entity being affected
      * @see ladysnake.pathos.api.event.SicknessEvent.SicknessTickEvent
      */
-    public void performEffect(EntityLivingBase carrier) {
+    public void performEffect(LivingEntity carrier) {
         if(this.sickness.performEffect(carrier, this))
             this.ticksSinceLastPerform = 0;
         ticksSinceLastPerform++;
@@ -115,12 +115,12 @@ public class SicknessEffect {
         return ticksSinceLastPerform;
     }
 
-    public NBTTagCompound serializeNBT() {
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setString("effect", Objects.requireNonNull(this.sickness.getRegistryName()).toString());
-        nbt.setFloat("severity", this.severity);
-        nbt.setInteger("ticksSinceLastPerform", this.ticksSinceLastPerform);
-        nbt.setInteger("ticksSinceBeginning", this.ticksSinceBeginning);
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
+        nbt.putString("effect", Objects.requireNonNull(this.sickness.getRegistryName()).toString());
+        nbt.putFloat("severity", this.severity);
+        nbt.putInt("ticksSinceLastPerform", this.ticksSinceLastPerform);
+        nbt.putInt("ticksSinceBeginning", this.ticksSinceBeginning);
         return nbt;
     }
 
@@ -132,7 +132,7 @@ public class SicknessEffect {
      *                
      * @see ladysnake.pathos.api.event.SicknessEvent.SicknessCureEvent
      */
-    public void onCured(EntityLivingBase carrier) {
+    public void onCured(LivingEntity carrier) {
         this.sickness.onCured(this, carrier);
     }
 

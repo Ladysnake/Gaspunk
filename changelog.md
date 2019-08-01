@@ -42,7 +42,7 @@ Additions / changes :
 
 - Gas agents are now defined through json files
     - There is an appropriate config folder for modpack makers
-    - This means you can make custom gases using any potion now
+    - This means you can make custom gases using any statusEffect now
 - Items have thaumcraft aspects assigned
     - Gas tubes and grenades are done automagically, which means any custom gas should have aspects out of the box
 

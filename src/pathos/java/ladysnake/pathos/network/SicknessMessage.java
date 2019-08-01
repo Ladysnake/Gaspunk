@@ -5,13 +5,13 @@ import ladysnake.pathos.api.ISickness;
 import ladysnake.pathos.api.SicknessEffect;
 import ladysnake.pathos.capability.CapabilitySickness;
 import ladysnake.pathos.sickness.Sickness;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class SicknessMessage implements IMessage{
     private SicknessEffect effect;
@@ -47,10 +47,10 @@ public class SicknessMessage implements IMessage{
     public static class SicknessMessageHandler implements IMessageHandler<SicknessMessage, IMessage> {
 
         @Override
-        @SideOnly(Side.CLIENT)
+        @Environment(EnvType.CLIENT)
         public IMessage onMessage(SicknessMessage message, MessageContext ctx) {
             FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(
-                    () -> CapabilitySickness.getHandler(Minecraft.getMinecraft().player).ifPresent(
+                    () -> CapabilitySickness.getHandler(MinecraftClient.getInstance().player).ifPresent(
                             // replace the existing effect instead of adding them
                             handler -> handler.addSickness(message.effect, (e1, e2) -> e2)
                     )

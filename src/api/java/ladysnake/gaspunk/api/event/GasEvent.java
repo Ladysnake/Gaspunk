@@ -2,7 +2,7 @@ package ladysnake.gaspunk.api.event;
 
 import ladysnake.gaspunk.api.IBreathingHandler;
 import ladysnake.gaspunk.api.IGas;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
@@ -20,7 +20,7 @@ public class GasEvent extends LivingEvent {
     protected final IGas gas;
     protected final float concentration;
 
-    public GasEvent(EntityLivingBase entity, IBreathingHandler breathHandler, IGas gas, float concentration) {
+    public GasEvent(LivingEntity entity, IBreathingHandler breathHandler, IGas gas, float concentration) {
         super(entity);
         this.breathHandler = breathHandler;
         this.gas = gas;
@@ -48,7 +48,7 @@ public class GasEvent extends LivingEvent {
      * This event is fired in addition to {@link GasTickEvent}. It will always be fired before the latter.
      */
     public static class GasEnterEvent extends GasEvent {
-        public GasEnterEvent(EntityLivingBase entity, IBreathingHandler breathHandler, IGas gas, float concentration) {
+        public GasEnterEvent(LivingEntity entity, IBreathingHandler breathHandler, IGas gas, float concentration) {
             super(entity, breathHandler, gas, concentration);
         }
     }
@@ -59,7 +59,7 @@ public class GasEvent extends LivingEvent {
      */
     @Cancelable
     public static class GasTickEvent extends GasEvent {
-        public GasTickEvent(EntityLivingBase entity, IBreathingHandler breathHandler, IGas gas, float concentration) {
+        public GasTickEvent(LivingEntity entity, IBreathingHandler breathHandler, IGas gas, float concentration) {
             super(entity, breathHandler, gas, concentration);
         }
     }
@@ -70,7 +70,7 @@ public class GasEvent extends LivingEvent {
      */
     @Cancelable
     public static class ExitGasCloudEvent extends GasEvent {
-        public ExitGasCloudEvent(EntityLivingBase entity, IBreathingHandler breathHandler, IGas gas, float concentration) {
+        public ExitGasCloudEvent(LivingEntity entity, IBreathingHandler breathHandler, IGas gas, float concentration) {
             super(entity, breathHandler, gas, concentration);
         }
     }
@@ -82,7 +82,7 @@ public class GasEvent extends LivingEvent {
     public static class GasImmunityEvent extends GasEvent {
         private boolean immune;
 
-        public GasImmunityEvent(EntityLivingBase entity, IBreathingHandler breathHandler, IGas gas, float concentration, boolean immune) {
+        public GasImmunityEvent(LivingEntity entity, IBreathingHandler breathHandler, IGas gas, float concentration, boolean immune) {
             super(entity, breathHandler, gas, concentration);
             this.immune = immune;
         }

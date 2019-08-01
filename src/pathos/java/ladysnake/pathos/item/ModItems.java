@@ -11,22 +11,22 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 @AutoRegister(Pathos.MOD_ID)
 public class ModItems {
 
-    public static final Item EMPTY_SYRINGE = new ItemSyringe();
-    public static final Item FILLED_SYRINGE = new ItemFilledSyringe();
+    public static final Item EMPTY_SYRINGE = new SyringeItem();
+    public static final Item FILLED_SYRINGE = new FilledSyringeItem();
 
-//    @SideOnly(Side.CLIENT)
+//    @Environment(EnvType.CLIENT)
 //    @SubscribeEvent
 //    public static void registerRenders(ModelRegistryEvent event) {
 //        ModelLoader.setCustomModelResourceLocation(EMPTY_SYRINGE, 0, new ModelResourceLocation(new ResourceLocation("pathos:empty_syringe"), "inventory"));
 //        ModelLoader.setCustomModelResourceLocation(FILLED_SYRINGE, 0, new ModelResourceLocation(new ResourceLocation("pathos:filled_syringe"), "inventory"));
 //    }
 //
-//    @SideOnly(Side.CLIENT)
+//    @Environment(EnvType.CLIENT)
 //    private static void registerRender(Item item) {
 //        registerRender(item, new ModelResourceLocation(Objects.requireNonNull(item.getRegistryName()).toString()));
 //    }
 //
-//    @SideOnly(Side.CLIENT)
+//    @Environment(EnvType.CLIENT)
 //    private static void registerRender(Item item, ModelResourceLocation loc) {
 //        ModelLoader.setCustomModelResourceLocation(item, 0, loc);
 //    }

@@ -6,13 +6,13 @@ import ladysnake.pathos.api.ISicknessHandler;
 import ladysnake.pathos.api.SicknessEffect;
 import ladysnake.pathos.api.event.SicknessEvent;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -39,15 +39,15 @@ public class CapabilitySickness {
     }
 
     public static Optional<ISicknessHandler> getHandler(Entity entity) {
-        if (entity instanceof EntityLivingBase)
+        if (entity instanceof LivingEntity)
             return Optional.ofNullable(entity.getCapability(CAPABILITY_SICKNESS, null));
         return Optional.empty();
     }
 
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        if (event.getObject() instanceof EntityLivingBase)
-            event.addCapability(new ResourceLocation(Pathos.MOD_ID, "sickness_cap"), new Provider((EntityLivingBase) event.getObject()));
+        if (event.getObject() instanceof LivingEntity)
+            event.addCapability(new Identifier(Pathos.MOD_ID, "sickness_cap"), new Provider((LivingEntity) event.getObject()));
     }
 
     @SubscribeEvent
@@ -56,14 +56,14 @@ public class CapabilitySickness {
     }
 
     public static class DefaultSicknessHandler implements ISicknessHandler {
-        private EntityLivingBase carrier;
+        private LivingEntity carrier;
         private Map<ISickness, SicknessEffect> sicknesses = new HashMap<>();
 
         DefaultSicknessHandler() {
             super();
         }
 
-        public DefaultSicknessHandler(EntityLivingBase carrier) {
+        public DefaultSicknessHandler(LivingEntity carrier) {
             this.carrier = carrier;
         }
 
@@ -113,12 +113,12 @@ public class CapabilitySickness {
         }
     }
 
-    public static class Provider implements ICapabilitySerializable<NBTTagList> {
+    public static class Provider implements ICapabilitySerializable<ListTag> {
         final ISicknessHandler instance;
 
-        Provider(EntityLivingBase object) {
-            if (object instanceof EntityPlayerMP)
-                this.instance = new PlayerSicknessHandler((EntityPlayerMP) object);
+        Provider(LivingEntity object) {
+            if (object instanceof ServerPlayerEntity)
+                this.instance = new PlayerSicknessHandler((ServerPlayerEntity) object);
             else
                 this.instance = new DefaultSicknessHandler(object);
         }
@@ -135,12 +135,12 @@ public class CapabilitySickness {
         }
 
         @Override
-        public NBTTagList serializeNBT() {
-            return (NBTTagList) CAPABILITY_SICKNESS.getStorage().writeNBT(CAPABILITY_SICKNESS, instance, null);
+        public ListTag serializeNBT() {
+            return (ListTag) CAPABILITY_SICKNESS.getStorage().writeNBT(CAPABILITY_SICKNESS, instance, null);
         }
 
         @Override
-        public void deserializeNBT(NBTTagList nbt) {
+        public void deserializeNBT(ListTag nbt) {
             CAPABILITY_SICKNESS.getStorage().readNBT(CAPABILITY_SICKNESS, instance, null, nbt);
         }
     }
@@ -149,8 +149,8 @@ public class CapabilitySickness {
 
         @Nullable
         @Override
-        public NBTBase writeNBT(Capability<ISicknessHandler> capability, ISicknessHandler instance, EnumFacing side) {
-            NBTTagList nbtList = new NBTTagList();
+        public Tag writeNBT(Capability<ISicknessHandler> capability, ISicknessHandler instance, EnumFacing side) {
+            ListTag nbtList = new ListTag();
             for (SicknessEffect effect : instance.getActiveSicknesses()) {
                 nbtList.appendTag(effect.serializeNBT());
             }
@@ -158,11 +158,11 @@ public class CapabilitySickness {
         }
 
         @Override
-        public void readNBT(Capability<ISicknessHandler> capability, ISicknessHandler instance, EnumFacing side, NBTBase nbt) {
-            if (nbt instanceof NBTTagList) {
-                for (NBTBase effect : ((NBTTagList) nbt)) {
-                    if (effect instanceof NBTTagCompound)
-                        instance.addSickness(new SicknessEffect((NBTTagCompound) effect));
+        public void readNBT(Capability<ISicknessHandler> capability, ISicknessHandler instance, EnumFacing side, Tag nbt) {
+            if (nbt instanceof ListTag) {
+                for (Tag effect : ((ListTag) nbt)) {
+                    if (effect instanceof CompoundTag)
+                        instance.addSickness(new SicknessEffect((CompoundTag) effect));
                 }
             }
         }

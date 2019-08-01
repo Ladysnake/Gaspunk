@@ -1,6 +1,6 @@
 package ladysnake.pathos.api;
 
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public interface ISickness extends IForgeRegistryEntry<ISickness> {
@@ -12,7 +12,7 @@ public interface ISickness extends IForgeRegistryEntry<ISickness> {
      * @param effect the specific effect afflicting this entity
      * @return true to reset the ticksSinceLastPerform counter on the effect
      */
-    boolean performEffect(EntityLivingBase carrier, SicknessEffect effect);
+    boolean performEffect(LivingEntity carrier, SicknessEffect effect);
 
     /**
      * @return the unlocalized name for this sickness
@@ -27,7 +27,7 @@ public interface ISickness extends IForgeRegistryEntry<ISickness> {
      * @param sicknessEffect the effect that is being removed
      * @param carrier the entity that was being affected by this effect
      */
-    default void onCured(SicknessEffect sicknessEffect, EntityLivingBase carrier) {
+    default void onCured(SicknessEffect sicknessEffect, LivingEntity carrier) {
         // NO-OP
     }
 

@@ -1,8 +1,7 @@
 package ladysnake.gaspunk.api.basetype;
 
 import ladysnake.gaspunk.api.IGasParticleType;
-import net.minecraft.util.ResourceLocation;
-
+import net.minecraft.util.Identifier;
 import javax.annotation.Nonnull;
 import java.util.Locale;
 
@@ -12,12 +11,12 @@ import java.util.Locale;
 public enum GasParticleTypes implements IGasParticleType {
     SMOKE(5), GAS(1), CANDYFLOSS(5);
 
-    private final ResourceLocation particleTexture;
+    private final Identifier particleTexture;
     private int particleAmount;
 
     GasParticleTypes(int particleAmount) {
         this.particleAmount = particleAmount;
-        particleTexture = new ResourceLocation("gaspunk", "entity/particle_" + this.name().toLowerCase(Locale.ENGLISH));
+        particleTexture = new Identifier("gaspunk", "entity/particle_" + this.name().toLowerCase(Locale.ENGLISH));
     }
 
     /**
@@ -26,7 +25,7 @@ public enum GasParticleTypes implements IGasParticleType {
      */
     @Nonnull
     @Override
-    public ResourceLocation getParticleTexture() {
+    public Identifier getParticleTexture() {
         return particleTexture;
     }
 

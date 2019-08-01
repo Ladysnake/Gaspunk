@@ -4,13 +4,13 @@ package net.minecraft.entity;
 import ladysnake.gaspunk.api.IBreathingHandler;
 import ladysnake.gaspunk.api.IGasAgent;
 import ladysnake.gaspunk.api.basetype.GasTypes;
-import ladysnake.gaspunk.gas.Gas;
-import ladysnake.gaspunk.gas.GasAgents;
-import ladysnake.gaspunk.gas.SuspendableGas;
-import ladysnake.gaspunk.gas.agent.LingeringAgent;
-import ladysnake.gaspunk.gas.core.CapabilityBreathing;
-import ladysnake.gaspunk.init.ModSicknesses;
-import ladysnake.gaspunk.sickness.SicknessSarin;
+import ladysnake.gaspunk.common.gas.Gas;
+import ladysnake.gaspunk.common.gas.GasAgents;
+import ladysnake.gaspunk.common.gas.SuspendableGas;
+import ladysnake.gaspunk.common.gas.agent.LingeringAgent;
+import ladysnake.gaspunk.common.gas.core.CapabilityBreathing;
+import ladysnake.gaspunk.common.sickness.GasPunkSicknesses;
+import ladysnake.gaspunk.common.sickness.SicknessSarin;
 import ladysnake.pathos.api.ISicknessHandler;
 import ladysnake.pathos.api.SicknessEffect;
 import ladysnake.pathos.capability.CapabilitySickness;
@@ -36,7 +36,7 @@ import static org.mockito.Mockito.*;
 @SuppressWarnings("ConstantConditions")
 public class SicknessTests {
 
-    private static final IGasAgent NERVE = GasAgents.createSicknessAgent("sarin_gas", true, true, new ResourceLocation("lung_control_loss"));
+    private static final IGasAgent NERVE = GasAgents.registerSicknessAgent("sarin_gas", true, true, new ResourceLocation("lung_control_loss"));
     private static final Gas SARIN_GAS = new SuspendableGas(GasTypes.GAS, 0x00FFFFFF, NERVE, 0.8F);
 
     static {
@@ -49,7 +49,7 @@ public class SicknessTests {
         CapabilityBreathing.CAPABILITY_BREATHING = (Capability<IBreathingHandler>) mock(Capability.class);
         //noinspection unchecked
         CapabilitySickness.CAPABILITY_SICKNESS = (Capability<ISicknessHandler>) mock(Capability.class);
-        ModSicknesses.addRegistries(null);
+        GasPunkSicknesses.addRegistries(null);
         Sickness.REGISTRY.register(new SicknessSarin().setRegistryName("lung_control_loss"));
     }
 
@@ -88,7 +88,7 @@ public class SicknessTests {
         assertTrue(CapabilityBreathing.getHandler(mockedCreeper).map(IBreathingHandler::getGasConcentrations).map(h -> h.get(SARIN_GAS)).isPresent());
     }
 
-//    @Test
+    @Test
     public void testGasTick() {
         IBreathingHandler handler = CapabilityBreathing.getHandler(mockedCreeper).get();
         Gas gas = new Gas(GasTypes.SMOKE, 0xFF);
@@ -98,7 +98,7 @@ public class SicknessTests {
         assertFalse(handler.getGasConcentrations().containsKey(gas));
     }
 
-//    @Test
+    @Test
     public void testSarinTick() {
         IBreathingHandler handler = CapabilityBreathing.getHandler(mockedCreeper).get();
         handler.setConcentration(SARIN_GAS, 0.5f);
@@ -107,7 +107,7 @@ public class SicknessTests {
         assertNotNull(sicknessHandler.getActiveEffect(((LingeringAgent) NERVE).getSickness()));
     }
 
-//    @Test
+    @Test
     public void testSarinTick2() {
         IBreathingHandler breathingHandler = CapabilityBreathing.getHandler(mockedCreeper).get();
         final float concentration = 0.5f;
@@ -125,7 +125,7 @@ public class SicknessTests {
         assertEquals(oracle, effect.getSeverity(), 1E-8f);
     }
 
-//    @Test
+    @Test
     public void testMustardGas() {
         IBreathingHandler breathingHandler = CapabilityBreathing.getHandler(mockedCreeper).get();
         final float concentration = 1.0f;
@@ -138,6 +138,6 @@ public class SicknessTests {
         float potency = gas.getAgents().get(0).getPotency();
         float oracle = potency * time;
         // TODO make a test for evolution in gas concentration
-//        assertEquals(oracle, breathingHandler.getGasConcentrations().get(ModGases.MUSTARD_GAS), 1E-8f);
+//        assertEquals(oracle, breathingHandler.getGasConcentrations().get(Gases.MUSTARD_GAS), 1E-8f);
     }
 }

@@ -1,20 +1,20 @@
 package ladysnake.gaspunk.client.render;
 
-import ladysnake.gaspunk.entity.EntityGasCloud;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.util.ResourceLocation;
+import ladysnake.gaspunk.common.entity.GasCloudEntity;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.util.Identifier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class RenderGasCloud<T extends EntityGasCloud> extends Render<T> {
-    public RenderGasCloud(RenderManager renderManager) {
-        super(renderManager);
+public class RenderGasCloud<E extends GasCloudEntity> extends EntityRenderer<E> {
+    public RenderGasCloud(EntityRenderDispatcher dispatcher) {
+        super(dispatcher);
     }
 
     @Override
-    public void doRender(@Nonnull T entity, double x, double y, double z, float entityYaw, float partialTicks) {
+    public void render(@Nonnull E entity, double x, double y, double z, float entityYaw, float partialTicks) {
 //        GlStateManager.pushMatrix();
 //        GlStateManager.translate((float)x, (float)y, (float)z);
 //        this.bindEntityTexture(entity);
@@ -41,12 +41,12 @@ public class RenderGasCloud<T extends EntityGasCloud> extends Render<T> {
 //        GlStateManager.disableBlend();
 //        GlStateManager.disableRescaleNormal();
 //        GlStateManager.popMatrix();
-        super.doRender(entity, x, y, z, entityYaw, partialTicks);
+        super.render(entity, x, y, z, entityYaw, partialTicks);
     }
 
     @Nullable
     @Override
-    protected ResourceLocation getEntityTexture(@Nonnull T entity) {
-        return new ResourceLocation("textures/entity/experience_orb.png");
+    protected Identifier getTexture(@Nonnull E entity) {
+        return new Identifier("textures/entity/experience_orb.png");
     }
 }

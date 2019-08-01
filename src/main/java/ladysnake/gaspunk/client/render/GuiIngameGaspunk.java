@@ -1,28 +1,28 @@
 package ladysnake.gaspunk.client.render;
 
-import ladysnake.gaspunk.GasPunk;
-import ladysnake.gaspunk.gas.core.CapabilityBreathing;
-import net.minecraft.client.Minecraft;
+import ladysnake.gaspunk.common.GasPunk;
+import ladysnake.gaspunk.common.gas.core.CapabilityBreathing;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.GuiIngameForge;
 
 public class GuiIngameGaspunk extends GuiIngameForge {
-    public static final ResourceLocation CUSTOM_ICONS = new ResourceLocation(GasPunk.MOD_ID, "textures/gui/icons.png");
+    public static final Identifier CUSTOM_ICONS = new Identifier(GasPunk.MOD_ID, "textures/gui/icons.png");
 
-    public GuiIngameGaspunk(Minecraft mc) {
+    public GuiIngameGaspunk(MinecraftClient mc) {
         super(mc);
     }
 
     protected void renderAir(int width, int height) {
         mc.profiler.startSection("air");
-        EntityPlayer player = (EntityPlayer) this.mc.getRenderViewEntity();
+        PlayerEntity player = (PlayerEntity) this.mc.getRenderViewEntity();
         if (player == null || player.isCreative()) return;
         float air = CapabilityBreathing.getHandler(player).orElseThrow(IllegalStateException::new).getAirSupply();
         if (air >= 300) return;
-        mc.renderEngine.bindTexture(CUSTOM_ICONS);
+        mc.textureManager.bindTexture(CUSTOM_ICONS);
         GlStateManager.enableBlend();
         int left = width / 2 + 91;
         int top = height - GuiIngameForge.right_height;

@@ -1,8 +1,7 @@
 package ladysnake.gaspunk.api;
 
-import net.minecraft.util.ResourceLocation;
-
 import javax.annotation.Nonnull;
+import net.minecraft.util.Identifier;
 
 public interface IGasParticleType {
 
@@ -12,7 +11,7 @@ public interface IGasParticleType {
      * @return the particle texture for gas clouds
      */
     @Nonnull
-    ResourceLocation getParticleTexture();
+    Identifier getParticleTexture();
 
     /**
      * @return The amount of particles spawned at once by gas clouds of this type.

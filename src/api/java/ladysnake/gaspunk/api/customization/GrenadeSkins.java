@@ -21,11 +21,8 @@ public enum GrenadeSkins {
         this.displayName = displayName;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public static GrenadeSkins fromDisplayName(String displayName) {
-        return Arrays.stream(VALUES).filter(s -> s.getDisplayName().equalsIgnoreCase(displayName)).findAny().orElse(NONE);
+    @Override
+    public String toString() {
+        return this.displayName;
     }
 }

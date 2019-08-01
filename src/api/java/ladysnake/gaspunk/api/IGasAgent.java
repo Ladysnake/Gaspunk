@@ -1,11 +1,11 @@
 package ladysnake.gaspunk.api;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 /**
  * A gas agent that defines the behaviour of a gas.
@@ -27,7 +27,7 @@ public interface IGasAgent {
      * @param firstTick     true if this entity was not affected by this gas during the previous tick
      * @param potency       the potency of the agent in the gas
      */
-    default void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick, float potency) {
+    default void applyEffect(LivingEntity entity, IBreathingHandler handler, float concentration, boolean firstTick, float potency) {
         applyEffect(entity, handler, concentration, firstTick, potency, false);
     }
 
@@ -40,7 +40,7 @@ public interface IGasAgent {
      * @param potency       the potency of the agent in the gas
      * @param forced        true if this agent should apply its effect without checking any prerequisite
      */
-    default void applyEffect(EntityLivingBase entity, IBreathingHandler handler, float concentration, boolean firstTick, float potency, boolean forced) {
+    default void applyEffect(LivingEntity entity, IBreathingHandler handler, float concentration, boolean firstTick, float potency, boolean forced) {
         // NO-OP
     }
 
@@ -51,13 +51,13 @@ public interface IGasAgent {
      * @param entity  the entity that has stopped breathing this gas
      * @param handler the entity's breathing handler
      */
-    default void onExitCloud(EntityLivingBase entity, IBreathingHandler handler) {
+    default void onExitCloud(LivingEntity entity, IBreathingHandler handler) {
         // NO-OP
     }
 
-    @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     default String getLocalizedName() {
-        return I18n.format(getUnlocalizedName());
+        return I18n.translate(getUnlocalizedName());
     }
 
     /**

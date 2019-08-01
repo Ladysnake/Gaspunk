@@ -1,7 +1,6 @@
 package ladysnake.gaspunk.api;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
@@ -10,15 +9,17 @@ import java.util.function.Supplier;
  * A starting point for an implementation of {@link IGas} using one or more {@link IGasAgent}
  * to perform its effects
  */
-public abstract class AbstractGas extends IForgeRegistryEntry.Impl<IGas> implements IGas {
+public abstract class AbstractGas implements IGas {
 
     // this will hold a reference to an internal method at runtime
     private static Supplier<Builder> builderSupplier;
 
     /**
-     * Returns a new builder. The generated builder is an implementation of {@link Builder} using references
-     * to internal classes.
+     * Returns a new builder.
+     *
      * @return a new gas builder
+     * @implSpec The generated builder is an implementation of {@link Builder} using references
+     * to internal classes.
      */
     @Nonnull
     public static Builder builder() {
