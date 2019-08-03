@@ -1,7 +1,7 @@
 package ladysnake.gaspunk.common.compat;
 
 import baubles.api.BaublesApi;
-import ladysnake.gaspunk.api.event.GasEvent;
+import ladysnake.gaspunk.api.event.GasImmunityCallback;
 import ladysnake.gaspunk.common.item.GasPunkItems;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,7 +17,7 @@ public final class WearablesCompatHandler {
     }
 
     @SubscribeEvent
-    public void onGasImmunity(GasEvent.GasImmunityEvent event) {
+    public void onGasImmunity(GasImmunityCallback event) {
         if (event.getEntity() instanceof PlayerEntity && BaublesApi.isBaubleEquipped((PlayerEntity) event.getEntity(), GasPunkItems.GAS_MASK) != -1)
             event.setImmune(true);
     }

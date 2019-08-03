@@ -8,7 +8,8 @@ import ladysnake.gaspunk.common.gas.Gas;
 import ladysnake.gaspunk.common.gas.GasAgents;
 import ladysnake.gaspunk.common.gas.SuspendableGas;
 import ladysnake.gaspunk.common.gas.agent.LingeringAgent;
-import ladysnake.gaspunk.common.gas.core.CapabilityBreathing;
+import ladysnake.gaspunk.common.gas.core.GasPunkComponents;
+import ladysnake.gaspunk.common.gas.core.DefaultBreathingHandler;
 import ladysnake.gaspunk.common.sickness.GasPunkSicknesses;
 import ladysnake.gaspunk.common.sickness.SicknessSarin;
 import ladysnake.pathos.api.ISicknessHandler;
@@ -43,10 +44,10 @@ public class SicknessTests {
         Launch.blackboard = new HashMap<>();
         Launch.blackboard.put("fml.deobfuscatedEnvironment", true);
         Bootstrap.register();
-        CapabilityBreathing.register();
+        GasPunkComponents.init();
         CapabilitySickness.register();
         //noinspection unchecked
-        CapabilityBreathing.CAPABILITY_BREATHING = (Capability<IBreathingHandler>) mock(Capability.class);
+        GasPunkComponents.CAPABILITY_BREATHING = (Capability<IBreathingHandler>) mock(Capability.class);
         //noinspection unchecked
         CapabilitySickness.CAPABILITY_SICKNESS = (Capability<ISicknessHandler>) mock(Capability.class);
         GasPunkSicknesses.addRegistries(null);
@@ -62,11 +63,11 @@ public class SicknessTests {
         mockedCreeper.world = mock(World.class);
         // allow the testing of the air supply attribute
         AbstractAttributeMap attributeMap = new AttributeMap();
-        attributeMap.registerAttribute(CapabilityBreathing.MAX_AIR_SUPPLY);
+        attributeMap.registerAttribute(GasPunkComponents.MAX_AIR_SUPPLY);
         when(mockedCreeper.getAttributeMap()).thenReturn(attributeMap);
         when(mockedCreeper.getEntityAttribute(any())).then(InvocationOnMock::callRealMethod);
         // setup capabilities
-        IBreathingHandler breathingHandler = new CapabilityBreathing.DefaultBreathingHandler(mockedCreeper);
+        IBreathingHandler breathingHandler = new DefaultBreathingHandler(mockedCreeper);
         ISicknessHandler sicknessHandler = new CapabilitySickness.DefaultSicknessHandler(mockedCreeper);
         when(mockedCreeper.getCapability(any(), any()))
                 .then(invocation -> invocation.getArgument(0) == CapabilitySickness.CAPABILITY_SICKNESS
@@ -78,19 +79,19 @@ public class SicknessTests {
 
     @Test
     public void testSetup() {
-        assertTrue(CapabilityBreathing.getHandler(mockedCreeper).isPresent());
+        assertTrue(GasPunkComponents.BREATHING.maybeGet(mockedCreeper).isPresent());
         assertTrue(CapabilitySickness.getHandler(mockedCreeper).isPresent());
     }
 
     @Test
     public void testGasAdd() {
-        CapabilityBreathing.getHandler(mockedCreeper).ifPresent(h -> h.setConcentration(SARIN_GAS, 0.5f));
-        assertTrue(CapabilityBreathing.getHandler(mockedCreeper).map(IBreathingHandler::getGasConcentrations).map(h -> h.get(SARIN_GAS)).isPresent());
+        GasPunkComponents.BREATHING.maybeGet(mockedCreeper).ifPresent(h -> h.setConcentration(SARIN_GAS, 0.5f));
+        assertTrue(GasPunkComponents.BREATHING.maybeGet(mockedCreeper).map(IBreathingHandler::getGasConcentrations).map(h -> h.get(SARIN_GAS)).isPresent());
     }
 
     @Test
     public void testGasTick() {
-        IBreathingHandler handler = CapabilityBreathing.getHandler(mockedCreeper).get();
+        IBreathingHandler handler = GasPunkComponents.BREATHING.maybeGet(mockedCreeper).get();
         Gas gas = new Gas(GasTypes.SMOKE, 0xFF);
         handler.setConcentration(gas, 0.5f);
         assertTrue(handler.getGasConcentrations().containsKey(gas));
@@ -100,7 +101,7 @@ public class SicknessTests {
 
     @Test
     public void testSarinTick() {
-        IBreathingHandler handler = CapabilityBreathing.getHandler(mockedCreeper).get();
+        IBreathingHandler handler = GasPunkComponents.BREATHING.maybeGet(mockedCreeper).get();
         handler.setConcentration(SARIN_GAS, 0.5f);
         handler.tick();
         ISicknessHandler sicknessHandler = CapabilitySickness.getHandler(mockedCreeper).get();
@@ -109,7 +110,7 @@ public class SicknessTests {
 
     @Test
     public void testSarinTick2() {
-        IBreathingHandler breathingHandler = CapabilityBreathing.getHandler(mockedCreeper).get();
+        IBreathingHandler breathingHandler = GasPunkComponents.BREATHING.maybeGet(mockedCreeper).get();
         final float concentration = 0.5f;
         final float time = 5;
         for (int i = 0; i < time; i++) {
@@ -127,7 +128,7 @@ public class SicknessTests {
 
     @Test
     public void testMustardGas() {
-        IBreathingHandler breathingHandler = CapabilityBreathing.getHandler(mockedCreeper).get();
+        IBreathingHandler breathingHandler = GasPunkComponents.BREATHING.maybeGet(mockedCreeper).get();
         final float concentration = 1.0f;
         final float time = 5;
         Gas gas = new Gas(GasTypes.GAS, 0xFF, NERVE, 1);

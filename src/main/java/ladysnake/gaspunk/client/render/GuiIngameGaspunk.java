@@ -1,7 +1,7 @@
 package ladysnake.gaspunk.client.render;
 
 import ladysnake.gaspunk.common.GasPunk;
-import ladysnake.gaspunk.common.gas.core.CapabilityBreathing;
+import ladysnake.gaspunk.common.gas.core.GasPunkComponents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,7 +20,7 @@ public class GuiIngameGaspunk extends GuiIngameForge {
         mc.profiler.startSection("air");
         PlayerEntity player = (PlayerEntity) this.mc.getRenderViewEntity();
         if (player == null || player.isCreative()) return;
-        float air = CapabilityBreathing.getHandler(player).orElseThrow(IllegalStateException::new).getAirSupply();
+        float air = GasPunkComponents.BREATHING.get(player).getAirSupply();
         if (air >= 300) return;
         mc.textureManager.bindTexture(CUSTOM_ICONS);
         GlStateManager.enableBlend();

@@ -1,10 +1,10 @@
 package ladysnake.gaspunk.common.gas.core;
 
-import ladysnake.gaspunk.common.network.BreathMessage;
-import ladysnake.gaspunk.common.network.PacketHandler;
+import nerdhub.cardinal.components.api.util.sync.EntitySyncedComponent;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.PacketByteBuf;
 
-public class PlayerBreathingHandler extends CapabilityBreathing.DefaultBreathingHandler {
+public class PlayerBreathingHandler extends DefaultBreathingHandler implements EntitySyncedComponent {
     private final ServerPlayerEntity owner;
 
     public PlayerBreathingHandler(ServerPlayerEntity owner) {
@@ -15,8 +15,29 @@ public class PlayerBreathingHandler extends CapabilityBreathing.DefaultBreathing
     @Override
     public void setAirSupply(float airSupply) {
         super.setAirSupply(airSupply);
-        // check that the player is actually connected before sending an update packet
-        if (owner.connection != null)
-            PacketHandler.NET.sendTo(new BreathMessage(airSupply), owner);
+        this.markDirty();
     }
+
+    @Override
+    public ServerPlayerEntity getEntity() {
+        return this.owner;
+    }
+
+    @Override
+    public void syncWith(ServerPlayerEntity player) {
+        if (player == this.owner) {
+            EntitySyncedComponent.super.syncWith(player);
+        }
+    }
+
+    @Override
+    public void writeToPacket(PacketByteBuf buf) {
+        buf.writeFloat(this.getAirSupply());
+    }
+
+    @Override
+    public void readFromPacket(PacketByteBuf buf) {
+        this.setAirSupply(buf.readFloat());
+    }
+
 }

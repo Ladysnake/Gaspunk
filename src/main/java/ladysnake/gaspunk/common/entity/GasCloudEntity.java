@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import ladysnake.gaspunk.client.GasPunkClient;
 import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.common.config.GasPunkConfig;
-import ladysnake.gaspunk.common.gas.core.CapabilityBreathing;
+import ladysnake.gaspunk.common.gas.core.GasPunkComponents;
 import ladysnake.gaspunk.common.gas.Gases;
 import ladysnake.gaspunk.common.util.GasUtil;
 import net.minecraft.entity.Entity;
@@ -93,7 +93,7 @@ public class GasCloudEntity extends Entity implements IEntityAdditionalSpawnData
                     : GasUtil.getPropagationDistance(world, new BlockPos(this), new BlockPos(entity), MAX_PROPAGATION_DISTANCE);
             if (distance >= 0) {
                 float concentration = ageRatio * (1 - distance / (float) MAX_PROPAGATION_DISTANCE);
-                CapabilityBreathing.getHandler(entity).ifPresent(h -> h.setConcentration(gas, concentration));
+                GasPunkComponents.BREATHING.get(entity).setConcentration(gas, concentration);
             }
         }
     }
@@ -122,7 +122,7 @@ public class GasCloudEntity extends Entity implements IEntityAdditionalSpawnData
 
     @Override
     protected void readCustomDataFromTag(@Nonnull CompoundTag compound) {
-        this.gas = Gases.GAS_REGISTRY.getValue(new Identifier(compound.getString("gas")));
+        this.gas = Gases.GAS_REGISTRY.get(new Identifier(compound.getString("gas")));
         this.setMaxLifespan(compound.getInt("max_lifespan"));
         this.setCloudAge(compound.getInt("cloud_age"));
         if (compound.containsKey("emitter_idLeast")) {

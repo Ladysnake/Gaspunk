@@ -3,6 +3,8 @@
   "package": "ladysnake.gaspunk.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "LivingEntityAccessor",
+    "LivingEntityMixin",
     "ThrownEntityAccessor",
     "ThrownEntityMixin"
   ],

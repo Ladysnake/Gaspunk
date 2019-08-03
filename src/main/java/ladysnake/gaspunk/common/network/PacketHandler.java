@@ -9,7 +9,6 @@ public class PacketHandler {
     private static int nextId;
 
     public static void initPackets() {
-        NET.registerMessage(new BreathMessageHandler(), BreathMessage.class, nextId++, Side.CLIENT);
         NET.registerMessage(new SpecialRewardMessageHandler(), SpecialRewardMessage.class, nextId++, Side.SERVER);
     }
 }

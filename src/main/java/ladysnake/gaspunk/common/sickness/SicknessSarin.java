@@ -18,8 +18,8 @@ public class SicknessSarin extends SicknessGas {
     public boolean performEffect(LivingEntity carrier, SicknessEffect effect) {
         super.performEffect(carrier, effect);
         if (!carrier.world.isClient) {
-//            if (carrier.getEntityAttribute(CapabilityBreathing.MAX_AIR_SUPPLY).getModifier(SARIN_BREATH_PENALTY_ID) == null)
-//                carrier.getEntityAttribute(CapabilityBreathing.MAX_AIR_SUPPLY).applyModifier(SARIN_BREATH_PENALTY);
+//            if (carrier.getEntityAttribute(GasPunkComponents.MAX_AIR_SUPPLY).getModifier(SARIN_BREATH_PENALTY_ID) == null)
+//                carrier.getEntityAttribute(GasPunkComponents.MAX_AIR_SUPPLY).applyModifier(SARIN_BREATH_PENALTY);
             if (effect.getTicksSinceLastPerform() % 20 == 0) {
                 carrier.attackEntityFrom(DamageSource.DROWN, MathHelper.ceil(effect.getSeverity() * 10));
                 return true;
@@ -30,6 +30,6 @@ public class SicknessSarin extends SicknessGas {
 
     @Override
     public void onCured(SicknessEffect sicknessEffect, LivingEntity carrier) {
-//        carrier.getEntityAttribute(CapabilityBreathing.MAX_AIR_SUPPLY).removeModifier(SARIN_BREATH_PENALTY);
+//        carrier.getEntityAttribute(GasPunkComponents.MAX_AIR_SUPPLY).removeModifier(SARIN_BREATH_PENALTY);
     }
 }

@@ -10,7 +10,7 @@ import ladysnake.gaspunk.common.entity.GrenadeEntity;
 import ladysnake.gaspunk.common.gas.Gas;
 import ladysnake.gaspunk.common.gas.GasAgents;
 import ladysnake.gaspunk.common.gas.Gases;
-import ladysnake.gaspunk.common.gas.core.CapabilityBreathing;
+import ladysnake.gaspunk.common.gas.core.GasPunkComponents;
 import ladysnake.gaspunk.common.item.GasPunkItems;
 import ladysnake.gaspunk.common.network.PacketHandler;
 import ladysnake.gaspunk.common.util.SpecialRewardChecker;
@@ -62,7 +62,7 @@ public final class GasPunk implements ModInitializer {
         GasAgents.init();
         Gases.init();
         Gas.classInit();
-        CapabilityBreathing.register();
+        GasPunkComponents.init();
         CapabilitySickness.register();
         PacketHandler.initPackets();
         new Thread(SpecialRewardChecker::retrieveSpecialRewards).start();

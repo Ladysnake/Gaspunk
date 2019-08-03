@@ -1,8 +1,11 @@
 package ladysnake.gaspunk.api;
 
+import ladysnake.gaspunk.api.event.GasImmunityCallback;
+import nerdhub.cardinal.components.api.component.Component;
+
 import java.util.Map;
 
-public interface IBreathingHandler {
+public interface IBreathingHandler extends Component {
 
     /**
      * Sets the concentration of the given gas in the target's environment for this tick
@@ -22,7 +25,7 @@ public interface IBreathingHandler {
      * @param gas the type of gas affecting the entity
      * @param concentration the concentration of the gas in the air surrounding the entity
      * @return true if this handler is immune to the given gas under the given concentration
-     * @see ladysnake.gaspunk.api.event.GasEvent.GasImmunityEvent
+     * @see GasImmunityCallback
      */
     boolean isImmune(IGas gas, float concentration);
 
