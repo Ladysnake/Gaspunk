@@ -1,6 +1,7 @@
 package ladysnake.gaspunk.api.basetype;
 
 import ladysnake.gaspunk.api.IGasParticleType;
+import net.minecraft.particle.ParticleType;
 import net.minecraft.util.Identifier;
 import javax.annotation.Nonnull;
 import java.util.Locale;

@@ -8,8 +8,8 @@ import net.minecraft.util.Identifier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class RenderGasCloud<E extends GasCloudEntity> extends EntityRenderer<E> {
-    public RenderGasCloud(EntityRenderDispatcher dispatcher) {
+public class GasCloudRenderer<E extends GasCloudEntity> extends EntityRenderer<E> {
+    public GasCloudRenderer(EntityRenderDispatcher dispatcher) {
         super(dispatcher);
     }
 
@@ -47,6 +47,6 @@ public class RenderGasCloud<E extends GasCloudEntity> extends EntityRenderer<E> 
     @Nullable
     @Override
     protected Identifier getTexture(@Nonnull E entity) {
-        return new Identifier("textures/entity/experience_orb.png");
+        return null;
     }
 }

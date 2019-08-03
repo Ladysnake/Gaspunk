@@ -3,7 +3,8 @@
   "package": "ladysnake.gaspunk.mixin.client",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-
+    "EntityRenderDispatcherAccessor",
+    "LivingEntityRendererAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

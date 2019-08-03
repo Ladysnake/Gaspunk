@@ -61,7 +61,7 @@ public class GasCloudEntity extends Entity implements IEntityAdditionalSpawnData
         int particleAmount = gas.getParticleType().getParticleAmount();
         int color = gas.getColor();
         if (this.world.isClient && this.getCloudAge() % 10 == 0) {
-            GasPunkClient.makeSmoke(world, x, y, z, color, particleAmount, MAX_PROPAGATION_DISTANCE-2, 2, gas.getParticleType());
+            GasPunkClient.INSTANCE.makeSmoke(world, x, y, z, color, particleAmount, MAX_PROPAGATION_DISTANCE-2, 2, gas.getParticleType());
         }
 
         if (!world.isClient) {

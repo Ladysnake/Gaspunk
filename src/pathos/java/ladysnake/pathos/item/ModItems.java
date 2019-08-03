@@ -17,18 +17,18 @@ public class ModItems {
 //    @Environment(EnvType.CLIENT)
 //    @SubscribeEvent
 //    public static void registerRenders(ModelRegistryEvent event) {
-//        ModelLoader.setCustomModelResourceLocation(EMPTY_SYRINGE, 0, new ModelResourceLocation(new ResourceLocation("pathos:empty_syringe"), "inventory"));
-//        ModelLoader.setCustomModelResourceLocation(FILLED_SYRINGE, 0, new ModelResourceLocation(new ResourceLocation("pathos:filled_syringe"), "inventory"));
+//        ModelLoader.setCustomModelIdentifier(EMPTY_SYRINGE, 0, new ModelIdentifier(new Identifier("pathos:empty_syringe"), "inventory"));
+//        ModelLoader.setCustomModelIdentifier(FILLED_SYRINGE, 0, new ModelIdentifier(new Identifier("pathos:filled_syringe"), "inventory"));
 //    }
 //
 //    @Environment(EnvType.CLIENT)
 //    private static void registerRender(Item item) {
-//        registerRender(item, new ModelResourceLocation(Objects.requireNonNull(item.getRegistryName()).toString()));
+//        registerRender(item, new ModelIdentifier(Objects.requireNonNull(item.getRegistryName()).toString()));
 //    }
 //
 //    @Environment(EnvType.CLIENT)
-//    private static void registerRender(Item item, ModelResourceLocation loc) {
-//        ModelLoader.setCustomModelResourceLocation(item, 0, loc);
+//    private static void registerRender(Item item, ModelIdentifier loc) {
+//        ModelLoader.setCustomModelIdentifier(item, 0, loc);
 //    }
 
 }

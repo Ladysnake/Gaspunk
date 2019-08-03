@@ -58,6 +58,7 @@ public final class GasPunk implements ModInitializer {
     public void onInitialize() {
         GasPunkConfig.load(GasPunkCommonConfig.class);
         this.createItemGroup();
+        GasPunkEntities.init();
         GasAgents.init();
         Gases.init();
         Gas.classInit();

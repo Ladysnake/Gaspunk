@@ -10,7 +10,7 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "ladysnake.gaspunk.client.GaspunkClient"
+      "ladysnake.gaspunk.client.GaspunkClient::INSTANCE"
     ],
     "main": [
       "ladysnake.gaspunk.Gaspunk::INSTANCE"

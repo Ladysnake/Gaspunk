@@ -7,24 +7,26 @@ import ladysnake.gaspunk.common.item.GasPunkItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
+import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
 import javax.annotation.Nullable;
 
 @Environment(EnvType.CLIENT)
-public class LayerBelt extends FeatureRenderer<PlayerEntity, BandoulierModel<PlayerEntity>> {
+public class LayerBelt extends FeatureRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> {
 
     private BandoulierModel<PlayerEntity> bandoulier = new BandoulierModel<>();
 
-    public LayerBelt(FeatureRendererContext<PlayerEntity, BandoulierModel<PlayerEntity>> ctx) {
+    public LayerBelt(FeatureRendererContext<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> ctx) {
         super(ctx);
     }
 
     @Override
-    public void render(@Nullable PlayerEntity player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void render(@Nullable AbstractClientPlayerEntity player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         if (player != null && BaublesApi.isBaubleEquipped(player, GasPunkItems.GRENADE_BELT) >= 0) {
             IRenderBauble.Helper.rotateIfSneaking(player);
             MinecraftClient.getInstance().getTextureManager().bindTexture(new Identifier("gaspunk:textures/entity/grenade_belt.png"));

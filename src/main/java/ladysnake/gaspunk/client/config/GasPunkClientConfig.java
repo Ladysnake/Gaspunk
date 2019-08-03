@@ -8,7 +8,6 @@ import java.util.Collections;
 
 public class GasPunkClientConfig extends GasPunkCommonConfig {
     private boolean useShaders = true;
-
     private boolean renderGasOverlays = false;
 
     @Override

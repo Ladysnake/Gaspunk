@@ -21,7 +21,7 @@ import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.init.Bootstrap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import org.junit.Before;
@@ -36,7 +36,7 @@ import static org.mockito.Mockito.*;
 @SuppressWarnings("ConstantConditions")
 public class SicknessTests {
 
-    private static final IGasAgent NERVE = GasAgents.registerSicknessAgent("sarin_gas", true, true, new ResourceLocation("lung_control_loss"));
+    private static final IGasAgent NERVE = GasAgents.registerSicknessAgent("sarin_gas", true, true, new Identifier("lung_control_loss"));
     private static final Gas SARIN_GAS = new SuspendableGas(GasTypes.GAS, 0x00FFFFFF, NERVE, 0.8F);
 
     static {

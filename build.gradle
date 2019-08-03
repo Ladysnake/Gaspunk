@@ -102,6 +102,7 @@ repositories {
         name = "JitPack"
         url = "https://jitpack.io"
     }
+    mavenLocal()
 }
 
 dependencies {
@@ -110,7 +111,7 @@ dependencies {
     modCompile "net.fabricmc:fabric-loader:${loader_version}"
 
     //optional dependency!
-    modCompile "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
     // Lazily evaluated callable returning a non-live (unlike a FileCollection) list of files
     sourceSets.api.compileClasspath += files({sourceSets.main.compileClasspath.toList()})
@@ -124,6 +125,7 @@ dependencies {
     modImplementation "com.github.Pyrofab:Cardinal-Components-API:${cca_version}"
     modImplementation "com.github.Ladysnake:Satin:${satin_version}"
     modImplementation "net.mcft.copy:Wearables:${wearables_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-particles-v1:0.1.0+143c1175"
 
     // Config API
     modImplementation "me.shedaniel.cloth:config-2:${project.clothconfig_version}"
@@ -132,6 +134,8 @@ dependencies {
     modImplementation "io.github.prospector.modmenu:ModMenu:${modmenu_version}"
     apiCompileOnly "com.google.code.findbugs:jsr305:3.0.2"
     pathosCompileOnly "com.google.code.findbugs:jsr305:3.0.2"
+    apiCompileOnly "org.apiguardian:apiguardian-api:1.0.0"
+    compileOnly "org.apiguardian:apiguardian-api:1.0.0"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile "org.mockito:mockito-core:2.+"

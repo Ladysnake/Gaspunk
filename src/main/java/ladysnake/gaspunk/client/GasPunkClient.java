@@ -1,43 +1,54 @@
 package ladysnake.gaspunk.client;
 
 import com.google.common.collect.ImmutableSet;
-import ladylib.LadyLib;
 import ladysnake.gaspunk.api.IGasParticleType;
 import ladysnake.gaspunk.api.customization.GrenadeSkins;
 import ladysnake.gaspunk.client.config.GasPunkClientConfig;
 import ladysnake.gaspunk.client.config.GasPunkPremiumConfig;
 import ladysnake.gaspunk.client.particle.ParticleGasSmoke;
+import ladysnake.gaspunk.client.render.GasCloudRenderer;
 import ladysnake.gaspunk.client.render.entity.LayerBelt;
 import ladysnake.gaspunk.common.config.GasPunkConfig;
+import ladysnake.gaspunk.common.entity.GasCloudEntity;
+import ladysnake.gaspunk.common.entity.GrenadeEntity;
 import ladysnake.gaspunk.common.item.GasPunkItems;
 import ladysnake.gaspunk.common.item.ItemGasTube;
 import ladysnake.gaspunk.common.util.SpecialRewardChecker;
+import ladysnake.gaspunk.mixin.client.EntityRenderDispatcherAccessor;
+import ladysnake.gaspunk.mixin.client.LivingEntityRendererAccessor;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.render.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.render.EntityRendererRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.options.ParticlesOption;
+import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.world.World;
 
 import java.awt.*;
 import java.util.UUID;
 
 public final class GasPunkClient implements ClientModInitializer {
+
+    public static final GasPunkClient INSTANCE = new GasPunkClient();
+
     private int particleCount = 0;
 
     @Override
     public void onInitializeClient() {
         GasPunkConfig.load(GasPunkClientConfig.class);
         MinecraftClient mc = MinecraftClient.getInstance();
-        ((ItemColors) mc.getItemColors()).register(((stack, tintIndex) -> tintIndex == 0
+        ColorProviderRegistry.ITEM.register(((stack, tintIndex) -> tintIndex == 0
                 ? ItemGasTube.getContainedGas(stack).getBottleColor()
                 : Color.WHITE.getRGB()), GasPunkItems.GAS_TUBE, GasPunkItems.GRENADE);
         if (FabricLoader.getInstance().isModLoaded("wearables")) {
-            mc.getRenderManager().getSkinMap().forEach((s, render) -> render.addLayer(new LayerBelt()));
+            ((EntityRenderDispatcherAccessor) mc.getEntityRenderManager()).getModelRenderers().forEach((s, render) -> ((LivingEntityRendererAccessor)render).invokeAddFeature(new LayerBelt(render)));
         }
+        EntityRendererRegistry.INSTANCE.register(GasCloudEntity.class, (manager, ctx) -> new GasCloudRenderer<>(manager));
+        EntityRendererRegistry.INSTANCE.register(GrenadeEntity.class, (manager, ctx) -> new FlyingItemEntityRenderer<GrenadeEntity>(manager, ctx.getItemRenderer()));
     }
 
-    public static void makeSmoke(World world, double x, double y, double z, int color, int amount, int radX, int radY, IGasParticleType texture) {
+    public void makeSmoke(World world, double x, double y, double z, int color, int amount, int radX, int radY, IGasParticleType texture) {
         if (!world.isClient) return;
         float b = (color & 0xFF) / 255F;
         float g = (color >> 8 & 0xFF) / 255F;
@@ -53,8 +64,8 @@ public final class GasPunkClient implements ClientModInitializer {
                 double posY = y + world.random.nextGaussian() * radY % radY;
                 double posZ = z + world.random.nextGaussian() * radX % radX;
                 ParticleGasSmoke particle = new ParticleGasSmoke(world, posX, posY, posZ, r, g, b, a, (float) (55 + 20 * world.random.nextGaussian()));
-                particle.setTexture(texture.getParticleTexture());
-                LadyLib.getParticleManager().addParticle(particle);
+                particle.setSprite(texture.getParticleTexture());
+                MinecraftClient.getInstance().particleManager.addParticle(particle);
             }
         }
     }
