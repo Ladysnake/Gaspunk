@@ -3,8 +3,6 @@ package ladysnake.gaspunk.network;
 import ladysnake.gaspunk.GasPunk;
 import ladysnake.gaspunk.util.SpecialRewardChecker;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

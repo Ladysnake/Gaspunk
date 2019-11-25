@@ -1,21 +1,17 @@
 package ladysnake.gaspunk.client.render.entity;
 
+import javax.annotation.Nullable;
+
 import baubles.api.BaublesApi;
 import baubles.api.render.IRenderBauble;
 import ladysnake.gaspunk.client.model.ModelBandoulier;
 import ladysnake.gaspunk.init.ModItems;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderLivingBase;
-import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nullable;
 
 @SideOnly(Side.CLIENT)
 public class LayerBelt implements LayerRenderer<EntityPlayer> {
