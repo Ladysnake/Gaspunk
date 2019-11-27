@@ -1,4 +1,4 @@
-##### Version 1.12.2-1.4.8
+##### Version 1.12.2-1.4.8 - BUILT
 - Edited the HREF for item skins
 - Temporarily removed the signatures because I'm not sure how to do it yet
 
