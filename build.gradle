@@ -188,20 +188,24 @@ jar {
     }
 }
 
+/*
 task signJar(type: SignJar, dependsOn: reobfJar) {
     if (canJarBeSigned()) {
-        keyStore = project.keyStore
-        alias = project.keyStoreAlias
-        storePass = project.keyStorePass
-        keyPass = project.keyStoreKeyPass
+        keyStore = project.findProperty("keyStore")
+        alias = project.findProperty("keyStoreAlias")
+        storePass = project.findProperty("keyStorePass")
+        keyPass = project.findProperty("keyStoreKeyPass")
         inputFile = jar.archivePath
         outputFile = jar.archivePath
     }
 }
+*/
 
+/*
 boolean canJarBeSigned() {
     return project.hasProperty('keyStore')
 }
+*/
 
 artifacts {
     archives apiJar
@@ -210,7 +214,7 @@ artifacts {
 }
 
 // Runs this task automatically when build is ran.
-build.dependsOn signJar
+// build.dependsOn signJar
 
 apply from: 'update_json.gradle'
 build.finalizedBy updateJson
