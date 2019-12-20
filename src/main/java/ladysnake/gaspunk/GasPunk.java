@@ -99,8 +99,7 @@ public class GasPunk {
         if (LadyLib.isDevEnv())
             LOGGER.info("Ignoring invalid fingerprint as we are in a development environment");
         else
-            LOGGER.info("The fingerpring is invalid and will not be officially supported by Ladysnake. Please contact @sschr15 for possible fixes...");
-            //LOGGER.warn("Invalid fingerprint detected! The file " + event.getSource().getName() + " may have been tampered with. This version will NOT be supported by the author!");
+            LOGGER.warn("Invalid fingerprint detected! The file " + event.getSource().getName() + " may have been tampered with. This version will NOT be supported by the author!");
     }
 
     public static class GasPunkTabs extends CreativeTabs {
