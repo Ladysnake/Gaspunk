@@ -1,6 +1,6 @@
 ##### Version 1.12.2-1.4.8 - BUILT
 - Edited the HREF for item skins
-- Temporarily removed the signatures because I'm not sure how to do it yet
+- Added the ability to change the length gas clouds exist through configuration
 
 ##### Version 1.12.2-1.4.7 - BUILT
 - Fixed a startup crash on dedicated servers

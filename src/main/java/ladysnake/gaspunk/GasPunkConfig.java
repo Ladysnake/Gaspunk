@@ -2,10 +2,16 @@ package ladysnake.gaspunk;
 
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.common.config.Config.RequiresMcRestart;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+/**
+ * Main configuration section
+ * @author Pyrofab
+ * @author sschr15 (a bit)
+ */
 @Config(modid = GasPunk.MOD_ID, name = GasPunk.MOD_ID + "/" + GasPunk.MOD_ID)
 @Mod.EventBusSubscriber(modid = GasPunk.MOD_ID)
 public class GasPunkConfig {
@@ -15,6 +21,13 @@ public class GasPunkConfig {
 
     @Config.Comment("Makes ash require smelting nether wart instead of rotten flesh")
     public static boolean alternativeAshRecipe = false;
+
+    @Config.Comment({
+        "Sets the lifespan in ticks for gas clouds.",
+        "The clouds themselves look like they take a bit longer to decay,",
+        "but the effects no longer happen after this amount."
+    })
+    public static int gasLifespan = 600;
 
     @Config.Comment({
             "The items which ID's are added here will be considered as gas masks when breathing gas",

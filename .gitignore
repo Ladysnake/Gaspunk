@@ -22,5 +22,4 @@ logs
 eclipse
 run
 classes
-keystore.jks
-gradleproperties.local
+.vscode/

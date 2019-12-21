@@ -1,8 +1,8 @@
 {
-    "homepage": null,
+    "homepage": "https://github.com/Ladysnake/Gaspunk",
     "promos": {
         "1.12.2-latest": "1.4.8",
-        "1.12.2-recommended": "1.4.7"
+        "1.12.2-recommended": "1.4.8"
     },
     "1.12.2": {
         "1.4.1": "Now requires forge 1.12.2-14.23.3.2669 or later\nAdded a few API features\n- added a way for add-ons to bypass a gas' checks when running its effect\n- exposed a few classes\nAlso now packages Ladylib as a contained dependency instead of shading the code like a caveman",
@@ -12,6 +12,6 @@
         "1.4.5": "Update the contained library",
         "1.4.6": "- Disabled candyfloss ore recipe when candyworld is not installed, fixes loading crash with Immersive Engineering\n- Gas loading errors are now more descriptive and don't crash. Check your logs if you make custom gases !",
         "1.4.7": "- Fixed a startup crash on dedicated servers",
-        "1.4.8": "- Edited the HREF for item skins\n- Temporarily removed the signatures because I'm not sure how to do it yet"
+        "1.4.8": "- Edited the HREF for item skins\n- Added the ability to change the length gas clouds exist through configuration"
     }
 }

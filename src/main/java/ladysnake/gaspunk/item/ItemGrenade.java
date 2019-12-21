@@ -2,6 +2,7 @@ package ladysnake.gaspunk.item;
 
 import ladylib.misc.ItemUtil;
 import ladysnake.gaspunk.GasPunk;
+import ladysnake.gaspunk.GasPunkConfig;
 import ladysnake.gaspunk.api.IGas;
 import ladysnake.gaspunk.api.customization.IHasSkin;
 import ladysnake.gaspunk.entity.EntityGasCloud;
@@ -88,7 +89,8 @@ public class ItemGrenade extends ItemGasTube implements IHasSkin {
         worldIn.spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.x, pos.y, pos.z, 20, 0.5, 0.5, 0.5, 0.2);
         EntityGasCloud cloud = new EntityGasCloud(worldIn, getContainedGas(stack));
         cloud.setPosition(pos.x, pos.y, pos.z);
-        cloud.setMaxLifespan(600);
+        int lifespan = GasPunkConfig.gasLifespan;
+        cloud.setMaxLifespan(lifespan);
         worldIn.spawnEntity(cloud);
         return cloud;
     }
