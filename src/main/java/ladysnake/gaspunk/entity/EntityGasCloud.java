@@ -30,7 +30,8 @@ import java.util.UUID;
 
 public class EntityGasCloud extends Entity implements IEntityAdditionalSpawnData {
 
-    public static final int MAX_PROPAGATION_DISTANCE = 10;
+    static int maxPropDistance = GasPunkConfig.maxPropagationDistance;
+    public static final int MAX_PROPAGATION_DISTANCE = maxPropDistance;
     public static final int MAX_PROPAGATION_DISTANCE_SQ = MAX_PROPAGATION_DISTANCE * MAX_PROPAGATION_DISTANCE;
     private static final DataParameter<Integer> CLOUD_AGE = EntityDataManager.createKey(EntityGasCloud.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> MAX_LIFESPAN = EntityDataManager.createKey(EntityGasCloud.class, DataSerializers.VARINT);
