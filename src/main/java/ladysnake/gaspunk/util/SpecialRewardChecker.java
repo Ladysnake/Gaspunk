@@ -80,7 +80,7 @@ public class SpecialRewardChecker {
     public static void retrieveSpecialRewards() {
         try {
             Gson GSON = new Gson();
-            URLConnection rewardPage = new URL("https://ladysnake.glitch.me/gaspunk/users").openConnection();
+            URLConnection rewardPage = new URL("https://github.com/Ladysnake/ModWinder/raw/master/gaspunkusers.json").openConnection();
             rewardPage.connect();
             BufferedReader in = new BufferedReader(new InputStreamReader(rewardPage.getInputStream()));
             String inputLine;

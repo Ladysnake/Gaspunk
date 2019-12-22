@@ -16,8 +16,11 @@ out
 # gradle
 build
 .gradle
+logs
 
 # other
 eclipse
 run
 classes
+.vscode/
+keystore.jks
