@@ -12,6 +12,6 @@
         "1.4.5": "Update the contained library",
         "1.4.6": "- Disabled candyfloss ore recipe when candyworld is not installed, fixes loading crash with Immersive Engineering\n- Gas loading errors are now more descriptive and don't crash. Check your logs if you make custom gases !",
         "1.4.7": "- Fixed a startup crash on dedicated servers",
-        "1.4.8": "- Edited the HREF for item skins\n- Added the ability to change the length gas clouds exist through configuration"
+        "1.4.8": "- Edited the HREF for item skins\n- Added the ability to change the length gas clouds exist through configuration\n- Also added the ability to change the distance the gas can travel"
     }
 }
