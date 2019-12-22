@@ -1,6 +1,7 @@
 ##### Version 1.12.2-1.4.8 - BUILT
 - Edited the HREF for item skins
 - Added the ability to change the length gas clouds exist through configuration
+- Also added the ability to change the distance the gas can travel
 
 ##### Version 1.12.2-1.4.7 - BUILT
 - Fixed a startup crash on dedicated servers

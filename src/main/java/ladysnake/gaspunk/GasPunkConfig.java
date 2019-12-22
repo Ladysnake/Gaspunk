@@ -22,6 +22,16 @@ public class GasPunkConfig {
     @Config.Comment("Makes ash require smelting nether wart instead of rotten flesh")
     public static boolean alternativeAshRecipe = false;
 
+    @Config.Comment(
+        "Sets the lifespan in ticks for gas clouds. The clouds themselves look like they take a bit longer to decay, but the effects no longer happen after this amount."
+    )
+    public static int gasLifespan = 600;
+
+    @Config.Comment(
+        "Default distance that the gas cloud travels. The value appears to be an estimate for the radius in meters. I am not the original developer, so I'm not completely sure."
+    )
+    public static int maxPropagationDistance = 10;
+
     @Config.Comment({
         "Sets the lifespan in ticks for gas clouds.",
         "The clouds themselves look like they take a bit longer to decay,",
