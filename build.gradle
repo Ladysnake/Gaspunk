@@ -1,220 +1,95 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven {
-            name = "forge"
-            url = "https://files.minecraftforge.net/maven"
-        }
-    }
-    dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
-    }
+plugins {
+	id 'maven-publish'
+	alias libs.plugins.quilt.loom
+	alias libs.plugins.chenille
 }
 
-apply plugin: "net.minecraftforge.gradle.forge"
-apply plugin: "signing"
-apply plugin: "maven"
+archivesBaseName = project.archives_base_name
+version = "${project.version}+${libs.versions.minecraft.get()}"
+group = project.maven_group
 
-version = modVersion
-group = modGroup
-archivesBaseName = modBaseName
+project.ext.javaVersion = 17
 
-sourceSets {
-    pathos {
-        compileClasspath = main.compileClasspath
-        runtimeClasspath = main.runtimeClasspath
-    }
-    main {
-        compileClasspath += pathos.output
-        runtimeClasspath += pathos.output
-    }
-    test {
-        compileClasspath += pathos.output
-        runtimeClasspath += pathos.output
-    }
-}
-
-minecraft {
-    version = "${project.forgeVersion}"
-    runDir = "run"
-
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not always work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = project.mcpVersion
-//    makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-    replace '@VERSION@', modVersion
-    // use findProperty instead of a direct reference to prevent gradle failure when the property does not exist
-    replace '@FINGERPRINT@', project.findProperty('signSHA1')
-
-    if (project.hasProperty('mc_username')) {
-        clientRunArgs += ['--username', "${project.mc_username}"]
-        if (project.hasProperty('mc_password')) {
-            clientRunArgs += ['--password=', "${project.mc_password}"]
-        }
-    }
-    if (project.hasProperty('mc_uuid')) {
-        clientRunArgs += ['--uuid', "${project.mc_uuid}"]
-    }
-    serverRunArgs += "nogui"
-
-    if (project.hasProperty('client_args')) {
-        clientJvmArgs += "${project.client_args}"
-    }
-    if (project.hasProperty('server_args')) {
-        serverJvmArgs += "${project.server_args}"
-    }
-
-    clientJvmArgs += "-Dlog4j.skipJansi=true"
-    serverJvmArgs += "-Dlog4j.skipJansi=true"
-
+chenille {
+	repositories {
+		ladysnake()
+		modrinth()
+		terraformers()
+	}
 }
 
 repositories {
-    mavenCentral()
-    jcenter()
-    maven {
-        url 'https://jitpack.io'
-    }
-    maven {
-        // location of the maven that hosts JEI files
-        name = "Progwml6 maven"
-        url = "http://dvs1.progwml6.com/files/maven"
-    }
-    maven {
-        // location of a maven mirror for JEI files, as a fallback
-        name = "ModMaven"
-        url = "modmaven.k-4u.nl"
-    }
-    maven {
-        name = "thiakil"    // Baubles
-        url = "http://maven.thiakil.com"
-    }
-    maven {
-        name 'Curseforge Maven' // Thaumcraft + IE
-        url 'https://minecraft.curseforge.com/api/maven/'
-    }
-    maven { // Albedo Lights (IE dep)
-        url 'https://repo.elytradev.com/'
-    }
+	// Add repositories to retrieve artifacts from in here.
+	// You should only use this when depending on other mods because
+	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
+	// for more information about repositories.
 }
 
-configurations {
-    contained
-    contained.transitive = false
-}
-
+// All the dependencies are declared at gradle/libs.version.toml and referenced with "libs.<id>"
+// See https://docs.gradle.org/current/userguide/platforms.html for information on how version catalogs work.
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile "org.mockito:mockito-core:2.+"
-    deobfProvided "com.azanor.baubles:Baubles:1.12-1.5.2"
-    deobfProvided "mezz.jei:jei_${mc_version}:${jei_version}:api"
-    deobfProvided "thaumcraft:Thaumcraft:${mc_version}:${tc_version}"
-//    deobfProvided "com.github.BluSunrize:ImmersiveEngineering:0.12-84"
-    deobfCompile "need-to-breathe:needtobreathe:1.12:0.1.4beta"
-    deobfCompile "mcjtylib:mcjtylib:1.12:2.6.7"
-    deobfCompile 'com.github.Ladysnake:Ladylib:cf50ce0f4e'
-    contained 'com.github.Ladysnake:Ladylib:2.1'
+	minecraft libs.minecraft
+	mappings variantOf(libs.quilt.mappings) { classifier 'intermediary-v2' }
+	modImplementation libs.quilt.loader
+
+	modImplementation libs.quilted.fabric.api
+
+    modImplementation "dev.emi:emi-fabric:1.0.5+1.19.2"
+	modImplementation "com.terraformersmc:modmenu:4.2.0-beta.2"
 }
 
 processResources {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+	inputs.property 'version', version
 
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include "mcmod.info"
-
-        // replace version and mcversion
-        expand "version": project.version, "mcversion": project.minecraft.version
-    }
-
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "mcmod.info"
-    }
+	filesMatching('quilt.mod.json') {
+		expand "version": version
+	}
 }
 
-task apiJar(type: Jar) {
-    from sourceSets.api.output
-    from sourceSets.api.allJava
-    classifier 'api'
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = 'UTF-8'
+	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
+	it.options.release = 17
 }
 
-task pathosJar(type: Jar) {
-    from sourceSets.pathos.output
-    from sourceSets.pathos.allJava
-    classifier 'pathos'
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = 'UTF-8'
+	it.options.release.set(project.ext.javaVersion)
 }
 
-javadoc {
-    source sourceSets.main.allJava
-    source sourceSets.api.allJava
-    source sourceSets.pathos.allJava
+java {
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task if it is present.
+	withSourcesJar()
+	withJavadocJar()
+
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(javaVersion)
+		vendor = JvmVendorSpec.MICROSOFT
+	}
 }
 
-// Javadoc jar
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    from javadoc.destinationDir
-    classifier = 'javadoc'
-}
-
-build.dependsOn(apiJar)
-build.dependsOn(javadocJar)
-
+// If you plan to use a different file for the license, don't forget to change the file name here!
 jar {
-    archiveName = "${archivesBaseName}-${mc_version}-${modVersion}.jar"
-    from sourceSets.api.output
-    from sourceSets.main.output
-    from(sourceSets.pathos.output) {
-        exclude "mcmod.info"
-        exclude "pack.mcmeta"
-    }
-
-    from(configurations.contained.files) {
-        include '*'
-        into 'META-INF/libraries'
-    }
-
-    manifest {
-        attributes([
-                'ContainedDeps': configurations.contained.files.collect { it.name }.join(" "),
-                'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}",
-                'Timestamp'     : System.currentTimeMillis()
-        ])
-    }
+	from(layout.projectDirectory) {
+		include "LICENSE*"
+		rename { "LICENSE_${archivesBaseName}.md" }
+	}
 }
 
+// Configure the maven publication
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+		}
+	}
 
-task signJar(type: SignJar, dependsOn: reobfJar) {
-    if (canJarBeSigned()) {
-        keyStore = project.findProperty("keyStore")
-        alias = project.findProperty("keyStoreAlias")
-        storePass = project.findProperty("keyStorePass")
-        keyPass = project.findProperty("keyStoreKeyPass")
-        inputFile = jar.archivePath
-        outputFile = jar.archivePath
-    }
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+	repositories {
+		// Add repositories to publish to here.
+		// Notice: This block does NOT have the same function as the block in the top level.
+		// The repositories here will be used for publishing your artifact, not for
+		// retrieving dependencies.
+	}
 }
-
-
-
-boolean canJarBeSigned() {
-    return project.hasProperty('keyStore')
-}
-
-
-artifacts {
-    archives apiJar
-    archives sourceJar
-    archives pathosJar
-}
-
-// Runs this task automatically when build is ran.
-build.dependsOn signJar
-
-//apply from: 'update_json.gradle'
-//build.finalizedBy updateJson
