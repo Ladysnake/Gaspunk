@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "tag": "minecraft:planks"
+  },
+  "result": "gaspunk:ash",
+  "experience": 0.01,
+  "cookingtime": 600
+}

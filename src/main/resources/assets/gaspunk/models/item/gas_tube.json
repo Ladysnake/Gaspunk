@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "gaspunk:item/gas_tube_fill",
+    "layer1": "gaspunk:item/gas_tube"
+  }
+}

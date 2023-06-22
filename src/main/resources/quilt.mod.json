@@ -1,0 +1,59 @@
+{
+	"schema_version": 1,
+	"quilt_loader": {
+		"group": "org.ladysnake",
+		"id": "gaspunk",
+		"version": "${version}",
+		"metadata": {
+			"name": "Gaspunk",
+			"description": "",
+			"contributors": {
+				"Team Ladysnake": "Owner",
+				"UpcraftLP": "Author",
+				"Pyrofab": "Author",
+				"sschr15": "Contributor",
+				"doctor4t": "Artist"
+			},
+			"contact": {
+				"homepage": "https://ladysnake.org/oldsite/gaspunk",
+				"sources": "https://github.com/Ladysnake/Gaspunk",
+				"issues": "https://github.com/Ladysnake/Gaspunk/issues"
+			},
+			"icon": "assets/gaspunk/icon.png"
+		},
+		"intermediate_mappings": "net.fabricmc:intermediary",
+		"entrypoints": {
+			"init": [
+				"org.ladysnake.gaspunk.GasPunk"
+			],
+			"client_init": [
+				"org.ladysnake.gaspunk.client.GasPunkClient"
+			],
+			"pre_launch": [
+			],
+			"cardinal-components-entity": [
+				"org.ladysnake.pathos.component.PathosEntityComponents"
+			]
+		},
+		"depends": [
+			{
+				"id": "quilt_loader",
+				"versions": ">=0.19.0"
+			},
+			{
+				"id": "quilted_fabric_api",
+				"versions": "*"
+			},
+			{
+				"id": "minecraft",
+				"versions": "1.19.2"
+			}
+		]
+	},
+	"mixin": [
+		"gaspunk.mixins.json"
+	],
+	"cardinal-components": [
+		"pathos:sickness_handler"
+	]
+}
