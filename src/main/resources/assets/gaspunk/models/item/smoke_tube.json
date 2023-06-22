@@ -1,7 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "gaspunk:items/potion_smoke_overlay",
-    "layer1": "gaspunk:items/potion_bottle_gas"
-  }
-}
