@@ -35,8 +35,14 @@ dependencies {
 
 	modImplementation libs.quilted.fabric.api
 
-    modImplementation "dev.emi:emi-fabric:1.0.5+1.19.2"
-	modImplementation "com.terraformersmc:modmenu:4.2.0-beta.2"
+    modImplementation "dev.emi:emi-fabric:1.0.5+1.20.1"
+	modImplementation "com.terraformersmc:modmenu:7.1.0"
+
+	modImplementation "maven.modrinth:midnightlib:1.4.1-quilt"
+
+	modApi "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.1"
+	modApi "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.2.1"
+
 }
 
 processResources {
@@ -45,12 +51,6 @@ processResources {
 	filesMatching('quilt.mod.json') {
 		expand "version": version
 	}
-}
-
-tasks.withType(JavaCompile).configureEach {
-	it.options.encoding = 'UTF-8'
-	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
-	it.options.release = 17
 }
 
 tasks.withType(JavaCompile).configureEach {
