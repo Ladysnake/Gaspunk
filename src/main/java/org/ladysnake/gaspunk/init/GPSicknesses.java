@@ -1,6 +1,6 @@
 package org.ladysnake.gaspunk.init;
 
-import org.ladysnake.gaspunk.api.SeverityFunctions;
+import org.ladysnake.pathos.api.SeverityFunctions;
 import org.ladysnake.gaspunk.sickness.GasSickness;
 import org.ladysnake.gaspunk.sickness.SarinGasSickness;
 import org.ladysnake.pathos.api.Sickness;

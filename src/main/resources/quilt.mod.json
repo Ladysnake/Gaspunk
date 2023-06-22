@@ -24,7 +24,8 @@
 		"intermediate_mappings": "net.fabricmc:intermediary",
 		"entrypoints": {
 			"init": [
-				"org.ladysnake.gaspunk.GasPunk"
+				"org.ladysnake.gaspunk.GasPunk",
+				"org.ladysnake.pathos.Pathos"
 			],
 			"client_init": [
 				"org.ladysnake.gaspunk.client.GasPunkClient"

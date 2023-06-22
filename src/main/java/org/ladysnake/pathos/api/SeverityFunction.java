@@ -1,4 +1,4 @@
-package org.ladysnake.gaspunk.api;
+package org.ladysnake.pathos.api;
 
 @FunctionalInterface
 public interface SeverityFunction {

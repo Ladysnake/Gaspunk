@@ -6,7 +6,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
-import org.ladysnake.gaspunk.api.SeverityFunction;
 import org.ladysnake.pathos.api.event.SicknessEvents;
 
 /**

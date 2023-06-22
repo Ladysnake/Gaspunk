@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
+import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -36,7 +37,7 @@ public class Pathos implements ModInitializer {
     @Override
     public void onInitialize(ModContainer mod) {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
-            entries.addItem(PathosItems.SYRINGE);
+            entries.addBefore(Items.GLASS_BOTTLE, PathosItems.SYRINGE);
             entries.addItem(PathosItems.BLOOD_SYRINGE, ItemGroup.Visibility.SEARCH_TAB_ONLY);
         });
 

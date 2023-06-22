@@ -18,13 +18,14 @@ import org.ladysnake.pathos.init.PathosItems;
 
 public class SyringeItem extends Item {
 
+    //TODO custom damage source
+
     public SyringeItem(Settings settings) {
         super(settings);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        user.damage(world.getDamageSources().thorns(user), 0.15F); // less than 0.5 hears
         return ItemUsage.consumeHeldItem(world, user, hand);
     }
 
@@ -53,6 +54,15 @@ public class SyringeItem extends Item {
             source.putUuid("uuid", user.getUuid());
         }
         nbt.put("source", source);
+
+        // use heal instead of damage to avoid knockback
+        if(user.getHealth() > 1.0F) {
+            user.heal(-1.0F);
+        }
+        else {
+            user.damage(world.getDamageSources().sting(user), 1.0F); // 0.5 hears
+        }
+
 
         if (user instanceof PlayerEntity player) {
             return ItemUsage.exchangeStack(stack, player, result);

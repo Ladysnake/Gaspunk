@@ -1,7 +1,7 @@
 package org.ladysnake.gaspunk.sickness;
 
 import net.minecraft.entity.LivingEntity;
-import org.ladysnake.gaspunk.api.SeverityFunction;
+import org.ladysnake.pathos.api.SeverityFunction;
 import org.ladysnake.pathos.api.Sickness;
 import org.ladysnake.pathos.api.SicknessEffect;
 import org.ladysnake.pathos.api.SicknessHandler;

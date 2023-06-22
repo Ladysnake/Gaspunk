@@ -36,6 +36,8 @@ public class FilledSyringeItem extends SyringeItem {
         }
         handler.sync();
 
+        user.heal(1.0F);
+
         ItemStack result = new ItemStack(PathosItems.SYRINGE);
         if(user instanceof PlayerEntity player) {
             return ItemUsage.exchangeStack(stack, player, result);
