@@ -1,0 +1,10 @@
+{
+  "effects": [
+    "gaspunk:eye_irritation"
+  ],
+  "severity_function": {
+    "type": "pathos:linear_decrease",
+    "value": 0.001
+  },
+  "initial_severity": 1.0
+}

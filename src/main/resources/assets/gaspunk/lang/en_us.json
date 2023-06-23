@@ -1,5 +1,6 @@
 {
   "itemGroup.gaspunk.items": "Gaspunk",
+
   "item.gaspunk.gas_mask": "Gas Mask",
   "item.gaspunk.gas_grenade": "Gas Grenade",
   "item.gaspunk.empty_grenade": "Empty Gas Grenade",
@@ -8,5 +9,11 @@
   "item.gaspunk.grenade_belt": "Grenade Belt",
   "item.gaspunk.ash": "Ash",
   "item.gaspunk.sulfur": "Sulfur",
-  "item.gaspunk.smoke_powder": "Smoke Powder"
+  "item.gaspunk.smoke_powder": "Smoke Powder",
+
+  "pathos.sickness_effect.gaspunk.eye_irritation": "Eye Irritation",
+  "pathos.sickness_effect.gaspunk.lung_control_loss": "Lung Control Loss",
+
+  "pathos.sickness.gaspunk.tear_gas": "Tear Gas",
+  "pathos.sickness.gaspunk.sarin_gas": "Sarin Gas"
 }

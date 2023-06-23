@@ -7,8 +7,8 @@ import net.minecraft.nbt.NbtList;
 import org.jetbrains.annotations.Nullable;
 import org.ladysnake.pathos.Pathos;
 import org.ladysnake.pathos.api.Sickness;
-import org.ladysnake.pathos.api.SicknessEffect;
 import org.ladysnake.pathos.api.SicknessHandler;
+import org.ladysnake.pathos.api.SicknessInstance;
 import org.ladysnake.pathos.api.event.SicknessEvents;
 
 import java.util.*;
@@ -18,8 +18,8 @@ public class SicknessHandlerImpl implements SicknessHandler {
 
     public static final float MIN_SEVERITY_THRESHOLD = 0.000001F;
 
-    private final Map<Sickness, SicknessEffect> sicknesses = new HashMap<>();
-    private final List<SicknessEffect> toRemove = new LinkedList<>();
+    private final Map<Sickness, SicknessInstance> sicknesses = new HashMap<>();
+    private final List<SicknessInstance> toRemove = new LinkedList<>();
     private final LivingEntity entity;
 
     public SicknessHandlerImpl(LivingEntity entity) {
@@ -37,7 +37,7 @@ public class SicknessHandlerImpl implements SicknessHandler {
     }
 
     @Override
-    public void addSickness(SicknessEffect effect, BiFunction<SicknessEffect, SicknessEffect, SicknessEffect> mergeFunction) {
+    public void addSickness(SicknessInstance effect, BiFunction<SicknessInstance, SicknessInstance, SicknessInstance> mergeFunction) {
         //TODO allow event to replace merge function
         if (SicknessEvents.ON_ADD.invoker().onSicknessAdd(this, getEntity(), effect, mergeFunction)) {
             sicknesses.merge(effect.getSickness(), effect, mergeFunction);
@@ -45,19 +45,19 @@ public class SicknessHandlerImpl implements SicknessHandler {
     }
 
     @Override
-    public Collection<SicknessEffect> getActiveSicknesses() {
+    public Collection<SicknessInstance> getActiveSicknesses() {
         return Collections.unmodifiableCollection(sicknesses.values());
     }
 
     @Nullable
     @Override
-    public SicknessEffect getActiveEffect(Sickness sickness) {
+    public SicknessInstance getActiveEffect(Sickness sickness) {
         return sicknesses.get(sickness);
     }
 
     @Override
     public void cure(Sickness sickness) {
-        SicknessEffect effect = sicknesses.getOrDefault(sickness, null);
+        SicknessInstance effect = sicknesses.getOrDefault(sickness, null);
         if (effect == null) { // no effect to cure
             return;
         }
@@ -67,16 +67,16 @@ public class SicknessHandlerImpl implements SicknessHandler {
 
     @Override
     public void serverTick() {
-        for (SicknessEffect sickness : getActiveSicknesses()) {
+        for (SicknessInstance instance : getActiveSicknesses()) {
 
             // only perform the effect if the event is not canceled; if an effect is not ticked it also will not be cured naturally
-            if (!SicknessEvents.ON_TICK.invoker().onTick(this, getEntity(), sickness)) {
+            if (!SicknessEvents.ON_TICK.invoker().onTick(this, getEntity(), instance)) {
                 continue;
             }
-            sickness.performEffect(getEntity());
+            instance.performEffect(getEntity());
 
-            if (sickness.getInitialSeverity() < MIN_SEVERITY_THRESHOLD && SicknessEvents.ON_CURE.invoker().onCure(this, getEntity(), sickness)) { // consider that effect cured
-                toRemove.add(sickness);
+            if (instance.getRemainingSeverity(getEntity().getWorld().getTime()) < MIN_SEVERITY_THRESHOLD && SicknessEvents.ON_CURE.invoker().onCure(this, getEntity(), instance)) { // consider that effect cured
+                toRemove.add(instance);
             }
         }
 
@@ -91,7 +91,7 @@ public class SicknessHandlerImpl implements SicknessHandler {
         NbtList list = tag.getList("sicknesses", NbtElement.COMPOUND_TYPE);
         for (int i = 0; i < list.size(); i++) {
             NbtCompound effectTag = list.getCompound(i);
-            SicknessEffect effect = new SicknessEffect(effectTag);
+            SicknessInstance effect = new SicknessInstance(getEntity().getWorld(), effectTag);
             if (effect.getSickness() == null) {
                 Pathos.getLogger().error("Unable to deserialize sickness effect '{}'!", effectTag);
                 continue;

@@ -10,8 +10,8 @@ import net.minecraft.util.Identifier;
 import org.ladysnake.gaspunk.init.GPEntities;
 import org.ladysnake.gaspunk.init.GPItemGroups;
 import org.ladysnake.gaspunk.init.GPItems;
-import org.ladysnake.gaspunk.init.GPSicknesses;
-import org.ladysnake.pathos.api.Sickness;
+import org.ladysnake.gaspunk.init.GPSicknessEffects;
+import org.ladysnake.pathos.api.SicknessEffect;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 
@@ -43,12 +43,12 @@ public class GasPunk implements ModInitializer {
                     Registry.register(Registries.ITEM, id, item);
                 });
 
-        ImmutableMap.<String, Sickness>builder()
-                .put("tear_gas", GPSicknesses.TEAR_GAS)
-                .put("sarin_gas", GPSicknesses.SARIN_GAS)
+        ImmutableMap.<String, SicknessEffect>builder()
+                .put("eye_irritation", GPSicknessEffects.EYE_IRRITATION)
+                .put("lung_control_loss", GPSicknessEffects.LUNG_CONTROL_LOSS)
                 .build().forEach((name, sickness) -> {
                     Identifier id = id(name);
-                    Registry.register(Sickness.REGISTRY, id, sickness);
+                    Registry.register(SicknessEffect.REGISTRY, id, sickness);
                 });
 
         ImmutableMap.<String, EntityType<?>>builder()

@@ -1,7 +1,7 @@
 package org.ladysnake.pathos.api.event;
 
 import net.minecraft.entity.LivingEntity;
-import org.ladysnake.pathos.api.SicknessEffect;
+import org.ladysnake.pathos.api.SicknessInstance;
 import org.ladysnake.pathos.api.SicknessHandler;
 import org.quiltmc.qsl.base.api.event.Event;
 
@@ -15,7 +15,7 @@ public class SicknessEvents {
      * The merge function is used if another effect of the same type already afflicts the entity
      * <p>This event is cancelable. If it is cancelled, the sickness effect will not be added</p>
      *
-     * @see SicknessHandler#addSickness(SicknessEffect, BiFunction)
+     * @see SicknessHandler#addSickness(SicknessInstance, BiFunction)
      */
     public static final Event<SicknessAddEvent> ON_ADD = Event.create(SicknessAddEvent.class, (listeners) -> (sicknessHandler, affectedEntity, effect, mergeFunction) -> {
         for (SicknessAddEvent listener : listeners) {
@@ -29,7 +29,7 @@ public class SicknessEvents {
 
     public interface SicknessAddEvent {
 
-        boolean onSicknessAdd(SicknessHandler sicknessHandler, LivingEntity affectedEntity, SicknessEffect effect, BiFunction<SicknessEffect, SicknessEffect, SicknessEffect> mergeFunction);
+        boolean onSicknessAdd(SicknessHandler sicknessHandler, LivingEntity affectedEntity, SicknessInstance effect, BiFunction<SicknessInstance, SicknessInstance, SicknessInstance> mergeFunction);
     }
 
     /**
@@ -37,7 +37,7 @@ public class SicknessEvents {
      *
      * <p> This event is cancelable. If it is cancelled, the api effect will not be performed for this tick</p>
      *
-     * @see SicknessEffect#performEffect(net.minecraft.entity.LivingEntity)
+     * @see SicknessInstance#performEffect(net.minecraft.entity.LivingEntity)
      */
     public static final Event<SicknessTickEvent> ON_TICK = Event.create(SicknessTickEvent.class, (listeners) -> (sicknessHandler, affectedEntity, effect) -> {
         for (SicknessTickEvent listener : listeners) {
@@ -50,7 +50,7 @@ public class SicknessEvents {
 
     public interface SicknessTickEvent {
 
-        boolean onTick(SicknessHandler sicknessHandler, LivingEntity affectedEntity, SicknessEffect effect);
+        boolean onTick(SicknessHandler sicknessHandler, LivingEntity affectedEntity, SicknessInstance effect);
     }
 
     /**
@@ -69,7 +69,7 @@ public class SicknessEvents {
 
     public interface SicknessCureEvent {
 
-        boolean onCure(SicknessHandler sicknessHandler, LivingEntity affectedEntity, SicknessEffect effect);
+        boolean onCure(SicknessHandler sicknessHandler, LivingEntity affectedEntity, SicknessInstance effect);
 
     }
 

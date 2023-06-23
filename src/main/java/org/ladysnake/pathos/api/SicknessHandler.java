@@ -24,7 +24,7 @@ public interface SicknessHandler extends AutoSyncedComponent, ServerTickingCompo
     LivingEntity getEntity();
 
     /**
-     * @param sickness a registered api
+     * @param sickness a registered sickness
      * @return true if this handler is afflicted with an effect of the same type as passed in argument
      */
     boolean isSicknessActive(Sickness sickness);
@@ -36,8 +36,8 @@ public interface SicknessHandler extends AutoSyncedComponent, ServerTickingCompo
      * @param effect the effect to afflict the component owner with
      * @see SicknessEvents.SicknessAddEvent
      */
-    default void addSickness(SicknessEffect effect) {
-        addSickness(effect, SicknessEffect::mergeSeverities);
+    default void addSickness(SicknessInstance effect) {
+        addSickness(effect, SicknessInstance::mergeSeverities);
     }
 
     void cure(Sickness sickness);
@@ -51,15 +51,15 @@ public interface SicknessHandler extends AutoSyncedComponent, ServerTickingCompo
      * @see SicknessEvents.SicknessAddEvent
      * @see Map#merge(Object, Object, BiFunction)
      */
-    void addSickness(SicknessEffect effect, BiFunction<SicknessEffect, SicknessEffect, SicknessEffect> mergeFunction);
+    void addSickness(SicknessInstance effect, BiFunction<SicknessInstance, SicknessInstance, SicknessInstance> mergeFunction);
 
     /**
      * @return all the sickness effects this handler is afflicted with
      */
-    Collection<SicknessEffect> getActiveSicknesses();
+    Collection<SicknessInstance> getActiveSicknesses();
 
     @Nullable
-    SicknessEffect getActiveEffect(Sickness sickness);
+    SicknessInstance getActiveEffect(Sickness sickness);
 
     default void sync() {
         COMPONENT_KEY.sync(getEntity());

@@ -1,54 +1,22 @@
 package org.ladysnake.pathos.api;
 
-import net.minecraft.entity.LivingEntity;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
+import net.minecraft.world.World;
 import org.ladysnake.pathos.Pathos;
 
-public class Sickness {
+import java.util.List;
 
-    public static final Registry<Sickness> REGISTRY = Pathos.SICKNESS_REGISTRY;
-    private String translationKey;
+public record Sickness(List<SicknessEffect> effects, SeverityFunction severityFunction, float initialSeverity) {
 
-    public Identifier getId() {
-        return REGISTRY.getId(this);
+    public static Registry<Sickness> getRegistry(World world) {
+        return world.getRegistryManager().get(Pathos.SICKNESS_REGISTRY_KEY);
     }
 
-    /**
-     * Performs this api effect on the afflicted entity
-     *
-     * @param carrier the entity affected by this disease
-     * @param effect  the specific effect afflicting this entity
-     * @return true to reset the ticksSinceLastPerform counter on the effect
-     */
-    public boolean performEffect(LivingEntity carrier, SicknessEffect effect) {
-        return true;
-    }
-
-    /**
-     * Called whenever an instance of an associated api effect is cured from an entity
-     *
-     * @param sicknessEffect the effect that is being removed
-     * @param carrier        the entity that was being affected by this effect
-     */
-    public void onCured(SicknessEffect sicknessEffect, LivingEntity carrier) {
-        // NO-OP
-    }
-
-    public float getSampleChance() {
-        return 0.5F;
-    }
-
-    public String getTranslationKey() {
-        if (translationKey == null) {
-            translationKey = Util.createTranslationKey("sickness", getId());
-        }
-        return translationKey;
-    }
-
-    static void setSeverity(LivingEntity carrier, SicknessEffect effect, float severity) {
-        effect.setSeverity(severity);
-        SicknessHandler.of(carrier).sync();
-    }
+    public static final Codec<Sickness> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.list(SicknessEffect.REGISTRY.getCodec()).fieldOf("effects").forGetter(Sickness::effects),
+            SeverityFunction.CODEC.fieldOf("severity_function").forGetter(Sickness::severityFunction),
+            Codec.FLOAT.fieldOf("initial_severity").forGetter(Sickness::initialSeverity)
+    ).apply(instance, Sickness::new));
 }

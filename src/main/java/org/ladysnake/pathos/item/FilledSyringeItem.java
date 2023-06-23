@@ -9,12 +9,13 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.ladysnake.pathos.Pathos;
-import org.ladysnake.pathos.api.Sickness;
-import org.ladysnake.pathos.api.SicknessEffect;
 import org.ladysnake.pathos.api.SicknessHandler;
+import org.ladysnake.pathos.api.SicknessInstance;
 import org.ladysnake.pathos.init.PathosItems;
 
 import java.util.List;
@@ -32,14 +33,14 @@ public class FilledSyringeItem extends SyringeItem {
         NbtList list = nbt.getList("afflictions", NbtElement.COMPOUND_TYPE);
         for (int i = 0; i < list.size(); i++) {
             NbtCompound compound = list.getCompound(i);
-            handler.addSickness(new SicknessEffect(compound));
+            handler.addSickness(new SicknessInstance(world, compound));
         }
         handler.sync();
 
         user.heal(1.0F);
 
         ItemStack result = new ItemStack(PathosItems.SYRINGE);
-        if(user instanceof PlayerEntity player) {
+        if (user instanceof PlayerEntity player) {
             return ItemUsage.exchangeStack(stack, player, result);
         }
 
@@ -53,10 +54,7 @@ public class FilledSyringeItem extends SyringeItem {
             NbtList afflictions = nbt.getList("afflictions", NbtElement.COMPOUND_TYPE);
             for (int i = 0; i < afflictions.size(); i++) {
                 NbtCompound compound = afflictions.getCompound(i);
-                Sickness sickness = SicknessEffect.getSickness(compound);
-                if(sickness != null) {
-                    tooltip.add(Text.translatable(sickness.getTranslationKey()));
-                }
+                tooltip.add(Text.translatable(Util.createTranslationKey(Pathos.MODID + ".sickness", new Identifier(compound.getString("sickness")))));
             }
         }
     }

@@ -14,17 +14,21 @@ import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ladysnake.pathos.api.Sickness;
+import org.ladysnake.pathos.api.SicknessEffect;
 import org.ladysnake.pathos.init.PathosItems;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
+import org.quiltmc.qsl.registry.api.dynamic.DynamicMetaRegistry;
 
 public class Pathos implements ModInitializer {
 
     public static final String MODID = "pathos";
     private static final Logger LOGGER = LogManager.getLogger("Pathos");
 
-    public static final RegistryKey<Registry<Sickness>> SICKNESS_REGISTRY_KEY = RegistryKey.ofRegistry(id("sickness"));
-    public static final Registry<Sickness> SICKNESS_REGISTRY = FabricRegistryBuilder.createSimple(SICKNESS_REGISTRY_KEY).buildAndRegister();
+    public static final RegistryKey<Registry<Sickness>> SICKNESS_REGISTRY_KEY = RegistryKey.ofRegistry(id("sicknesses"));
+    public static final RegistryKey<Registry<SicknessEffect>> SICKNESS_EFFECT_REGISTRY_KEY = RegistryKey.ofRegistry(id("sickness_effects"));
+
+    public static final Registry<SicknessEffect> SICKNESS_EFFECT_REGISTRY = FabricRegistryBuilder.createSimple(SICKNESS_EFFECT_REGISTRY_KEY).buildAndRegister();
 
     public static Identifier id(String path) {
         return new Identifier(MODID, path);
@@ -40,6 +44,8 @@ public class Pathos implements ModInitializer {
             entries.addBefore(Items.GLASS_BOTTLE, PathosItems.SYRINGE);
             entries.addItem(PathosItems.BLOOD_SYRINGE, ItemGroup.Visibility.SEARCH_TAB_ONLY);
         });
+
+        DynamicMetaRegistry.registerSynced(SICKNESS_REGISTRY_KEY, Sickness.CODEC);
 
         ImmutableMap.<String, Item>builder()
                 .put("syringe", PathosItems.SYRINGE)
